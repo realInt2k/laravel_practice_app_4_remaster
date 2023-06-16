@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,18 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\DashboardController;
             
 
 Route::get('/', function () {return redirect('sign-in');})->middleware('guest');
@@ -68,9 +63,9 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('pages.static-sign-up');
 	})->name('static-sign-up');
 	Route::get('user-management', function () {
-		return view('pages.laravel-examples.user-management');
+		return view('pages.users.user-management');
 	})->name('user-management');
 	Route::get('user-profile', function () {
-		return view('pages.laravel-examples.user-profile');
+		return view('pages.users.user-profile');
 	})->name('user-profile');
 });
