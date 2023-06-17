@@ -1,13 +1,15 @@
 <x-layout bodyClass="g-sidenav-show  bg-gray-200">
-
     <x-navbars.sidebar activePage="user-management"></x-navbars.sidebar>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <!-- Navbar -->
         <x-navbars.navs.auth titlePage="User Management"></x-navbars.navs.auth>
         <!-- End Navbar -->
+        <!-- Modal -->
+        @include('components.modals.form-modal', ['title' => ''])
+        <!-- End Modal -->
         <div class="container-fluid py-4">
             <div class="row">
-                <form class="row" id="form-search" action={{}} method="GET">
+                <form class="row" id="form-search" action="{{ route('users.search') }}" method="GET">
                     @csrf
                     @method('GET')
                     <div class="col-md-4">
@@ -64,3 +66,6 @@
     <x-plugins></x-plugins>
 
 </x-layout>
+<script
+    src="{{ asset('assets/models/common/domTrigger.js') }}?v={{ filemtime(public_path('assets/models/common/domTrigger.js')) }}">
+</script>

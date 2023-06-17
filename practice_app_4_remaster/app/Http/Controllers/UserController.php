@@ -13,7 +13,7 @@ use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
-    const PER_PAGE = 15;
+    const PER_PAGE = 5;
     public $userService, $roleService, $permissionService;
     public function __construct(
         UserService $userService,
@@ -27,6 +27,11 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        return view('pages.users.index');
+    }
+
+    public function search(Request $request)
+    {
         $pathWithSearchParam = $this->getSearchString($request);
         if ($pathWithSearchParam == self::DEFAULT_SEARCH_STRING) {
             $pathWithSearchParam = 'users';
@@ -35,10 +40,11 @@ class UserController extends Controller
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
         $oldSearch = $request->all();
-        return view(
-            'pages.users.index',
+        $viewHtml = view(
+            'pages.users.pagination',
             compact('users', 'roles', 'permissions', 'oldSearch')
-        );
+        )->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function show(Request $request, $id)
@@ -68,7 +74,7 @@ class UserController extends Controller
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
 
-        $viewHtml = view('users.edit', compact('user', 'roles', 'permissions'))->render();
+        $viewHtml = view('pages.users.edit', compact('user', 'roles', 'permissions'))->render();
         return $this->responseWithHtml($viewHtml);
     }
 

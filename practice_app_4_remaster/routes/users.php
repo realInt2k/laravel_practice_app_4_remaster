@@ -7,7 +7,7 @@ use App\Http\Controllers\UserController;
 
 Route::prefix('/users')->group(function () {
     Route::middleware('auth')->group(function () {
-        Route::get('/search', [UserController::class, 'index'])
+        Route::get('/search', [UserController::class, 'search'])
             ->name('users.search');
 
         Route::get('/', [UserController::class, 'index'])
