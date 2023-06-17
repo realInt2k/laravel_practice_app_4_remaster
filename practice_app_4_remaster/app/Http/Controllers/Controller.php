@@ -14,6 +14,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
     const DEFAULT_SEARCH_STRING = 'search?';
+    const PER_PAGE = 5;
+    
     public function getSearchString($request)
     {
         $pathWithSearchParam = self::DEFAULT_SEARCH_STRING;

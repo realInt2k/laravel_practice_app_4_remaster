@@ -37,7 +37,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'product-management' ? ' active bg-gradient-primary' : '' }} "
-                    href="">
+                    href="{{ route('products.index') }}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
                     </div>
@@ -46,7 +46,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'role-management' ? ' active bg-gradient-primary' : '' }} "
-                    href="">
+                    href="{{ route('roles.index') }}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
                     </div>
@@ -55,7 +55,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'category-management' ? ' active bg-gradient-primary' : '' }} "
-                    href="">
+                    href="{{ route('categories.index') }}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
                     </div>
@@ -85,7 +85,8 @@
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
         <div class="mx-3">
-            <a class="btn bg-gradient-primary w-100" href="../../documentation/getting-started/installation.html" target="_blank">View documentation</a>
+            <a class="btn bg-gradient-primary w-100" href="../../documentation/getting-started/installation.html"
+                target="_blank">View documentation</a>
         </div>
     </div>
 </aside>

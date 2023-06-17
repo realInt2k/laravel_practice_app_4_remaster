@@ -3,10 +3,11 @@
 namespace App\Routes;
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
 Route::prefix('/products')->group(function () {
     Route::middleware('auth')->group(function () {
-        Route::get('/search', [ProductController::class, 'index'])
+        Route::get('/search', [ProductController::class, 'search'])
             ->name('products.search');
 
         Route::get('/{id}/edit', [ProductController::class, 'edit'])

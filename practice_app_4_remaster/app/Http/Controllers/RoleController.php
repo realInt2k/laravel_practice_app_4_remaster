@@ -12,7 +12,6 @@ use App\Services\PermissionService;
 
 class RoleController extends Controller
 {
-    const PER_PAGE = 15;
     public $roleService, $permissionService;
     public function __construct(RoleService $roleService, PermissionService $permissionService)
     {
@@ -20,7 +19,12 @@ class RoleController extends Controller
         $this->permissionService = $permissionService;
     }
 
-    public function index(Request $request)
+    public function index()
+    {
+        return view('pages.roles.index');
+    }
+
+    public function search(Request $request)
     {
         $pathWithSearchParam = $this->getSearchString($request);
         if ($pathWithSearchParam == self::DEFAULT_SEARCH_STRING) {
@@ -29,72 +33,36 @@ class RoleController extends Controller
         $permissions = $this->permissionService->getAllPermissions();
         $roles = $this->roleService->search($request, self::PER_PAGE, $pathWithSearchParam);
         $oldFilter = $request->all();
-        return view('roles.index', compact('permissions', 'roles', 'oldFilter'));
+        $viewHtml = view('pages.roles.pagination', compact('permissions', 'roles', 'oldFilter'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function show(Request $request, $id)
     {
         $role = $this->roleService->getById($id);
-        $permissions = $this->permissionService->getAllPermissions();
-        $redirectRequest = $request->all();
-        return view('roles.show', compact('role', 'permissions', 'redirectRequest'));
+        $viewHtml = view('pages.roles.show', compact('role'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function create(Request $request)
     {
         $permissions = $this->permissionService->getAllPermissions();
-        return view('roles.create', compact('permissions'));
-    }
-
-    public function storeAjaxValidation(StoreRoleRequest $request)
-    {
-        if (!$request->ajax()) {
-            return redirect()->back();
-        }
-        return response(Response::HTTP_OK);
+        $viewHtml = view('pages.roles.create', compact('permissions'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function store(StoreRoleRequest $request)
     {
-        try {
-            $role = $this->roleService->store($request);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return redirect()->route('roles.show', $role->id);
+        $role = $this->roleService->store($request);
+        $viewHtml = view('pages.roles.show', compact('role'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function edit(Request $request, $id)
     {
         $role = $this->roleService->getById($id);
-        $redirectRequest = $request->all();
-        $permissions = $this->permissionService->getAllPermissions();
-        return view('roles.edit', compact('role', 'permissions', 'redirectRequest'));
-    }
-
-    public function updateAjaxValidation(UpdateRoleRequest $request, $id)
-    {
-        try {
-            $user = $this->roleService->updateAjaxValidation($id);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return response(Response::HTTP_OK);
-    }
-
-    public function updateAjax(UpdateRoleRequest $request, $id)
-    {
-        if (!$request->ajax()) {
-            return redirect()->back();
-        }
-        try {
-            $role = $this->roleService->update($request, $id);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return response()->json([
-            'data' => $role
-        ], Response::HTTP_OK);
+        $viewHtml = view('pages.roles.show', compact('role'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function update(UpdateRoleRequest $request, $id)
@@ -104,17 +72,8 @@ class RoleController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return redirect()->back();
-    }
-
-    public function destroyAjax(Request $request, $id)
-    {
-        try {
-            $role = $this->roleService->destroy($id);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return response(Response::HTTP_NO_CONTENT);
+        $viewHtml = view('pages.roles.show', compact('role'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function destroy(Request $request, $id)
@@ -124,6 +83,6 @@ class RoleController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return redirect()->back();
+        return $this->responseWithHtml('', Response::HTTP_NO_CONTENT);
     }
 }

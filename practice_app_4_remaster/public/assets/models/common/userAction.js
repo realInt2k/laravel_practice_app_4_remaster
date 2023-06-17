@@ -33,7 +33,7 @@ userAction = (function () {
         userAction.sendAjax(link, "get", data)
             .done(function (data) {
                 if (userAction.debug) {
-                    // console.log("get table ok", data);
+                    console.log("get", link, "table ok");
                 }
                 $("#table-data").html(data.html);
             })

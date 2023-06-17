@@ -13,7 +13,6 @@ use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
-    const PER_PAGE = 5;
     public $userService, $roleService, $permissionService;
     public function __construct(
         UserService $userService,
