@@ -7,8 +7,10 @@
             Swal.close();
         }
     });
-    $(function () {
+    $(document).ready(function () {
         userAction.getTable();
+    })
+    $(function () {
         $(document).off("keypress", ".is-invalid").on("keypress", ".is-invalid", function () {
             $(this).removeClass("is-invalid");
         });
@@ -71,11 +73,16 @@
                 }
                 return;
             }
-            const data = formData.serialize();
+            let data = formData.serialize();
+            let sendWithFile = false;
+            if (formData.attr('enctype') === 'multipart/form-data') {
+                data = new FormData($("#form-data")[0]);
+                sendWithFile = true;
+            }
             const method = formData.data("method");
             const url = formData.attr("action");
             const getTableUrl = userAction.getTableUrl();
-            userAction.sendAjax({ url: url, method: method, data: data })
+            userAction.sendAjax({ url: url, method: method, data: data, sendWithFile })
                 .done(function (response) {
                     notification.success("Success!", response.message);
                     userAction.getTable(getTableUrl);
@@ -86,7 +93,7 @@
                 })
                 .always(function (response) {
                     if (userAction.debug) {
-                        console.log("response: ", response);
+                        console.log("update's response: ", response);
                     }
                 });
         })

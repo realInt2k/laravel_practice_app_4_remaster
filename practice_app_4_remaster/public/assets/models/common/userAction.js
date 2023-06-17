@@ -38,13 +38,18 @@ userAction = (function () {
         modal.modal("hide");
     }
 
-    modules.sendAjax = function ({ url, method = "get", data = "null" } = {}) {
-        return $.ajax({
-            url,
-            data,
-            method,
-            async: false
-        });
+    modules.sendAjax = function ({ url, method = "get", data = "null", sendWithFile = false } = {}) {
+        if (sendWithFile) {
+            return userAction.sendAjaxProMax({ url, method, data });
+        } else {
+            return $.ajax({
+                url,
+                data,
+                method,
+                async: false
+            });
+        }
+
     }
 
     modules.sendAjaxProMax = function ({ url, method = "get", data = "null" } = {}) {

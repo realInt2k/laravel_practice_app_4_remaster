@@ -33,15 +33,17 @@
                     </div>
                 </td>
                 <td class="align-middle text-center text-sm">
-                    {{ 'category' }}
-
+                    @foreach ($product->categories as $category)
+                        <div class="badge bg-info" style="text-transform: none">{{ $category->name }}</div>
+                    @endforeach
                 </td>
                 <td class="align-middle text-center">
-                    <p class="text-xs text-secondary mb-0">{{ $product->email }}
+                    <p class="text-xs text-secondary mb-0">{{ substr($product->description, 0, 30) . '...' }}
                     </p>
                 </td>
                 <td class="align-middle text-center">
-                    {{ 'VISUAL' }}
+                    <img id="preview" src="{{ $product->image_path ? asset($product->image_path) : '#' }}"
+                        alt="product image" class="rounded mb-2" {{ $product->image_path ? '' : 'hidden' }} height="100px" />
                 </td>
                 <td class="align-middle">
                     <a rel="tooltip" class="btn btn-success btn-link button-edit" data-id="{{ $product->id }}"

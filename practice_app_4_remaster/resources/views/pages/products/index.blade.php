@@ -63,6 +63,3 @@
     <x-plugins></x-plugins>
 
 </x-layout>
-<script
-    src="{{ asset('assets/models/common/domTrigger.js') }}?v={{ filemtime(public_path('assets/models/common/domTrigger.js')) }}">
-</script>

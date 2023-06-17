@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Traits\ImageProcessing;
 use App\Repositories\ProductRepository;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
 
 class ProductService extends BaseService
@@ -29,7 +28,7 @@ class ProductService extends BaseService
         try {
             $input = $request->all();
             $input['user_id'] = auth()->user()->id;
-            $input['category_ids'] = $this->extractCategoryIdsFromInput($input);
+            $this->extractCategoryIdsFromInput($input);
             $this->processRequestImageToInput($request, $input, null);
             $product = $this->productRepo->saveNewProduct($input);
         } catch (Exception $e) {
@@ -64,7 +63,7 @@ class ProductService extends BaseService
         DB::beginTransaction();
         try {
             $input = $request->all();
-            $input['category_ids'] = $this->extractCategoryIdsFromInput($input);
+            $this->extractCategoryIdsFromInput($input);
             $product = $this->productRepo->findOrFail($id);
             $this->processRequestImageToInput($request, $input, $product);
             $product = $this->productRepo->updateProduct($input, $id);
@@ -90,7 +89,7 @@ class ProductService extends BaseService
         DB::commit();
     }
 
-    public function search($request, $perPage, $path, $categoryIds)
+    public function search($request, $perPage, $categoryIds)
     {
         $searchData = [];
         $searchData['category_ids'] = $categoryIds;
@@ -99,7 +98,6 @@ class ProductService extends BaseService
         $searchData['name'] = $request->name;
         $searchData['description'] = $request->description;
         $searchData['perPage'] = $perPage;
-        $searchData['path'] = $path;
         $products = $this->productRepo->search($searchData);
         return $products;
     }
@@ -113,11 +111,12 @@ class ProductService extends BaseService
 
     private function processRequestImageToInput($request, &$input, $product)
     {
-        $this->removeProductImage($product);
         if (isset($request->remove_image_request) && $request->remove_image_request == 'true') {
+            $this->removeProductImage($product);
             $input['image'] = null;
         } else {
             if ($request->image !== null) {
+                $this->removeProductImage($product);
                 $path = $this->createPublicDirIfNotExist('storage/images/');
                 $name = $this->nameTheImage($request);
                 $image = $this->makeImage($request->file('image'));
@@ -127,23 +126,15 @@ class ProductService extends BaseService
                 }
                 $input['image'] = $name;
             } else {
-                $input['image'] = null;
+                // no remove image requested and request->image isn't null => no need to update.
             }
         }
     }
 
-    private function extractCategoryIdsFromInput($input)
+    private function extractCategoryIdsFromInput(&$input)
     {
         if (!isset($input['category_ids'])) {
-            return [];
-        }
-        $category_ids = $input['category_ids'];
-        if (is_string($category_ids)) {
-            return explode(',', $category_ids);
-        } elseif ($category_ids == null || $category_ids == '') {
-            return [];
-        } else {
-            return $category_ids;
+            $input['category_ids'] = [];
         }
     }
 }

@@ -27,15 +27,11 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
-        $pathWithSearchParam = $this->getSearchString($request);
-        if ($pathWithSearchParam == self::DEFAULT_SEARCH_STRING) {
-            $pathWithSearchParam = 'products';
-        }
         $categoryIds = [];
         if (isset($request->category)) {
             $categoryIds = $this->categoryService->getAllRelevantIdsFromCategoryId($request->category);
         }
-        $products = $this->productService->search($request, self::PER_PAGE, $pathWithSearchParam, $categoryIds);
+        $products = $this->productService->search($request, self::PER_PAGE, $categoryIds);
         $categories = $this->categoryService->getAllCategories();
         $oldFilter = $request->all();
         $viewHtml = view(
@@ -56,7 +52,7 @@ class ProductController extends Controller
     {
         $product = $this->productService->edit($id);
         $categories = $this->categoryService->getAllCategories();
-        $viewHtml = view('pages.products.edit', compact('product', 'categories'));
+        $viewHtml = view('pages.products.edit', compact('product', 'categories'))->render();
         return $this->responseWithHtml($viewHtml);
     }
 
@@ -81,8 +77,7 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        $viewHtml = view('pages.products.show', compact('product'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($product);
     }
 
     public function destroy(Request $request, $id)

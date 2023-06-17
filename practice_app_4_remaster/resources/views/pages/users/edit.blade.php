@@ -8,6 +8,9 @@
                 User
                 <small class="text-muted">details</small>
             </h3>
+            <div>
+                Name
+            </div>
             <span style="font-size:0.75rem" id="error-name" class="error text-danger"></span>
             <div class="input-group input-group-dynamic mb-4">
                 <span class="input-group-text text-danger mr-4">*</span>
@@ -15,6 +18,9 @@
                     value="{{ $user->name }}">
             </div>
 
+            <div>
+                Email
+            </div>
             <span style="font-size:0.75rem" id="error-email" class="error text-danger"></span>
             <div class="input-group input-group-dynamic mb-4">
                 <span class="input-group-text text-danger">*</span>
@@ -22,6 +28,9 @@
                     placeholder="something@deha-soft.com" value="{{ $user->email }}">
             </div>
 
+            <div>
+                Update Password
+            </div>
             <span style="font-size:0.75rem" id="error-password" class="error text-danger"></span>
             <div class="input-group input-group-dynamic mb-4">
                 <input type="text" name="password" class="form-control" id="input-password"
