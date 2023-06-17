@@ -34,18 +34,17 @@ class UserController extends Controller
         $users = $this->userService->search($request, self::PER_PAGE, $pathWithSearchParam);
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
-        $oldFilter = $request->all();
+        $oldSearch = $request->all();
         return view(
-            'users.index',
-            compact('users', 'roles', 'permissions', 'oldFilter')
+            'pages.users.index',
+            compact('users', 'roles', 'permissions', 'oldSearch')
         );
     }
 
     public function show(Request $request, $id)
     {
         $user = $this->userService->getById($id);
-        $redirectRequest = $request->all();
-        return view('users.show', compact('user', 'redirectRequest'));
+        return view('users.show', compact('user'));
     }
 
     public function create()
@@ -55,22 +54,12 @@ class UserController extends Controller
         return view('users.create', compact('roles', 'permissions'));
     }
 
-    public function storeAjaxValidation(StoreUserRequest $request)
-    {
-        if (!$request->ajax()) {
-            return redirect()->back();
-        }
-        return response(Response::HTTP_OK);
-    }
-
     public function store(StoreUserRequest $request)
     {
-        try {
-            $user = $this->userService->store($request);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return redirect()->route('users.show', $user->id);
+        $user = $this->userService->store($request);
+
+        $viewHtml = view('users.store', compact('user'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function edit(Request $request, $id)
@@ -78,36 +67,9 @@ class UserController extends Controller
         $user = $this->userService->getById($id);
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
-        $redirectRequest = $request->all();
-        return view('users.edit', compact('user', 'roles', 'permissions', 'redirectRequest'));
-    }
 
-    public function updateAjaxValidation(UpdateUserRequest $request, $id)
-    {
-        if (!$request->ajax()) {
-            return redirect()->back();
-        }
-        try {
-            $user = $this->userService->getById($id);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return response(Response::HTTP_OK);
-    }
-
-    public function updateAjax(UpdateUserRequest $request, $id)
-    {
-        if (!$request->ajax()) {
-            return redirect()->back();
-        }
-        try {
-            $user = $this->userService->update($request, $id);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return response()->json([
-            'data' => $user
-        ], Response::HTTP_OK);
+        $viewHtml = view('users.edit', compact('user', 'roles', 'permissions'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function update(UpdateUserRequest $request, $id)
@@ -117,20 +79,8 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return redirect()->back();
-    }
-
-    public function destroyAjax(Request $request, $id)
-    {
-        if (auth()->user()->id == $id) {
-            auth()->logout();
-        }
-        try {
-            $this->userService->destroy($id);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
-        return response(Response::HTTP_NO_CONTENT);
+        $viewHtml = view('users.show', compact('user'));
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function destroy(Request $request, $id)
@@ -143,6 +93,6 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return redirect()->back();
+        return $this->responseWithHtml('', Response::HTTP_NO_CONTENT);
     }
 }

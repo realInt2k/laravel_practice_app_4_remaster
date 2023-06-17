@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+use App\Helpers\RouteHelper;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +15,14 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\DashboardController;
-            
+
+RouteHelper::requireRoute();            
 
 Route::get('/', function () {return redirect('sign-in');})->middleware('guest');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
@@ -41,31 +43,14 @@ Route::post('sign-out', [SessionsController::class, 'destroy'])->middleware('aut
 Route::get('profile', [ProfileController::class, 'create'])->middleware('auth')->name('profile');
 Route::post('user-profile', [ProfileController::class, 'update'])->middleware('auth');
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('billing', function () {
-		return view('pages.billing');
-	})->name('billing');
-	Route::get('tables', function () {
-		return view('pages.tables');
-	})->name('tables');
-	Route::get('rtl', function () {
-		return view('pages.rtl');
-	})->name('rtl');
-	Route::get('virtual-reality', function () {
-		return view('pages.virtual-reality');
-	})->name('virtual-reality');
-	Route::get('notifications', function () {
-		return view('pages.notifications');
-	})->name('notifications');
 	Route::get('static-sign-in', function () {
 		return view('pages.static-sign-in');
 	})->name('static-sign-in');
 	Route::get('static-sign-up', function () {
 		return view('pages.static-sign-up');
 	})->name('static-sign-up');
-	Route::get('user-management', function () {
-		return view('pages.users.user-management');
-	})->name('user-management');
 	Route::get('user-profile', function () {
 		return view('pages.users.user-profile');
 	})->name('user-profile');
 });
+

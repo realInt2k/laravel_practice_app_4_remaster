@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -20,61 +21,20 @@ class Controller extends BaseController
     {
         $pathWithSearchParam = self::DEFAULT_SEARCH_STRING;
         foreach ($request->all() as $searchParam => $searchValue) {
-            if($searchParam == 'page') {
+            if ($searchParam == 'page') {
                 continue;
             }
             $pathWithSearchParam .= '&' . $searchParam . $searchValue;
         }
         return $pathWithSearchParam;
     }
-    /**
-     * The attributes that are mass assignable.
-     * @var array
-     */
-    public function paginate($items, $perPage = 5, $page = null, $options = [])
-    {
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
-    }
 
-    public function deleteGetRedirectPage($curPage, $lastPage, $perPage, $href, $count)
+    public function responseWithHtml($html, $status = Response::HTTP_OK, $message = null)
     {
-        $redirectPage = $curPage;
-        if ($count == 1 && $curPage == $lastPage && $curPage != 1) {
-            $redirectPage = $curPage - 1;
-        }
-        return $redirectPage;
-    }
-
-    /**
-     * @paramExplain $count means how many elements are presented in that page
-     * @return return url for redirect based on pagination information
-     */
-    public function deleteGetRedirectUrl(int $curPage, int $lastPage, int $perPage, string $href, int $count): string
-    {
-        $redirectPage = $this->deleteGetRedirectPage($curPage, $lastPage, $perPage, $href, $count);
-        if ($href === route('users.index') || $href === route('products.index') || $href === route('roles.index')) {
-            $url = $href . "?&page=" . $redirectPage;
-        } else {
-            $url = $href . "&page=" . $redirectPage;
-        }
-        return $url;
-    }
-
-    /**
-     * @paramExplain $count means how many elements are presented in that page
-     * @return return url for redirect based on pagination information
-     */
-    public function getRedirectUrl($curPage, $href): string
-    {
-        $redirectPage = $curPage;
-        if ($href === route('users.index') || $href === route('products.index') || $href === route('roles.index')) {
-            $url = $href . "?&page=" . $redirectPage;
-        } else {
-            $url = $href . "&page=" . $redirectPage;
-        }
-        return $url;
+        return response()->json([
+            'html' => $html,
+            'message' => $message,
+        ], $status);
     }
 
     public function responseWhenException(Request $request, Exception $e)
