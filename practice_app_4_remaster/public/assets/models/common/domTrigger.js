@@ -9,7 +9,15 @@
     });
     $(function () {
         userAction.getTable();
-        $(document).on("click", ".button-edit", function (e) {
+        $(document).off("keypress", ".is-invalid").on("keypress", ".is-invalid", function () {
+            $(this).removeClass("is-invalid");
+        });
+
+        $("#form-search").off("keyup", ".search-input").on("keyup", ".search-input", userAction.debounce(function () {
+            userAction.getTable();
+        }));
+
+        $(document).off("click", ".button-edit").on("click", ".button-edit", function (e) {
             e.preventDefault();
             const id = $(this).data("id");
             const url = $(this).data("url");
@@ -26,7 +34,7 @@
                 });
         });
 
-        $(document).on("click", ".button-delete", function (e) {
+        $(document).off("click", ".button-delete").on("click", ".button-delete", function (e) {
             e.preventDefault();
             notification.confirm().then((result) => {
                 if (!result.isConfirmed) {
@@ -54,9 +62,15 @@
             });
         });
 
-        $(document).on("click", "#form-modal-save", function (e) {
+        $(document).off("click", "#form-modal-save").on("click", "#form-modal-save", function (e) {
             e.preventDefault();
             const formData = $("#form-data");
+            if (formData.length == 0) {
+                if (userAction.debug) {
+                    console.log("can't find form-data");
+                }
+                return;
+            }
             const data = formData.serialize();
             const method = formData.data("method");
             const url = formData.attr("action");
@@ -77,7 +91,7 @@
                 });
         })
 
-        $(document).on("click", ".page-link", function (e) {
+        $(document).off("click", ".page-link").on("click", ".page-link", function (e) {
             e.preventDefault();
             const url = $(this).attr("href");
             userAction.getTable(url);

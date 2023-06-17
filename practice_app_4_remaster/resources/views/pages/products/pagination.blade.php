@@ -46,13 +46,15 @@
                 <td class="align-middle">
                     <a rel="tooltip" class="btn btn-success btn-link button-edit" data-id="{{ $product->id }}"
                         data-page-number={{ $products->currentPage() }}
+                        data-page-count-elements={{ $products->count() }}
                         data-url="{{ route('products.edit', $product->id) }}">
                         <i class="material-icons">edit</i>
                         <div class="ripple-container"></div>
                     </a>
 
-                    <button type="button" class="btn btn-danger btn-link button-create"
+                    <button type="button" class="btn btn-danger btn-link button-delete"
                         data-page-number={{ $products->currentPage() }} data-id="{{ $product->id }}"
+                        data-page-count-elements={{ $products->count() }}
                         data-url="{{ route('products.destroy', $product->id) }}">
                         <i class="material-icons">close</i>
                         <div class="ripple-container"></div>

@@ -8,7 +8,6 @@ use Illuminate\Http\Response;
 use App\Services\ProductService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Http\Requests\PaginationDeleteRequest;
 use App\Services\CategoryService;
 
 class ProductController extends Controller
@@ -86,7 +85,7 @@ class ProductController extends Controller
         return $this->responseWithHtml($viewHtml);
     }
 
-    public function destroy(PaginationDeleteRequest $request, $id)
+    public function destroy(Request $request, $id)
     {
         try {
             $this->productService->destroy($id);

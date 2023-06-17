@@ -5,11 +5,23 @@ userAction = (function () {
     modules.pageNumber = -1;
     modules.pageCount = -1;
 
+    const DELAY_TIMEOUT = 500;
+
     modules.getTableUrl = function (action = null) {
         if (action == "delete" && userAction.pageCountElements == 1 && userAction.pageNumber > 1) {
             userAction.pageNumber -= 1;
         }
         return $("#form-search").attr("action") + "?page=" + userAction.pageNumber;
+    }
+
+    modules.debounce = function (callback, delay = DELAY_TIMEOUT) {
+        let timer;
+        return function () {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                callback.apply(this, arguments); // why use apply
+            }, delay)
+        }
     }
 
     modules.openModal = function ({ modalId = "#form-modal", populateHtml = "" } = {}) {

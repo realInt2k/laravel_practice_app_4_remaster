@@ -14,17 +14,14 @@
                     @method('GET')
                     <div class="col-md-4">
                         <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Name</label>
-                            <input type="text" class="form-control border" name="name">
+                            <label class="form-label"> 🔍 Name</label>
+                            <input type="text" class="form-control border search-input" name="name">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Email</label>
-                            <input type="text" class="form-control border" name="email">
-                            <div class="input-group-append mx-3">
-                                <span class="input-group-text"><i class="fa fa-search"></i></span>
-                            </div>
+                            <label class="form-label"> 🔍 Email</label>
+                            <input type="text" class="form-control border search-input" name="email">
                         </div>
                     </div>
                     <div class="col-md-4">

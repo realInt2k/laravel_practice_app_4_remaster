@@ -53,7 +53,6 @@
 </head>
 
 <body class="{{ $bodyClass }}">
-    <?= csrf_token() ?>
     <script>
         (function(yourcode) {
             yourcode(window.jQuery, window, document);

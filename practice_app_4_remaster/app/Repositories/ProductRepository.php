@@ -43,10 +43,8 @@ class ProductRepository extends BaseRepository
             ->whereId($searchData['id'])
             ->whereUserId($searchData['user_id'])
             ->whereName($searchData['name'])
-            ->whereDescription($searchData['description'])->get();
-        return $this->customPaginate($products, $searchData['perPage'], null, [
-            'path' => $searchData['path']
-        ]);
+            ->whereDescription($searchData['description']);
+        return $products->paginate($searchData['perPage']);
     }
 
     public function destroy($id)
