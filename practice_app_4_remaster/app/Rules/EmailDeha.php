@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class EmailDeha implements ValidationRule
 {
-    const ACCEPT_EMAIL = 'deha-soft.com';
+    const ACCEPT_EMAILS = ['deha-soft.com', 'gmail.com'];
     /**
      * Run the validation rule.
      *
@@ -17,8 +17,8 @@ class EmailDeha implements ValidationRule
     {
         $email = explode('@', $value);
         $domain = $email[array_key_last($email)];
-        if ($domain !== self::ACCEPT_EMAIL) {
-            $fail(':attribute must be email of DEHA (deha-soft.com)');
+        if (!in_array($domain, self::ACCEPT_EMAILS)) {
+            $fail('email must be (deha-soft.com) or (gmail.com)');
         }
     }
 }

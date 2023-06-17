@@ -31,25 +31,56 @@
     <!-- Nucleo Icons -->
     <link href="{{ asset('assets') }}/css/nucleo-icons.css" rel="stylesheet" />
     <link href="{{ asset('assets') }}/css/nucleo-svg.css" rel="stylesheet" />
+    <link
+        href="{{ asset('assets/css/common/input.css') }}?v={{ filemtime(public_path('assets/css/common/input.css')) }}"
+        rel="stylesheet" />
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets') }}/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
-    <script
-        src="{{ asset('assets/models/common/userAction.js') }}?v={{ filemtime(public_path('assets/models/common/userAction.js')) }}">
-    </script>
+
+    <!-- Swal -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
         crossorigin="anonymous"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
 <body class="{{ $bodyClass }}">
-
+    <?= csrf_token() ?>
+    <script>
+        (function(yourcode) {
+            yourcode(window.jQuery, window, document);
+        }(function($, window, document) {
+            (function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+            })
+        }));
+    </script>
+    <!-- self defined script -->
+    <script
+        src="{{ asset('assets/models/common/userAction.js') }}?v={{ filemtime(public_path('assets/models/common/userAction.js')) }}">
+    </script>
+    <script
+        src="{{ asset('assets/models/common/domStatus.js') }}?v={{ filemtime(public_path('assets/models/common/domStatus.js')) }}">
+    </script>
+    <script
+        src="{{ asset('assets/models/common/domTrigger.js') }}?v={{ filemtime(public_path('assets/models/common/domTrigger.js')) }}">
+    </script>
+    <script
+        src="{{ asset('assets/models/common/notification.js') }}?v={{ filemtime(public_path('assets/models/common/notification.js')) }}">
+    </script>
     {{ $slot }}
-
     <script src="{{ asset('assets') }}/js/core/popper.min.js"></script>
     <script src="{{ asset('assets') }}/js/core/bootstrap.min.js"></script>
     <script src="{{ asset('assets') }}/js/plugins/perfect-scrollbar.min.js"></script>
@@ -69,20 +100,6 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('assets') }}/js/material-dashboard.min.js?v=3.0.0"></script>
-    <script>
-        (function(yourcode) {
-            yourcode(window.jQuery, window, document);
-        }(function($, window, document) {
-            (function() {
-                // DOM is ready 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-            })
-        }));
-    </script>
 </body>
 
 </html>

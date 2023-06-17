@@ -31,11 +31,7 @@ class UserController extends Controller
 
     public function search(Request $request)
     {
-        $pathWithSearchParam = $this->getSearchString($request);
-        if ($pathWithSearchParam == self::DEFAULT_SEARCH_STRING) {
-            $pathWithSearchParam = 'users';
-        }
-        $users = $this->userService->search($request, self::PER_PAGE, $pathWithSearchParam);
+        $users = $this->userService->search($request, self::PER_PAGE);
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
         $oldSearch = $request->all();
@@ -84,8 +80,8 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        $viewHtml = view('users.show', compact('user'));
-        return $this->responseWithHtml($viewHtml);
+        // $viewHtml = view('pages.users.show', compact('user'));
+        return $this->responseWithData($user);
     }
 
     public function destroy(Request $request, $id)

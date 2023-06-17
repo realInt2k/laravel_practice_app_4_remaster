@@ -32,8 +32,6 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users', 'email')->whereNot('id', $id),
                 new EmailDeha()
             ],
-            'roles' => 'present',
-            'permissions' => 'present'
         ];
     }
 }

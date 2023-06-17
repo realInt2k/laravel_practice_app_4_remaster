@@ -38,13 +38,11 @@ class UserService extends BaseService
         DB::beginTransaction();
         try {
             $storeData = $request->all();
-            $storeData['roles'] = $this->extractRoleOrPermissionInput($storeData['roles']);
-            $storeData['permissions'] = $this->extractRoleOrPermissionInput($storeData['permissions']);
+            $this->extractRoleOrPermissionInput($storeData);
             $user = $this->userRepo->saveNewUser($storeData);
-            
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
+            Log::info($e);
             throw new InvalidArgumentException("cannot create user data");
         }
         DB::commit();
@@ -62,12 +60,11 @@ class UserService extends BaseService
             } else {
                 $updateData['password'] = Hash::make($updateData['password']);
             }
-            $updateData['roles'] = $this->extractRoleOrPermissionInput($updateData['roles']);
-            $updateData['permissions'] = $this->extractRoleOrPermissionInput($updateData['permissions']);
+            $this->extractRoleOrPermissionInput($updateData);
             $user = $this->userRepo->updateUser($updateData, $id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
+            Log::info($e);
             throw new InvalidArgumentException("cannot update user data");
         }
         DB::commit();
@@ -82,13 +79,13 @@ class UserService extends BaseService
             $this->userRepo->destroy($id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
+            Log::info($e);
             throw new InvalidArgumentException("cannot destroy user data");
         }
         DB::commit();
     }
 
-    public function search(Request $request, int $perPage, string $path)
+    public function search(Request $request, int $perPage)
     {
         $searchData = [];
         $searchData['id'] = $request->id;
@@ -97,7 +94,6 @@ class UserService extends BaseService
         $searchData['permission'] = $request->permission;
         $searchData['role'] = $request->role;
         $searchData['perPage'] = $perPage;
-        $searchData['path'] = $path;
         $users = $this->userRepo->search($searchData);
         return $users;
     }
@@ -107,14 +103,13 @@ class UserService extends BaseService
         return $this->userRepo->customPaginate($users, $perPage, null, ['path' => $path]);
     }
 
-    private function extractRoleOrPermissionInput($input)
+    private function extractRoleOrPermissionInput(&$updateData)
     {
-        if (is_string($input)) {
-            return explode(',', $input);
-        } elseif ($input == null || $input == '') {
-            return [];
-        } else {
-            return $input;
+        if (!isset($updateData['roles'])) {
+            $updateData['roles'] = [];
+        }
+        if (!isset($updateData['permissions'])) {
+            $updateData['permissions'] = [];
         }
     }
 }

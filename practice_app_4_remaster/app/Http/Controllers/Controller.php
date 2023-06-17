@@ -15,7 +15,7 @@ class Controller extends BaseController
     use AuthorizesRequests, ValidatesRequests;
     const DEFAULT_SEARCH_STRING = 'search?';
     const PER_PAGE = 5;
-    
+
     public function getSearchString($request)
     {
         $pathWithSearchParam = self::DEFAULT_SEARCH_STRING;
@@ -32,6 +32,14 @@ class Controller extends BaseController
     {
         return response()->json([
             'html' => $html,
+            'message' => $message,
+        ], $status);
+    }
+
+    public function responseWithData($data, $status = Response::HTTP_OK, $message = "OK")
+    {
+        return response()->json([
+            'data' => $data,
             'message' => $message,
         ], $status);
     }
@@ -53,7 +61,6 @@ class Controller extends BaseController
                 ], 500);
             } else {
                 report($e);
-                dd($e);
                 abort(500);
             }
         }

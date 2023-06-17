@@ -59,9 +59,8 @@ class UserRepository extends BaseRepository
             ->whereName($searchData['name'])
             ->whereEmail($searchData['email'])
             ->wherePermissionName($searchData['permission'])
-            ->whereRoleName($searchData['role'])->get();
-        return $this->customPaginate($users, $searchData['perPage'], null, [
-            'path' => $searchData['path']
-        ]);
+            ->whereRoleName($searchData['role']);
+        $users = $users->paginate($searchData['perPage'], ['*'], 'page');
+        return $users;
     }
 }
