@@ -30,32 +30,41 @@
                     </div>
                 </td>
                 <td class="align-middle text-center text-sm">
-                    {{ 'PARENT' }}
-
+                    @if ($category->parent)
+                        <div style="text-transform: none" class="badge bg-info">{{ $category->parent->name }}</div>
+                    @endif
                 </td>
                 <td class="align-middle text-center">
-                    {{ 'CHILD' }}
-                </td>
-                <td class="align-middle">
-                    <a rel="tooltip" class="btn btn-success btn-link button-edit" data-id="{{ $category->id }}"
-                        data-page-number={{ $categories->currentPage() }}
-                        data-url="{{ route('categories.edit', $category->id) }}">
-                        <i class="material-icons">edit</i>
-                        <div class="ripple-container"></div>
-                    </a>
+                    @foreach ($category->children as $index => $cat)
+                        @if ($index > 1)
+                            ...
+                        @break
+                    @endif
+                    <div style="text-transform: none" class="badge bg-info">{{ $cat->name }}</div>
+                @endforeach
+            </td>
+            <td class="align-middle">
+                <a rel="tooltip" class="btn btn-success btn-link button-edit" data-id="{{ $category->id }}"
+                    data-page-number={{ $categories->currentPage() }}
+                    data-url="{{ route('categories.edit', $category->id) }}"
+                    data-page-count-elements={{ $categories->count() }}>
+                    <i class="material-icons">edit</i>
+                    <div class="ripple-container"></div>
+                </a>
 
-                    <button type="button" class="btn btn-danger btn-link button-create"
-                        data-page-number={{ $categories->currentPage() }} data-id="{{ $category->id }}"
-                        data-url="{{ route('categories.destroy', $category->id) }}">
-                        <i class="material-icons">close</i>
-                        <div class="ripple-container"></div>
-                    </button>
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
+                <button type="button" class="btn btn-danger btn-link button-delete"
+                    data-page-number={{ $categories->currentPage() }} data-id="{{ $category->id }}"
+                    data-url="{{ route('categories.destroy', $category->id) }}"
+                    data-page-count-elements={{ $categories->count() }}>
+                    <i class="material-icons">close</i>
+                    <div class="ripple-container"></div>
+                </button>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
 </table>
 
 <div class="mt-3 mr-2 ml-2">
-    {{ $categories->links() }}
+{{ $categories->links() }}
 </div>

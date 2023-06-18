@@ -56,8 +56,8 @@ class CategoryRepository extends BaseRepository
 
     public function search($searchData)
     {
-        $categories = $this->model->query()->whereName($searchData['name'])->get();
-        $categories = $this->customPaginate($categories, $searchData['perPage'], null, ['path' => $searchData['path']]);
+        $categories = $this->model->query()->whereName($searchData['name']);
+        $categories = $categories->paginate($searchData['perPage']);
         return $categories;
     }
 }

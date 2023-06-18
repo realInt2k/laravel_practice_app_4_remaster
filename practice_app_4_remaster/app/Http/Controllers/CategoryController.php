@@ -46,7 +46,7 @@ class CategoryController extends Controller
     {
         $categories = $this->categoryService->getAllCategories();
         $category = $this->categoryService->getById($id);
-        $viewHtml = view('categories.edit', compact('category', 'categories'));
+        $viewHtml = view('pages.categories.edit', compact('category', 'categories'))->render();
         return $this->responseWithHtml($viewHtml);
     }
 
@@ -71,8 +71,7 @@ class CategoryController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        $viewHtml = view('pages.categories.show', compact('category'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($category);
     }
 
     public function destroy(Request $request, $id)

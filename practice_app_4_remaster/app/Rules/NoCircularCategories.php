@@ -38,7 +38,7 @@ class NoCircularCategories implements ValidationRule
         }
         if (in_array($value, $allChildIds)) {
             $fail(
-                'Cannot create circular category dependency. Category ' . $this->id . ' already includes: '
+                'Cannot create circular category dependency. This category already includes: '
                     . $strChildNames
             );
         }
