@@ -77,8 +77,20 @@ class User extends Authenticatable
         if (is_string($permissionNames)) {
             $permissionNames = explode('|', $permissionNames);
         }
-        $permissionNameCountCheck = $this->permissions()->wherein('name', $permissionNames)->count();
-        return $permissionNameCountCheck === count($permissionNames);
+        $result = true;
+        foreach ($permissionNames as $name) {
+            $indirectPermissionCountCheck = $this->roles()->whereHas(
+                'permissions',
+                fn ($query) =>
+                $query->where('name', $name)
+            )->count();
+            $directPermissionCountCheck = $this->permissions()->where('name', $name)->count();
+            if ($indirectPermissionCountCheck + $directPermissionCountCheck <= 0) {
+                $result = false;
+                break;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -216,9 +228,4 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = bcrypt($password);
-    }
 }

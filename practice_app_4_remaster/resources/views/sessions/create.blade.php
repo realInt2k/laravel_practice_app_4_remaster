@@ -21,10 +21,6 @@
                                     <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
                                         <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Sign in</h4>
                                         <div class="row mt-3">
-                                            <h6 class='text-white text-center'>
-                                                <span class="font-weight-normal">Email:</span> admin@material.com
-                                                <br>
-                                                <span class="font-weight-normal">Password:</span> secret</h6>
                                             <div class="col-2 text-center ms-auto">
                                                 <a class="btn btn-link px-3" href="javascript:;">
                                                     <i class="fa fa-facebook text-white text-lg"></i>
@@ -57,14 +53,14 @@
                                         @endif
                                         <div class="input-group input-group-outline mt-3">
                                             <label class="form-label">Email</label>
-                                            <input type="email" class="form-control" name="email" value="{{ 'admin@material.com' }}">
+                                            <input type="email" class="form-control" name="email">
                                         </div>
                                         @error('email')
                                         <p class='text-danger inputerror'>{{ $message }} </p>
                                         @enderror
                                         <div class="input-group input-group-outline mt-3">
                                             <label class="form-label">Password</label>
-                                            <input type="password" class="form-control" name="password" value='{{ 'secret'}}'>
+                                            <input type="password" class="form-control" name="password">
                                         </div>
                                         @error('password')
                                         <p class='text-danger inputerror'>{{ $message }} </p>

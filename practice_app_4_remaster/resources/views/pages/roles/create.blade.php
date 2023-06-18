@@ -2,7 +2,11 @@
     @csrf
     <div class="row">
         <div class="col-sm-1"></div>
-        <div class="col-sm-5">
+        @allowedToChangeRoleAndPermission()
+            <div class="col-sm-5">
+        @else
+            <div class="col-sm-10">
+        @endallowedToChangeRoleAndPermission
             <h3>
                 <small class="text-muted">Role details</small>
             </h3>
@@ -15,6 +19,7 @@
                 <input type="text" class="form-control" id="input-name" name="name" placeholder="name">
             </div>
         </div>
+        @allowedToChangeRoleAndPermission()
         <div class="col-sm-5">
             <h3>
                 <small class="text-muted">permissions</small>
@@ -25,6 +30,7 @@
                 @endforeach
             </select>
         </div>
+        @endallowedToChangeRoleAndPermission
         <div class="col-sm-1"></div>
     </div>
 </form>

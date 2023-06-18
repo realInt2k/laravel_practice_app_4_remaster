@@ -11,31 +11,24 @@ Route::prefix('/products')->group(function () {
             ->name('products.search');
 
         Route::get('/{id}/edit', [ProductController::class, 'edit'])
-            ->name('products.edit');
-
-        Route::put('/{id}/ajax/validate', [ProductController::class, 'updateAjaxValidation'])
-            ->name('products.update.ajax.validation');
-
-        Route::put('/{id}/ajax/', [ProductController::class, 'updateAjax'])
-            ->name('products.update.ajax');
+            ->name('products.edit')
+            ->middleware('permissionCheck:p_products-update');
 
         Route::post('/', [ProductController::class, 'store'])
-            ->name('products.store');
-
-        Route::post('/ajax/validate', [ProductController::class, 'storeAjaxValidation'])
-            ->name('products.store.ajax.validation');
+            ->name('products.store')
+            ->middleware('permissionCheck:p_products-store');
 
         Route::get('/create', [ProductController::class, 'create'])
-            ->name('products.create');
+            ->name('products.create')
+            ->middleware('permissionCheck:p_products-store');
 
         Route::put('/{id}', [ProductController::class, 'update'])
-            ->name('products.update');
+            ->name('products.update')
+            ->middleware('permissionCheck:p_products-update');
 
         Route::delete('/{id}', [ProductController::class, 'destroy'])
-            ->name('products.destroy');
-
-        Route::delete('/{id}/ajax', [ProductController::class, 'destroyAjax'])
-            ->name('products.destroy.ajax');
+            ->name('products.destroy')
+            ->middleware('permissionCheck:p_products-destroy');
 
         Route::get('/', [ProductController::class, 'index'])
             ->name('products.index');

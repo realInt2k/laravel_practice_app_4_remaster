@@ -23,8 +23,10 @@ class UserRepository extends BaseRepository
     public function saveNewUser($storeData)
     {
         $user = $this->create($storeData);
-        $user->syncRoles($storeData['roles']);
-        $user->syncPermissions($storeData['permissions']);
+        if (auth()->user()->isSuperAdmin()) {
+            $user->syncRoles($storeData['roles']);
+            $user->syncPermissions($storeData['permissions']);
+        }
         return $user;
     }
 
@@ -32,14 +34,11 @@ class UserRepository extends BaseRepository
     {
         /** @var User */
         $user = $this->update($updateData, $id);
-        $user->syncRoles($updateData['roles']);
-        $user->syncPermissions($updateData['permissions']);
+        if (auth()->user()->isSuperAdmin()) {
+            $user->syncRoles($updateData['roles']);
+            $user->syncPermissions($updateData['permissions']);
+        }
         return $user;
-    }
-
-    public function authUser(): User
-    {
-        return Auth::user();
     }
 
     public function destroy($id)

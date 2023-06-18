@@ -28,14 +28,18 @@ class RoleRepository extends BaseRepository
     public function saveNewRole(array $saveData)
     {
         $role = $this->create($saveData);
-        $role->syncPermissionIds($saveData['permissions']);
+        if (auth()->user()->isSuperAdmin()) {
+            $role->syncPermissionIds($saveData['permissions']);
+        }
         return $role;
     }
 
     public function updateRole($updateData, $id)
     {
         $role = $this->findOrFail($id);
-        $role->syncPermissionIds($updateData['permissions']);
+        if (auth()->user()->isSuperAdmin()) {
+            $role->syncPermissionIds($updateData['permissions']);
+        }
         $role->update($updateData);
         return $role;
     }

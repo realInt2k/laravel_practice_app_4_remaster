@@ -3,7 +3,11 @@
     @method('put')
     <div class="row">
         <div class="col-sm-1"></div>
-        <div class="col-sm-5">
+        @allowedToChangeRoleAndPermission()
+            <div class="col-sm-5">
+        @else
+            <div class="col-sm-10">
+        @endallowedToChangeRoleAndPermission
             <h3>
                 <small class="text-muted">User details</small>
             </h3>
@@ -36,28 +40,29 @@
                     placeholder="update password">
             </div>
         </div>
+        @allowedToChangeRoleAndPermission()
         <div class="col-sm-5">
             <h3>
                 <small class="text-muted">roles</small>
             </h3>
-            <select style="width: 100%" class="select2" multiple="multiple" name="roles[]">
-                @foreach ($roles as $role)
-                    <option {{ $user->hasRoleId($role->id) ? 'selected' : '' }} value="{{ $role->id }}">
-                        {{ $role->name }}</option>
-                @endforeach
-            </select>
-
+                <select style="width: 100%" class="select2" multiple="multiple" name="roles[]">
+                    @foreach ($roles as $role)
+                        <option {{ $user->hasRoleId($role->id) ? 'selected' : '' }} value="{{ $role->id }}">
+                            {{ $role->name }}</option>
+                    @endforeach
+                </select>
             <h3>
                 <small class="text-muted">permissions</small>
             </h3>
-            <select style="width: 100%" class="form-control select2" multiple="multiple" name="permissions[]">
-                @foreach ($permissions as $permission)
-                    <option {{ $user->hasPermissionId($permission->id) ? 'selected' : '' }}
-                        value="{{ $permission->id }}">
-                        {{ $permission->name }}</option>
-                @endforeach
-            </select>
+                <select style="width: 100%" class="form-control select2" multiple="multiple" name="permissions[]">
+                    @foreach ($permissions as $permission)
+                        <option {{ $user->hasPermissionId($permission->id) ? 'selected' : '' }}
+                            value="{{ $permission->id }}">
+                            {{ $permission->name }}</option>
+                    @endforeach
+                </select>
         </div>
+        @endallowedToChangeRoleAndPermission
         <div class="col-sm-1"></div>
     </div>
 </form>

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Product;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -23,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
-        Blade::if('canSeeExtraInfo', function () {
+        Blade::if('adminOnly', function () {
             /** @var User */
             $authUser = auth()->user();
             return
@@ -39,33 +42,39 @@ class AppServiceProvider extends ServiceProvider
                 ($authUser->isAdmin() && $authUser->hasPermissionNames($action));
         });
 
-        Blade::if('canManipulateRole', function (string $action, Role $role) {
+        Blade::if('canManipulateRole', function (string $action, Role | null $role = null) {
             /** @var User */
             $authUser = auth()->user();
-            if ($role->name == 'admin' || $role->name == 'super-admin') {
-                return $authUser->isSuperAdmin();
+            if ($role) {
+                if ($role->name == 'admin' || $role->name == 'super-admin') {
+                    return $authUser->isSuperAdmin();
+                }
             }
             return
                 $authUser->isSuperAdmin() ||
                 ($authUser->isAdmin() && $authUser->hasPermissionNames($action));
         });
 
-        Blade::if('canManipulateProduct', function (string $action, Product $product) {
+        Blade::if('canManipulateProduct', function (string $action, Product | null $product = null) {
             /** @var User */
             $authUser = auth()->user();
+            $authOwnProduct = $product ? $authUser->hasProduct($product->id) : true;
             return
                 $authUser->isSuperAdmin() ||
                 ($authUser->hasPermissionNames($action) && $authUser->isAdmin()) ||
-                ($authUser->hasPermissionNames($action) && $authUser->hasProduct($product->id));
+                ($authUser->hasPermissionNames($action) && $authOwnProduct);
         });
 
-        Blade::if('canManipulateUser', function (string $action, User $user) {
+        Blade::if('canManipulateUser', function (string $action, User | null $user = null) {
             /** @var User */
             $authUser = auth()->user();
             if ($authUser->isSuperAdmin()) {
                 return true;
             } else if ($authUser->isAdmin()) {
                 $checkPermission = $authUser->hasPermissionNames($action);
+                if(!$user) {
+                    return $checkPermission;
+                }
                 if ($user->isSuperAdmin()) {
                     return false;
                 } else if ($user->isAdmin()) {
@@ -74,6 +83,10 @@ class AppServiceProvider extends ServiceProvider
                     return $checkPermission;
                 }
             } else {
+                // non-admin can only edit itself.
+                if(!$user) {
+                    return false;
+                }
                 return $user->id === $authUser->id;
             }
         });

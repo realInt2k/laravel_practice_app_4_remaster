@@ -1,8 +1,10 @@
+@canManipulateCategory('categories-store')
 <div class=" me-3 my-3 text-end">
     <a class="btn bg-gradient-dark mb-0 button-create" data-url="{{ route('categories.create') }}"><i
             class="material-icons text-sm">add</i>&nbsp;&nbsp;Create New
         Category</a>
 </div>
+@endcanManipulateCategory
 <div id="page-info" data-page-number={{ $categories->currentPage() }} data-page-count-elements={{ $categories->count() }}
     hidden>
 </div>
@@ -54,26 +56,24 @@
             </td>
             <td class="align-middle">
                 <div class="btn-group">
+                    @canManipulateCategory('categories-update')
                     <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit"
-                        data-id="{{ $category->id }}" data-page-number={{ $categories->currentPage() }}
-                        data-url="{{ route('categories.edit', $category->id) }}"
-                        data-page-count-elements={{ $categories->count() }}>
+                        data-id="{{ $category->id }}" data-url="{{ route('categories.edit', $category->id) }}">
                         <span class="material-icons" style="font-size: 150%;">edit</span>
                         <div class="ripple-container"></div>
                     </a>
+                    @endcanManipulateCategory
 
+                    @canManipulateCategory('categories-destroy')
                     <button type="button" class="btn btn-danger btn-link btn-sm button-delete"
-                        data-page-number={{ $categories->currentPage() }} data-id="{{ $category->id }}"
-                        data-url="{{ route('categories.destroy', $category->id) }}"
-                        data-page-count-elements={{ $categories->count() }}>
+                        data-id="{{ $category->id }}" data-url="{{ route('categories.destroy', $category->id) }}">
                         <span class="material-icons" style="font-size: 150%;">close</span>
                         <div class="ripple-container"></div>
                     </button>
+                    @endcanManipulateCategory
 
                     <a rel="tooltip" class="btn btn-info btn-link btn-sm btn-sm button-show"
-                        data-id="{{ $category->id }}" data-page-number={{ $categories->currentPage() }}
-                        data-page-count-elements={{ $categories->count() }}
-                        data-url="{{ route('categories.show', $category->id) }}">
+                        data-id="{{ $category->id }}" data-url="{{ route('categories.show', $category->id) }}">
                         <span class="material-icons" style="font-size: 150%;">search</span>
                         <div class="ripple-container"></div>
                     </a>

@@ -2,9 +2,13 @@
     @csrf
     <div class="row">
         <div class="col-sm-1"></div>
-        <div class="col-sm-5">
+        @allowedToChangeRoleAndPermission()
+            <div class="col-sm-5">
+        @else
+            <div class="col-sm-10">
+        @endallowedToChangeRoleAndPermission
             <h3>
-                <small class="text-muted">Details</small>
+                <small class="text-muted">User Details</small>
             </h3>
             <div>
                 Name
@@ -35,6 +39,7 @@
                     placeholder="select password">
             </div>
         </div>
+        @allowedToChangeRoleAndPermission()
         <div class="col-sm-5">
             <h3>
                 <small class="text-muted">roles</small>
@@ -56,6 +61,7 @@
                 @endforeach
             </select>
         </div>
+        @endallowedToChangeRoleAndPermission
         <div class="col-sm-1"></div>
     </div>
 </form>
