@@ -19,18 +19,38 @@
             userAction.getTable();
         }));
 
-        $("#form-search").on("submit", function(e) {
+        $("#form-search").on("submit", function (e) {
             e.preventDefault();
             return false;
         });
+
+        $(document).off("submit", "#form-data").on("submit", "#form-data", function (e) {
+            e.preventDefault();
+            return false;
+        })
+
+        $(document).off("click", ".button-create").on("click", ".button-create", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const url = $(this).data("url");
+            userAction.getPageInfo();
+            userAction.sendAjax({ url: url, method: 'get', data: {} })
+                .done(function (response) {
+                    userAction.openModal({ populateHtml: response.html });
+                })
+                .fail(function (response) {
+                    if (userAction.debug) {
+                        console.log(response);
+                    }
+                });
+        })
 
         $(document).off("click", ".button-edit").on("click", ".button-edit", function (e) {
             e.preventDefault();
             e.stopPropagation();
             const id = $(this).data("id");
             const url = $(this).data("url");
-            userAction.pageNumber = $(this).data("page-number");
-            userAction.pageCountElements = $(this).data("page-count-elements");
+            userAction.getPageInfo();
             userAction.sendAjax({ url: url, method: 'get', data: {} })
                 .done(function (response) {
                     userAction.openModal({ populateHtml: response.html });
@@ -47,8 +67,7 @@
             e.stopPropagation();
             const id = $(this).data("id");
             const url = $(this).data("url");
-            userAction.pageNumber = $(this).data("page-number");
-            userAction.pageCountElements = $(this).data("page-count-elements");
+            userAction.getPageInfo();
             userAction.sendAjax({ url: url, method: 'get', data: {} })
                 .done(function (response) {
                     userAction.show({ populateHtml: response.html });

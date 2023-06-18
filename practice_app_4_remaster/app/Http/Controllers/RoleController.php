@@ -54,8 +54,7 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         $role = $this->roleService->store($request);
-        $viewHtml = view('pages.roles.show', compact('role'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($role);
     }
 
     public function edit(Request $request, $id)

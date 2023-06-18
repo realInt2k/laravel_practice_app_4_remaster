@@ -31,9 +31,9 @@ class CategoryRepository extends BaseRepository
         return array_merge([$id], $childIds);
     }
 
-    public function saveNewCategory($request)
+    public function saveNewCategory($dataStore)
     {
-        $category = $this->create($request->all());
+        $category = $this->create($dataStore);
         return $category;
     }
 

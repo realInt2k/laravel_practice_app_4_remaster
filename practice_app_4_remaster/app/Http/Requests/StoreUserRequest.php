@@ -29,8 +29,6 @@ class StoreUserRequest extends FormRequest
                 'unique:users,email',
                 new EmailDeha()
             ],
-            'roles' => 'present',
-            'permissions' => 'present',
             'password' => 'required'
         ];
     }

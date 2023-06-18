@@ -53,15 +53,14 @@ class UserController extends Controller
     {
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
-        return view('pages.users.create', compact('roles', 'permissions'));
+        $viewHtml = view('pages.users.create', compact('roles', 'permissions'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function store(StoreUserRequest $request)
     {
         $user = $this->userService->store($request);
-
-        $viewHtml = view('users.store', compact('user'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($user);
     }
 
     public function edit(Request $request, $id)

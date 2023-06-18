@@ -12,7 +12,7 @@ Route::prefix('/roles')->group(function () {
             ->name('roles.search');
 
         Route::get('/create', [RoleController::class, 'create'])
-            ->name('roles.create')->middleware('roleRoutePermission:p_roles-store');
+            ->name('roles.create');
 
         Route::get('/', [RoleController::class, 'index'])
             ->name('roles.index');

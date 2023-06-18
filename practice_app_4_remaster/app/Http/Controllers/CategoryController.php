@@ -53,15 +53,14 @@ class CategoryController extends Controller
     public function create(Request $request)
     {
         $categories = $this->categoryService->getAllCategories();
-        $viewHtml = view('categories.create', compact('categories'));
+        $viewHtml = view('pages.categories.create', compact('categories'))->render();
         return $this->responseWithHtml($viewHtml);
     }
 
     public function store(StoreCategoryRequest $request)
     {
         $category = $this->categoryService->store($request);
-        $viewHtml = view('pages.categories.show', compact('category'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($category);
     }
 
     public function update(UpdateCategoryRequest $request, $id)

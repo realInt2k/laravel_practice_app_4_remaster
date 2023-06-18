@@ -66,8 +66,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $product = $this->productService->store($request);
-        $viewHtml = view('pages.products.show', compact('product'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($product);
     }
 
     public function update(UpdateProductRequest $request, $id)

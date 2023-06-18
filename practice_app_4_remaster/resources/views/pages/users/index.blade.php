@@ -41,11 +41,7 @@
                                         <strong>User table</strong>
                                     </div>
                             </div>
-                            <div class=" me-3 my-3 text-end">
-                                <a class="btn bg-gradient-dark mb-0" href="javascript:;"><i
-                                        class="material-icons text-sm">add</i>&nbsp;&nbsp;Add New
-                                    User</a>
-                            </div>
+                            
                             <div class="card-body px-0 pb-2">
                                 <div class="table-responsive p-0">
                                     <div id="table-data"></div>

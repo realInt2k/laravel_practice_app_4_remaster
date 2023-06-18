@@ -1,3 +1,11 @@
+<div class=" me-3 my-3 text-end">
+    <a class="btn bg-gradient-dark mb-0 button-create" data-url="{{ route('categories.create') }}"><i
+            class="material-icons text-sm">add</i>&nbsp;&nbsp;Create New
+        Category</a>
+</div>
+<div id="page-info" data-page-number={{ $categories->currentPage() }} data-page-count-elements={{ $categories->count() }}
+    hidden>
+</div>
 <table class="table align-items-center mb-0">
     <thead>
         <tr>
@@ -36,18 +44,18 @@
                 </td>
                 <td class="align-middle text-center">
                     @foreach ($category->children as $index => $cat)
-                        @if($index > 1) 
+                        @if ($index > 1)
                             <br>
-                            {{count($category->children) - $index }} more...
-                            @break
-                        @endif
-                        <div style="text-transform: none" class="badge bg-info">{{ $cat->name }}</div>
-                    @endforeach
+                            {{ count($category->children) - $index }} more...
+                        @break
+                    @endif
+                    <div style="text-transform: none" class="badge bg-info">{{ $cat->name }}</div>
+                @endforeach
             </td>
             <td class="align-middle">
                 <div class="btn-group">
-                    <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit" data-id="{{ $category->id }}"
-                        data-page-number={{ $categories->currentPage() }}
+                    <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit"
+                        data-id="{{ $category->id }}" data-page-number={{ $categories->currentPage() }}
                         data-url="{{ route('categories.edit', $category->id) }}"
                         data-page-count-elements={{ $categories->count() }}>
                         <span class="material-icons" style="font-size: 150%;">edit</span>
@@ -62,8 +70,9 @@
                         <div class="ripple-container"></div>
                     </button>
 
-                    <a rel="tooltip" class="btn btn-info btn-link btn-sm btn-sm button-show" data-id="{{ $category->id }}"
-                        data-page-number={{ $categories->currentPage() }} data-page-count-elements={{ $categories->count() }}
+                    <a rel="tooltip" class="btn btn-info btn-link btn-sm btn-sm button-show"
+                        data-id="{{ $category->id }}" data-page-number={{ $categories->currentPage() }}
+                        data-page-count-elements={{ $categories->count() }}
                         data-url="{{ route('categories.show', $category->id) }}">
                         <span class="material-icons" style="font-size: 150%;">search</span>
                         <div class="ripple-container"></div>

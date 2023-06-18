@@ -7,6 +7,12 @@ userAction = (function () {
 
     const DELAY_TIMEOUT = 500;
 
+    modules.getPageInfo = function () {
+        const pageInfo = $("#page-info");
+        userAction.pageNumber = pageInfo.data("page-number");
+        userAction.pageCountElements = pageInfo.data("page-count-elements");
+    }
+
     modules.getTableUrl = function (action = null) {
         if (action == "delete" && userAction.pageCountElements == 1 && userAction.pageNumber > 1) {
             userAction.pageNumber -= 1;

@@ -25,15 +25,8 @@ class CategoryService extends BaseService
 
     public function store($request)
     {
-        DB::beginTransaction();
-        try {
-            $category = $this->categoryRepo->saveNewCategory($request);
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot store category data");
-        }
-        DB::commit();
+        $dataStore = $request->all();
+        $category = $this->categoryRepo->saveNewCategory($dataStore);
         return $category;
     }
 
