@@ -53,6 +53,13 @@
 </head>
 
 <body class="{{ $bodyClass }}">
+    <!-- Modal -->
+    @include('components.modals.form-modal', ['title' => ''])
+    <!-- End Modal -->
+
+    <!-- Show Modal -->
+    @include('components.modals.show-modal', ['title' => ''])
+    <!-- End Show Modal -->
     <script>
         (function(yourcode) {
             yourcode(window.jQuery, window, document);

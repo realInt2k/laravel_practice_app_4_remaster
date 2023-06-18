@@ -4,9 +4,6 @@
         <!-- Navbar -->
         <x-navbars.navs.auth titlePage="Role Management"></x-navbars.navs.auth>
         <!-- End Navbar -->
-        <!-- Modal -->
-        @include('components.modals.form-modal', ['title' => ''])
-        <!-- End Modal -->
         <div class="container-fluid py-4">
             <div class="row">
                 <form class="row" id="form-search" action="{{ route('roles.search') }}" method="GET">
@@ -56,6 +53,3 @@
     <x-plugins></x-plugins>
 
 </x-layout>
-<script
-    src="{{ asset('assets/models/common/domTrigger.js') }}?v={{ filemtime(public_path('assets/models/common/domTrigger.js')) }}">
-</script>

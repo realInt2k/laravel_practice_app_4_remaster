@@ -4,9 +4,6 @@
         <!-- Navbar -->
         <x-navbars.navs.auth titlePage="User Management"></x-navbars.navs.auth>
         <!-- End Navbar -->
-        <!-- Modal -->
-        @include('components.modals.form-modal', ['title' => ''])
-        <!-- End Modal -->
         <div class="container-fluid py-4">
             <div class="row">
                 <form class="row" id="form-search" action="{{ route('users.search') }}" method="GET">

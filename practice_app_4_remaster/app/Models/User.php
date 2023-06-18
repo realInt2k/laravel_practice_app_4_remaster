@@ -43,6 +43,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class, 'user_permission', 'user_id', 'permission_id');
     }
 
+    public function hasRoleId($roleId): bool
+    {
+        return $this->roles->where('id', $roleId)->count() > 0;
+    }
+
+    public function hasPermissionId($permId): bool
+    {
+        return $this->permissions->where('id', $permId)->count() > 0;
+    }
+
     /**
      * check if user has all the role names or not
      * @explainParam $roleNames: string or array (i.e: "role1|role2" or [role1, role2])
@@ -206,10 +216,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);
     }
-
 }

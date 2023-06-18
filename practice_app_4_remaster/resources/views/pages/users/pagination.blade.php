@@ -1,4 +1,4 @@
-<table class="table align-items-center mb-0">
+<table class="table align-items-center mb-0 table-hover">
     <thead>
         <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -37,27 +37,39 @@
                     </p>
                 </td>
                 <td class="align-middle text-center">
-                    @foreach ($user->roles as $role)
-                        <span class="text-secondary text-xs font-weight-bold">{{ $role->name }}</span>
+                    @foreach ($user->roles as $index => $role)
+                        @if($index > 1) 
+                            <br>
+                            {{count($user->roles) - $index }} more...
+                            @break
+                        @endif
+                        <span class="badge bg-primary" style="text-transform: none">{{ $role->name }}</span>
                     @endforeach
                 </td>
                 <td class="align-middle text-center">
                     <span class="text-secondary text-xs font-weight-bold">22/03/18</span>
                 </td>
                 <td class="align-middle">
-                    <a rel="tooltip" class="btn btn-success btn-link button-edit" data-id="{{ $user->id }}"
-                        data-page-number={{ $users->currentPage() }} data-page-count-elements={{ $users->count() }}
-                        data-url="{{ route('users.edit', $user->id) }}">
-                        <i class="material-icons">edit</i>
-                        <div class="ripple-container"></div>
-                    </a>
-
-                    <button type="button" class="btn btn-danger btn-link button-delete"
-                        data-page-number={{ $users->currentPage() }} data-id="{{ $user->id }}"
-                        data-page-count-elements={{ $users->count() }} data-url="{{ route('users.destroy', $user->id) }}">
-                        <i class="material-icons">close</i>
-                        <div class="ripple-container"></div>
-                    </button>
+                    <div class="btn-group">
+                        <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit" data-id="{{ $user->id }}"
+                            data-page-number={{ $users->currentPage() }} data-page-count-elements={{ $users->count() }}
+                            data-url="{{ route('users.edit', $user->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">edit</span>
+                            <div class="ripple-container"></div>
+                        </a>
+                        <button type="button" class="btn btn-danger btn-link btn-sm button-delete"
+                            data-page-number={{ $users->currentPage() }} data-id="{{ $user->id }}"
+                            data-page-count-elements={{ $users->count() }} data-url="{{ route('users.destroy', $user->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">close</span>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <a rel="tooltip" class="btn btn-info btn-link btn-sm button-show" data-id="{{ $user->id }}"
+                            data-page-number={{ $users->currentPage() }} data-page-count-elements={{ $users->count() }}
+                            data-url="{{ route('users.show', $user->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">search</span>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </div>
                 </td>
             </tr>
         @endforeach

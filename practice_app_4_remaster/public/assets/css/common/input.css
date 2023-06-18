@@ -10,6 +10,9 @@ input:focus {
     background-color: rgba(212, 25, 0, 0.212) !important;
 }
 
+.button-show:hover {
+    cursor: pointer !important;
+}
 /* .select2 {
     font-size: 0.8rem !important;
 }

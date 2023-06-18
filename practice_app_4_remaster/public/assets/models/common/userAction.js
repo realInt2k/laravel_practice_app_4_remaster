@@ -24,6 +24,15 @@ userAction = (function () {
         }
     }
 
+    modules.show = function ({ modalId = "#show-modal", populateHtml = "" } = {}) {
+        if (userAction.debug) {
+            console.log("open modal", modalId);
+        }
+        const modal = $(modalId);
+        $(modalId + "-body").html(populateHtml);
+        modal.modal("show");
+    }
+
     modules.openModal = function ({ modalId = "#form-modal", populateHtml = "" } = {}) {
         if (userAction.debug) {
             console.log("open modal", modalId);

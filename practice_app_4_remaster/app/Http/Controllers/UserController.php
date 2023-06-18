@@ -45,14 +45,15 @@ class UserController extends Controller
     public function show(Request $request, $id)
     {
         $user = $this->userService->getById($id);
-        return view('users.show', compact('user'));
+        $viewHtml = view('pages.users.show', compact('user'))->render();
+        return $this->responseWithHtml($viewHtml);
     }
 
     public function create()
     {
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
-        return view('users.create', compact('roles', 'permissions'));
+        return view('pages.users.create', compact('roles', 'permissions'));
     }
 
     public function store(StoreUserRequest $request)
@@ -80,7 +81,6 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        // $viewHtml = view('pages.users.show', compact('user'));
         return $this->responseWithData($user);
     }
 

@@ -19,8 +19,14 @@
             userAction.getTable();
         }));
 
+        $("#form-search").on("submit", function(e) {
+            e.preventDefault();
+            return false;
+        });
+
         $(document).off("click", ".button-edit").on("click", ".button-edit", function (e) {
             e.preventDefault();
+            e.stopPropagation();
             const id = $(this).data("id");
             const url = $(this).data("url");
             userAction.pageNumber = $(this).data("page-number");
@@ -36,8 +42,27 @@
                 });
         });
 
+        $(document).off("click", ".button-show").on("click", ".button-show", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = $(this).data("id");
+            const url = $(this).data("url");
+            userAction.pageNumber = $(this).data("page-number");
+            userAction.pageCountElements = $(this).data("page-count-elements");
+            userAction.sendAjax({ url: url, method: 'get', data: {} })
+                .done(function (response) {
+                    userAction.show({ populateHtml: response.html });
+                })
+                .fail(function (response) {
+                    if (userAction.debug) {
+                        console.log(response);
+                    }
+                });
+        });
+
         $(document).off("click", ".button-delete").on("click", ".button-delete", function (e) {
             e.preventDefault();
+            e.stopPropagation();
             notification.confirm().then((result) => {
                 if (!result.isConfirmed) {
                     return;

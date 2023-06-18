@@ -29,28 +29,38 @@
                 <td>
                     @foreach ($role->permissions as $index => $permission)
                         @if($index > 1) 
-                            ...
+                            <br>
+                            {{count($role->permissions) - $index }} more...
                             @break
                         @endif
                         <div style="text-transform: none" class="badge bg-info">{{ $permission->name }}</div>
                     @endforeach
                 </td>
                 <td class="align-middle">
-                    <a rel="tooltip" class="btn btn-success btn-link button-edit" data-id="{{ $role->id }}"
-                        data-page-number={{ $roles->currentPage() }} 
-                        data-page-count-elements={{ $roles->count() }}
-                        data-url="{{ route('roles.edit', $role->id) }}">
-                        <i class="material-icons">edit</i>
-                        <div class="ripple-container"></div>
-                    </a>
+                    <div class="btn-group">
+                        <a rel="tooltip" class="btn btn-success btn-sm btn-link button-edit" data-id="{{ $role->id }}"
+                            data-page-number={{ $roles->currentPage() }} 
+                            data-page-count-elements={{ $roles->count() }}
+                            data-url="{{ route('roles.edit', $role->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">edit</span>
+                            <div class="ripple-container"></div>
+                        </a>
 
-                    <button type="button" class="btn btn-danger btn-link button-delete"
-                        data-page-number={{ $roles->currentPage() }} data-id="{{ $role->id }}"
-                        data-page-count-elements={{ $roles->count() }}
-                        data-url="{{ route('roles.destroy', $role->id) }}">
-                        <i class="material-icons">close</i>
-                        <div class="ripple-container"></div>
-                    </button>
+                        <button type="button" class="btn btn-danger btn-sm btn-link button-delete"
+                            data-page-number={{ $roles->currentPage() }} data-id="{{ $role->id }}"
+                            data-page-count-elements={{ $roles->count() }}
+                            data-url="{{ route('roles.destroy', $role->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">close</span>
+                            <div class="ripple-container"></div>
+                        </button>
+
+                        <a rel="tooltip" class="btn btn-info btn-link btn-sm button-show" data-id="{{ $role->id }}"
+                            data-page-number={{ $roles->currentPage() }} data-page-count-elements={{ $roles->count() }}
+                            data-url="{{ route('roles.show', $role->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">search</span>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </div>
                 </td>
             </tr>
         @endforeach

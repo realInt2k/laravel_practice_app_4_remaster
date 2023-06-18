@@ -33,7 +33,12 @@
                     </div>
                 </td>
                 <td class="align-middle text-center text-sm">
-                    @foreach ($product->categories as $category)
+                    @foreach ($product->categories as $index => $category)
+                        @if($index > 1) 
+                            <br>
+                            {{count($product->categories) - $index }} more...
+                            @break
+                        @endif
                         <div class="badge bg-info" style="text-transform: none">{{ $category->name }}</div>
                     @endforeach
                 </td>
@@ -46,21 +51,30 @@
                         alt="product image" class="rounded mb-2" {{ $product->image_path ? '' : 'hidden' }} height="100px" />
                 </td>
                 <td class="align-middle">
-                    <a rel="tooltip" class="btn btn-success btn-link button-edit" data-id="{{ $product->id }}"
-                        data-page-number={{ $products->currentPage() }}
-                        data-page-count-elements={{ $products->count() }}
-                        data-url="{{ route('products.edit', $product->id) }}">
-                        <i class="material-icons">edit</i>
-                        <div class="ripple-container"></div>
-                    </a>
+                    <div class="btn-group">
+                        <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit" data-id="{{ $product->id }}"
+                            data-page-number={{ $products->currentPage() }}
+                            data-page-count-elements={{ $products->count() }}
+                            data-url="{{ route('products.edit', $product->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">edit</span>
+                            <div class="ripple-container"></div>
+                        </a>
 
-                    <button type="button" class="btn btn-danger btn-link button-delete"
-                        data-page-number={{ $products->currentPage() }} data-id="{{ $product->id }}"
-                        data-page-count-elements={{ $products->count() }}
-                        data-url="{{ route('products.destroy', $product->id) }}">
-                        <i class="material-icons">close</i>
-                        <div class="ripple-container"></div>
-                    </button>
+                        <button type="button" class="btn btn-danger btn-sm btn-link button-delete"
+                            data-page-number={{ $products->currentPage() }} data-id="{{ $product->id }}"
+                            data-page-count-elements={{ $products->count() }}
+                            data-url="{{ route('products.destroy', $product->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">close</span>
+                            <div class="ripple-container"></div>
+                        </button>
+
+                        <a rel="tooltip" class="btn btn-info btn-link btn-sm button-show" data-id="{{ $product->id }}"
+                            data-page-number={{ $products->currentPage() }} data-page-count-elements={{ $products->count() }}
+                            data-url="{{ route('products.show', $product->id) }}">
+                            <span class="material-icons" style="font-size: 150%;">search</span>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </div>
                 </td>
             </tr>
         @endforeach
