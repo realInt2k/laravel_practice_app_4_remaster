@@ -87,8 +87,7 @@
                     return;
                 }
                 const url = $(this).data("url");
-                userAction.pageNumber = $(this).data("page-number");
-                userAction.pageCountElements = $(this).data("page-count-elements");
+                userAction.getPageInfo();
                 const getTableUrl = userAction.getTableUrl("delete");
                 userAction.sendAjax({
                     url: url, method: 'delete', data: {
@@ -141,6 +140,7 @@
                     }
                 });
         })
+        
 
         $(document).off("click", ".page-link").on("click", ".page-link", function (e) {
             e.preventDefault();

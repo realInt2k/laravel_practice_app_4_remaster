@@ -5,6 +5,14 @@ namespace App\Routes;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
+Route::middleware('auth')->group(function () {
+    Route::post('user-profile', [UserController::class, 'updateProfile'])
+        ->name('user-profile.update');
+    Route::get('user-profile', function () {
+        return view('pages.users.user-profile');
+    })->name('user-profile');
+});
+
 Route::prefix('/users')->group(function () {
     Route::middleware('auth')->middleware('permissionCheck:r_admin|r_super-admin')
         ->group(function () {

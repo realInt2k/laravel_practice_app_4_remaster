@@ -93,46 +93,13 @@ class User extends Authenticatable
         return $result;
     }
 
-    /**
-     * return an array of role ids
-     * @return array
-     */
-    public function getRoleIds(): array
+    public function getAllPermissionNames(): array
     {
-        $ids = $this->roles()->pluck('id')->toArray();
-        return $ids;
-    }
-
-    /**
-     * return an array of role names
-     * @return array
-     */
-    public function getRoleNames(): array
-    {
-        $roleNames = $this->roles()->pluck('name')->toArray();
-        return $roleNames;
-    }
-
-    /**
-     * return an array of permission ids
-     * @return array
-     */
-    public function getPermissionIds(): array
-    {
-        return $this->permissions->pluck('id')->toArray();
-    }
-
-    /**
-     * return an array of permission names
-     * @return array
-     */
-    public function getPermissionNames(): array
-    {
-        $permissionIds = $this->getPermissionIds();
-        $permissionNames = Permission::wherein('id', $permissionIds)
-            ->pluck('name')
-            ->toArray();
-        return $permissionNames;
+        $result = $this->permissions->pluck('name')->toArray();
+        foreach ($this->roles as $role) {
+            $result = array_merge($result, $role->permissions->pluck('name')->toArray());
+        }
+        return array_unique($result);
     }
 
     public function scopeWithRolesAndPermissions($query)

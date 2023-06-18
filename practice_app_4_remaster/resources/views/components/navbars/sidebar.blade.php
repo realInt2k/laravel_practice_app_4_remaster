@@ -8,7 +8,7 @@
             aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0 d-flex text-wrap align-items-center" href=" {{ route('user-profile') }} ">
             <img src="{{ asset('assets') }}/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
-            <span class="ms-2 font-weight-bold text-white">Admin</span>
+            <span class="ms-2 font-weight-bold text-white">Uni Mana</span>
         </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">

@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 
 class UserService extends BaseService
 {
@@ -33,7 +31,7 @@ class UserService extends BaseService
         return $this->userRepo->findOrFail($id);
     }
 
-    public function store(StoreUserRequest $request)
+    public function store(Request $request)
     {
         DB::beginTransaction();
         try {
@@ -49,7 +47,7 @@ class UserService extends BaseService
         return $user;
     }
 
-    public function update(UpdateUserRequest $request, $id)
+    public function update(Request $request, $id, $isProfile = false)
     {
         DB::beginTransaction();
         try {
@@ -61,7 +59,11 @@ class UserService extends BaseService
                 $updateData['password'] = Hash::make($updateData['password']);
             }
             $this->extractRoleOrPermissionInput($updateData);
-            $user = $this->userRepo->updateUser($updateData, $id);
+            if($isProfile) {
+                $user = $this->userRepo->updateProfile($updateData, $id);
+            } else {
+                $user = $this->userRepo->updateUser($updateData, $id);
+            }
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e);

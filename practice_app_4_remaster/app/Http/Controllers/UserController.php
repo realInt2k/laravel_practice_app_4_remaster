@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use App\Services\PermissionService;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdateProfileRequest;
 
 class UserController extends Controller
 {
@@ -71,6 +72,17 @@ class UserController extends Controller
 
         $viewHtml = view('pages.users.edit', compact('user', 'roles', 'permissions'))->render();
         return $this->responseWithHtml($viewHtml);
+    }
+
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        $id = auth()->user()->id;
+        try {
+            $user = $this->userService->update($request, $id, true);
+        } catch (Exception $e) {
+            return $this->responseWhenException($request, $e);
+        }
+        return $this->responseWithData($user);
     }
 
     public function update(UpdateUserRequest $request, $id)

@@ -20,11 +20,28 @@
                     </div>
                     <div class="col-auto my-auto">
                         <div class="h-100">
-                            <h5 class="mb-1">
+                            <h5 class="mb-1" id="profile-name">
                                 {{ auth()->user()->name }}
                             </h5>
+                            <span class="text-primary h6">Roles:</span>
                             <p class="mb-0 font-weight-normal text-sm">
-                                CEO / Co-Founder
+                                @if (count(auth()->user()->roles) > 0)
+                                    @foreach (auth()->user()->roles as $role)
+                                        <span class="badge bg-primary"> {{ $role->name }} </span>
+                                    @endforeach
+                                @else
+                                    none
+                                @endif
+                            </p>
+                            <span class="text-primary h6">All permissions:</span>
+                            <p class="mb-0 font-weight-normal text-sm">
+                                @if (count(auth()->user()->getAllPermissionNames()) > 0)
+                                    @foreach (auth()->user()->getAllPermissionNames() as $name)
+                                        <span class="badge bg-info"> {{ $name }} </span>
+                                    @endforeach
+                                @else
+                                    none
+                                @endif
                             </p>
                         </div>
                     </div>
@@ -39,80 +56,84 @@
                     </div>
                     <div class="card-body p-3">
                         @if (session('status'))
-                        <div class="row">
-                            <div class="alert alert-success alert-dismissible text-white" role="alert">
-                                <span class="text-sm">{{ Session::get('status') }}</span>
-                                <button type="button" class="btn-close text-lg py-3 opacity-10"
-                                    data-bs-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                            <div class="row">
+                                <div class="alert alert-success alert-dismissible text-white" role="alert">
+                                    <span class="text-sm">{{ Session::get('status') }}</span>
+                                    <button type="button" class="btn-close text-lg py-3 opacity-10"
+                                        data-bs-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                         @endif
                         @if (Session::has('demo'))
-                                <div class="row">
-                                    <div class="alert alert-danger alert-dismissible text-white" role="alert">
-                                        <span class="text-sm">{{ Session::get('demo') }}</span>
-                                        <button type="button" class="btn-close text-lg py-3 opacity-10"
-                                            data-bs-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                </div>
-                        @endif
-                        <form method='POST' action='{{ route('user-profile') }}'>
-                            @csrf
                             <div class="row">
-                                
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Email address</label>
-                                    <input type="email" name="email" class="form-control border border-2 p-2" value='{{ old('email', auth()->user()->email) }}'>
-                                    @error('email')
-                                <p class='text-danger inputerror'>{{ $message }} </p>
-                                @enderror
-                                </div>
-                                
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" name="name" class="form-control border border-2 p-2" value='{{ old('name', auth()->user()->name) }}'>
-                                    @error('name')
-                                <p class='text-danger inputerror'>{{ $message }} </p>
-                                @enderror
-                                </div>
-                               
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Phone</label>
-                                    <input type="number" name="phone" class="form-control border border-2 p-2" value='{{ old('phone', auth()->user()->phone) }}'>
-                                    @error('phone')
-                                    <p class='text-danger inputerror'>{{ $message }} </p>
-                                    @enderror
-                                </div>
-                                
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Location</label>
-                                    <input type="text" name="location" class="form-control border border-2 p-2" value='{{ old('location', auth()->user()->location) }}'>
-                                    @error('location')
-                                    <p class='text-danger inputerror'>{{ $message }} </p>
-                                    @enderror
-                                </div>
-                                
-                                <div class="mb-3 col-md-12">
-                                    <label for="floatingTextarea2">About</label>
-                                    <textarea class="form-control border border-2 p-2"
-                                        placeholder=" Say something about yourself" id="floatingTextarea2" name="about"
-                                        rows="4" cols="50">{{ old('about', auth()->user()->about) }}</textarea>
-                                        @error('about')
-                                        <p class='text-danger inputerror'>{{ $message }} </p>
-                                        @enderror
+                                <div class="alert alert-danger alert-dismissible text-white" role="alert">
+                                    <span class="text-sm">{{ Session::get('demo') }}</span>
+                                    <button type="button" class="btn-close text-lg py-3 opacity-10"
+                                        data-bs-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             </div>
-                            <button type="submit" class="btn bg-gradient-dark">Submit</button>
+                        @endif
+                        <form method='POST' action='{{ route('user-profile.update') }}' id="form-data"
+                            data-method="post">
+                            @csrf
+                            <div class="row">
+
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label">Email address</label>
+                                    <input type="email" name="email" class="form-control border border-2 p-2"
+                                        value='{{ old('email', auth()->user()->email) }}' id="input-email">
+                                    <p class='text-danger error' id="error-email"></p>
+                                </div>
+
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" name="name" class="form-control border border-2 p-2"
+                                        value='{{ old('name', auth()->user()->name) }}' id="input-name">
+                                    <p class='text-danger error' id="error-name"></p>
+                                </div>
+
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label">Phone</label>
+                                    <input type="number" name="phone" class="form-control border border-2 p-2"
+                                        value='{{ old('phone', auth()->user()->phone) }}' id="input-phone">
+                                    <p class='text-danger error' id="error-phone"></p>
+                                </div>
+
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" name="location" class="form-control border border-2 p-2"
+                                        value='{{ old('location', auth()->user()->location) }}' id="input-location">
+                                    <p class='text-danger error' id="error-location"></p>
+                                </div>
+
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label">Update your password</label>
+                                    <input type="text" name="password" class="form-control border border-2 p-2"
+                                        id="input-password">
+                                    <p class='text-danger error' id="error-password"></p>
+                                </div>
+
+                                <div class="mb-3 col-md-12">
+                                    <label for="floatingTextarea2">About</label>
+                                    <textarea class="form-control border border-2 p-2" placeholder=" Say something about yourself" id="floatingTextarea2"
+                                        name="about" rows="4" cols="50" id="input-about">{{ old('about', auth()->user()->about) }}</textarea>
+                                    <p class='text-danger error' id="error-about"></p>
+                                </div>
+                            </div>
+                            <button type="submit"
+                                class="btn bg-gradient-dark button-update profile-button-confirm">Submit</button>
                         </form>
 
                     </div>
                 </div>
             </div>
-
+            <script
+                src="{{ asset('assets/models/users/profileFormTrigger.js') }}?v={{ filemtime(public_path('assets/models/users/profileFormTrigger.js')) }}">
+            </script>
         </div>
         <x-footers.auth></x-footers.auth>
     </div>
