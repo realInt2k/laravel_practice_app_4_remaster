@@ -61,7 +61,8 @@ class RoleController extends Controller
     public function edit(Request $request, $id)
     {
         $role = $this->roleService->getById($id);
-        $viewHtml = view('pages.roles.show', compact('role'))->render();
+        $permissions = $this->permissionService->getAllPermissions();
+        $viewHtml = view('pages.roles.edit', compact('role', 'permissions'))->render();
         return $this->responseWithHtml($viewHtml);
     }
 
@@ -72,8 +73,7 @@ class RoleController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        $viewHtml = view('pages.roles.show', compact('role'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($role);
     }
 
     public function destroy(Request $request, $id)

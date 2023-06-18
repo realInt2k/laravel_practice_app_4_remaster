@@ -5,8 +5,7 @@
         <div class="col-sm-1"></div>
         <div class="col-sm-5">
             <h3>
-                User
-                <small class="text-muted">details</small>
+                <small class="text-muted">User details</small>
             </h3>
             <div>
                 Name

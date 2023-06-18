@@ -6,8 +6,7 @@
         <div class="col-sm-1"></div>
         <div class="col-sm-5">
             <h3>
-                Product
-                <small class="text-muted">details</small>
+                <small class="text-muted">Product details</small>
             </h3>
 
             <div>

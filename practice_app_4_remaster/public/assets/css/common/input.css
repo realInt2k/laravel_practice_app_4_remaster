@@ -1,3 +1,19 @@
 input:focus {
     outline: none;
 }
+
+.select2-selection__choice {
+    background-color: rgb(255, 255, 255) !important;
+}
+
+.select2-selection__choice__remove:hover {
+    background-color: rgba(212, 25, 0, 0.212) !important;
+}
+
+/* .select2 {
+    font-size: 0.8rem !important;
+}
+
+.select2-dropdown {
+    font-size: 0.8rem !important;
+} */

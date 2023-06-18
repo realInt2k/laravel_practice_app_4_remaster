@@ -52,9 +52,8 @@ class RoleRepository extends BaseRepository
         $roles = $this->model->withPermissions()
             ->whereId($searchData['id'])
             ->whereName($searchData['name'])
-            ->wherePermissionName($searchData['permission'])->get();
-        return $this->customPaginate($roles, $searchData['perPage'], null, [
-            'path' => $searchData['path']
-        ]);
+            ->wherePermissionName($searchData['permission']);
+        $roles = $roles->paginate($searchData['perPage']);
+        return $roles;
     }
 }
