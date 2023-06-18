@@ -72,7 +72,7 @@ class AppServiceProvider extends ServiceProvider
                 return true;
             } else if ($authUser->isAdmin()) {
                 $checkPermission = $authUser->hasPermissionNames($action);
-                if(!$user) {
+                if (!$user) {
                     return $checkPermission;
                 }
                 if ($user->isSuperAdmin()) {
@@ -83,11 +83,7 @@ class AppServiceProvider extends ServiceProvider
                     return $checkPermission;
                 }
             } else {
-                // non-admin can only edit itself.
-                if(!$user) {
-                    return false;
-                }
-                return $user->id === $authUser->id;
+                return false;
             }
         });
 
