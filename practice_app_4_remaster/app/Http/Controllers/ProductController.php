@@ -22,7 +22,8 @@ class ProductController extends Controller
 
     public function index()
     {
-        return view('pages.products.index');
+        $categories = $this->categoryService->getAllCategories();
+        return view('pages.products.index', compact('categories'));
     }
 
     public function search(Request $request)

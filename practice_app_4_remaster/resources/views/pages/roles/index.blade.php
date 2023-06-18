@@ -17,10 +17,11 @@
                     </div>
                     <div class="col-md-4">
                         <div class="input-group input-group-outline my-3">
-                            <select class="form-select" aria-label="Role">
-                                <option selected>Select a Permission</option>
-                                <option value="admin">perm 1</option>
-                                <option value="user">perm 2</option>
+                            <select class="form-select search-select" name="permission">
+                                <option value="" selected>Select a Permission</option>
+                                @foreach ($permissions as $permission)
+                                    <option value="{{ $permission->name }}">{{ $permission->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

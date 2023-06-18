@@ -23,10 +23,11 @@
                     </div>
                     <div class="col-md-4">
                         <div class="input-group input-group-outline my-3">
-                            <select class="form-select" aria-label="category_id">
-                                <option selected>Select a category</option>
-                                <option value="1">cat 1</option>
-                                <option value="2">cat 2</option>
+                            <select class="form-select search-select" aria-label="category_id" name="category">
+                                <option value="" selected>Select a category</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
                             </select>
 
                         </div>
@@ -41,7 +42,7 @@
                                         <strong>Product table</strong>
                                     </div>
                             </div>
-                            
+
                             <div class="card-body px-0 pb-2">
                                 <div class="table-responsive p-0">
                                     <div id="table-data"></div>

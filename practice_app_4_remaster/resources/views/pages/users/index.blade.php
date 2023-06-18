@@ -23,10 +23,11 @@
                     </div>
                     <div class="col-md-4">
                         <div class="input-group input-group-outline my-3">
-                            <select class="form-select" aria-label="Role">
-                                <option selected>Select a role</option>
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
+                            <select class="form-select search-select" aria-label="Role" name="role">
+                                <option value="" selected>Select a role</option>
+                                @foreach ($roles as $role)
+                                    <option value={{ $role->name }}> {{ $role->name }} </option>
+                                @endforeach
                             </select>
 
                         </div>
@@ -41,7 +42,7 @@
                                         <strong>User table</strong>
                                     </div>
                             </div>
-                            
+
                             <div class="card-body px-0 pb-2">
                                 <div class="table-responsive p-0">
                                     <div id="table-data"></div>

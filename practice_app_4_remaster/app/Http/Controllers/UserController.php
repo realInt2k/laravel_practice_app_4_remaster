@@ -27,7 +27,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        return view('pages.users.index');
+        $roles = $this->roleService->getAllRoles();
+        return view('pages.users.index', compact('roles'));
     }
 
     public function search(Request $request)

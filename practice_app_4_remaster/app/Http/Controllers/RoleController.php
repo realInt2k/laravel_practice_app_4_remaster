@@ -21,7 +21,8 @@ class RoleController extends Controller
 
     public function index()
     {
-        return view('pages.roles.index');
+        $permissions = $this->permissionService->getAllPermissions();
+        return view('pages.roles.index', compact('permissions'));
     }
 
     public function search(Request $request)

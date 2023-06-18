@@ -19,6 +19,10 @@
             userAction.getTable();
         }));
 
+        $(document).off("change", ".search-select").on("change", ".search-select", userAction.debounce(function () {
+            userAction.getTable();
+        }));
+
         $("#form-search").on("submit", function (e) {
             e.preventDefault();
             return false;
@@ -140,7 +144,7 @@
                     }
                 });
         })
-        
+
 
         $(document).off("click", ".page-link").on("click", ".page-link", function (e) {
             e.preventDefault();
