@@ -20,7 +20,7 @@ class PermissionCheck
         /** @var \App\Models\User */
         $user = auth()->user();
         if (!$user->isSuperAdmin()) {
-            $validatePermissionExpression = !$this->calculate($user, $expression);
+            $validatePermissionExpression = $this->calculate($user, $expression);
             if (!$validatePermissionExpression) {
                 if ($request->ajax()) {
                     return response()->json([
