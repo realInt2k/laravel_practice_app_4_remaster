@@ -41,8 +41,9 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
         $this->testAsNewUserWithRolePermission('role' . Str::random(5), 'products-update');
         $product = Product::factory()->create();
         $id = $product->id;
-        $response = $this->put(route('products.update', $id), $product->toArray());
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response = $this->from('/')->put(route('products.update', $id), $product->toArray());
+        $response->assertStatus(302);
+        $response->assertSessionHas(config('constants.authenticationErrorKey'));
     }
 
     /**
