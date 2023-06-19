@@ -26,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
+        if(auth()->user()) {
+            
+        }
         Blade::if('adminOnly', function () {
             /** @var User */
             $authUser = auth()->user();

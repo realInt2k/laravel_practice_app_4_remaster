@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Traits\ImageProcessing;
 use App\Repositories\ProductRepository;
 use App\Http\Requests\StoreProductRequest;
+use Illuminate\Validation\UnauthorizedException;
 
 class ProductService extends BaseService
 {
@@ -60,6 +61,12 @@ class ProductService extends BaseService
 
     public function update($request, $id)
     {
+        /** @var User */
+        $authUser = auth()->user();
+
+        if (!$authUser->isAdmin() && !$authUser->isSuperAdmin() && !$authUser->hasProduct($id)) {
+            throw new UnauthorizedException("not your product");
+        }
         DB::beginTransaction();
         try {
             $input = $request->all();

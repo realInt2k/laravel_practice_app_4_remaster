@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 Route::middleware('auth')->group(function () {
-    Route::post('user-profile', [UserController::class, 'updateProfile'])
+    Route::put('user-profile', [UserController::class, 'updateProfile'])
         ->name('user-profile.update');
     Route::get('user-profile', function () {
         return view('pages.users.user-profile');
@@ -14,9 +14,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('/users')->group(function () {
-    Route::middleware('auth')->middleware('permissionCheck:r_admin|r_super-admin')
+    Route::middleware('auth')
         ->group(function () {
-            Route::get('/search', [UserController::class, 'search'])
+            Route::middleware('permissionCheck:r_admin')->group(function () {
+                Route::get('/search', [UserController::class, 'search'])
                 ->name('users.search');
 
             Route::get('/', [UserController::class, 'index'])
@@ -43,6 +44,7 @@ Route::prefix('/users')->group(function () {
 
             Route::delete('/{id}', [UserController::class, 'destroy'])
                 ->name('users.destroy')
-                ->middleware('permissionCheck:p_users-destroy');
+                ->middleware('permissionCheck:p_users-destroy'); 
+            });
         });
 });

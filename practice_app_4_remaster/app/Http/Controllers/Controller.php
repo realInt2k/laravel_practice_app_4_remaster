@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -43,24 +44,32 @@ class Controller extends BaseController
             'message' => $message,
         ], $status);
     }
+    public function returnAjaxResponse($status, $e)
+    {
+        return response()->json([
+            'error' => $e->getMessage()
+        ], $status);
+    }
 
     public function responseWhenException(Request $request, Exception $e)
     {
+        report($e);
         if ($e instanceof ModelNotFoundException) {
             if ($request->ajax()) {
-                return response()->json([
-                    'error' => $e->getMessage()
-                ], 404);
+                $this->returnAjaxResponse(Response::HTTP_NOT_FOUND, $e);
             } else {
                 abort(404);
             }
+        } else if ($e instanceof UnauthorizedException) {
+            if ($request->ajax()) {
+                $this->returnAjaxResponse(Response::HTTP_UNAUTHORIZED, $e);
+            } else {
+                abort(Response::HTTP_UNAUTHORIZED);
+            }
         } else {
             if ($request->ajax()) {
-                return response()->json([
-                    'error' => $e->getMessage()
-                ], 500);
+                $this->returnAjaxResponse(500, $e);
             } else {
-                report($e);
                 abort(500);
             }
         }

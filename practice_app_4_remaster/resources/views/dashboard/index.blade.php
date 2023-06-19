@@ -14,14 +14,14 @@
                                 <i class="material-icons opacity-10">weekend</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Today's Money</p>
-                                <h4 class="mb-0">$53k</h4>
+                                <p class="text-sm mb-0 text-capitalize">grey text</p>
+                                <h4 class="mb-0">$6996</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
                         <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than
-                                lask week</p>
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+69% crazier </span>than
+                                last time</p>
                         </div>
                     </div>
                 </div>
@@ -33,14 +33,14 @@
                                 <i class="material-icons opacity-10">person</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Today's Users</p>
+                                <p class="text-sm mb-0 text-capitalize">Number of bs</p>
                                 <h4 class="mb-0">2,300</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
                         <div class="card-footer p-3">
                             <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3% </span>than
-                                lask month</p>
+                                last month</p>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                                 <i class="material-icons opacity-10">person</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">New Clients</p>
+                                <p class="text-sm mb-0 text-capitalize">New bs</p>
                                 <h4 class="mb-0">3,462</h4>
                             </div>
                         </div>
@@ -71,14 +71,13 @@
                                 <i class="material-icons opacity-10">weekend</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Sales</p>
-                                <h4 class="mb-0">$103,430</h4>
+                                <p class="text-sm mb-0 text-capitalize">top text</p>
+                                <h4 class="mb-0">bottom figure</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
                         <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than
-                                yesterday</p>
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder"> percentage </span> (insert time) </p>
                         </div>
                     </div>
                 </div>
@@ -94,12 +93,12 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 ">Website Views</h6>
+                            <h6 class="mb-0 ">Bullshit graph 1</h6>
                             <p class="text-sm ">Last Campaign Performance</p>
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                                <p class="mb-0 text-sm"> campaign sent 2 days ago </p>
+                                <p class="mb-0 text-sm"> M T W T F S S </p>
                             </div>
                         </div>
                     </div>
@@ -114,13 +113,13 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 "> Daily Sales </h6>
-                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in today
+                            <h6 class="mb-0 "> Bullshit graph 2 </h6>
+                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) more bullshit than the first one
                                 sales. </p>
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                                <p class="mb-0 text-sm"> updated just 1 decade ago </p>
                             </div>
                         </div>
                     </div>
@@ -135,12 +134,12 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 ">Completed Tasks</h6>
-                            <p class="text-sm ">Last Campaign Performance</p>
+                            <h6 class="mb-0 ">Bullshit graph 3</h6>
+                            <p class="text-sm ">Last Chirstmas I gave ya ma hah</p>
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                                <p class="mb-0 text-sm">just updated</p>
+                                <p class="mb-0 text-sm">but the very next day I gave it huwei</p>
                             </div>
                         </div>
                     </div>
@@ -184,16 +183,16 @@
                                         <tr>
                                             <th
                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Companies</th>
+                                                Lyrics</th>
                                             <th
                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Members</th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Budget</th>
+                                                Random number</th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Completion</th>
+                                                Random progress bar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -205,7 +204,7 @@
                                                             class="avatar avatar-sm me-3" alt="xd">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Material XD Version</h6>
+                                                        <h6 class="mb-0 text-sm">you say yes</h6>
                                                     </div>
                                                 </div>
                                             </td>
@@ -259,7 +258,7 @@
                                                             class="avatar avatar-sm me-3" alt="atlassian">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Add Progress Track</h6>
+                                                        <h6 class="mb-0 text-sm">I say no</h6>
                                                     </div>
                                                 </div>
                                             </td>
@@ -303,7 +302,7 @@
                                                             class="avatar avatar-sm me-3" alt="team7">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Fix Platform Errors</h6>
+                                                        <h6 class="mb-0 text-sm">You say so</h6>
                                                     </div>
                                                 </div>
                                             </td>
@@ -347,7 +346,7 @@
                                                             class="avatar avatar-sm me-3" alt="spotify">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Launch our Mobile App</h6>
+                                                        <h6 class="mb-0 text-sm">I say go go go</h6>
                                                     </div>
                                                 </div>
                                             </td>
@@ -401,7 +400,7 @@
                                                             class="avatar avatar-sm me-3" alt="jira">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Add the New Pricing Page</h6>
+                                                        <h6 class="mb-0 text-sm">Oh noooo</h6>
                                                     </div>
                                                 </div>
                                             </td>
@@ -440,7 +439,7 @@
                                                             class="avatar avatar-sm me-3" alt="invision">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Redesign New Online Shop</h6>
+                                                        <h6 class="mb-0 text-sm">You say goodbye, and I say hello</h6>
                                                     </div>
                                                 </div>
                                             </td>
