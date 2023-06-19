@@ -40,6 +40,11 @@ class RoleService extends BaseService
                 $saveData['permissions'] = [];
             }
             $role = $this->roleRepo->saveNewRole($saveData);
+            /** @var User */
+            $authUser = auth()->user();
+            if ($authUser->isSuperAdmin()) {
+                $role->syncPermissionIds($saveData['permissions']);
+            }
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());
@@ -47,12 +52,6 @@ class RoleService extends BaseService
         }
         DB::commit();
         return $role;
-    }
-
-    public function updateAjaxValidation($id)
-    {
-        $user = $this->roleRepo->findOrFail($id);
-        return $user;
     }
 
     public function update(UpdateRoleRequest $request, $id)
@@ -64,6 +63,11 @@ class RoleService extends BaseService
                 $updateData['permissions'] = [];
             }
             $role = $this->roleRepo->updateRole($updateData, $id);
+            /** @var User */
+            $authUser = auth()->user();
+            if ($authUser->isSuperAdmin()) {
+                $role->syncPermissionIds($updateData['permissions']);
+            }
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());

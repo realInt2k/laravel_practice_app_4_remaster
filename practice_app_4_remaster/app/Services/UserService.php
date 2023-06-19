@@ -38,6 +38,12 @@ class UserService extends BaseService
             $storeData = $request->all();
             $this->extractRoleOrPermissionInput($storeData);
             $user = $this->userRepo->saveNewUser($storeData);
+            /** @var User */
+            $auth = auth()->user();
+            if ($auth->isSuperAdmin()) {
+                $user->syncRoles($storeData['roles']);
+                $user->syncPermissions($storeData['permissions']);
+            }
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e);
@@ -59,7 +65,13 @@ class UserService extends BaseService
                 $updateData['password'] = Hash::make($updateData['password']);
             }
             $this->extractRoleOrPermissionInput($updateData);
-            if($isProfile) {
+            /** @var User */
+            $auth = auth()->user();
+            if ($auth->isSuperAdmin()) {
+                $user->syncRoles($updateData['roles']);
+                $user->syncPermissions($updateData['permissions']);
+            }
+            if ($isProfile) {
                 $user = $this->userRepo->updateProfile($updateData, $id);
             } else {
                 $user = $this->userRepo->updateUser($updateData, $id);
