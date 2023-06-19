@@ -80,3 +80,9 @@
 <div class="mt-3 mr-2 ml-2">
 {{ $roles->links() }}
 </div>
+
+@if (count($roles) === 0)
+<div class="alert alert-warning" role="alert">
+    <strong>no records!</strong>
+</div>
+@endif
