@@ -4,6 +4,7 @@ namespace Tests\Feature\Users;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Feature\AbstractMiddlewareTestCase;
@@ -20,7 +21,7 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
             $newData = User::factory()->make();
             $updateArray = array_merge(
                 $newData->toArray(),
-                ['roles' => [], 'password' => 'brand new password']
+                ['password' => 'brand new password']
             );
             $response = $this->put(route('users.update', $user->id), $updateArray);
             $response->assertStatus(302);
@@ -37,7 +38,7 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
             $newData = User::factory()->make();
             $updateArray = array_merge(
                 $newData->toArray(),
-                ['roles' => [], 'password' => 'brand new password']
+                ['password' => 'brand new password']
             );
             $response = $this->put(route('users.update', $otherUser->id), $updateArray);
             $response->assertStatus(302);
@@ -52,14 +53,10 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
             /** @var User */
             $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users-update');
             $otherUser = User::factory()->create();
-            $otherUserRoles = [];
-            $otherUserPermissions = [];
             $newData = User::factory()->make();
             $updateArray = array_merge(
                 $newData->toArray(),
                 [
-                    'roles' => $otherUserRoles,
-                    'permissions' => $otherUserPermissions,
                     'password' => 'brand new password'
                 ]
             );
@@ -129,7 +126,6 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
                 $newData->toArray(),
                 [
                     'roles' => $otherUserRoles,
-                    'permissions' => [],
                     'password' => 'brand new password'
                 ]
             );
@@ -159,12 +155,8 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
             /** @var User */
             $currentUser = $this->testAsNewUserWithSuperAdmin();
             $otherUser = User::factory()->create();
-            $newData = User::factory()->make();
-            $newData->email = $currentUser->email;
-            $updateArray = array_merge(
-                $newData->toArray(),
-                ['roles' => [], 'permissions' => [], 'password' => 'brand new password']
-            );
+            $updateArray = $this->getUpdateData();
+            $updateArray['email'] = $currentUser->email;
             $response = $this->from(route('users.edit', $otherUser->id))->put(route('users.update', $otherUser->id), $updateArray);
             $response->assertStatus(302);
             $response->assertSessionHasErrors(['email']);
@@ -174,5 +166,15 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
             unset($currentUser['created_at']);
             $this->assertDatabaseHas('users', $currentUser->toArray());
         });
+    }
+
+    public function getUpdateData()
+    {
+        $newData = User::factory()->make();
+        $updateArray = array_merge(
+            $newData->toArray(),
+            ['password' => Str::random(10)]
+        );
+        return $updateArray;
     }
 }

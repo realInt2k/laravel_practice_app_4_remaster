@@ -18,7 +18,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
     {
         DB::transaction(function () {
             $user = User::factory()->create();
-            $response = $this->get(route('users.edit', $user->id));
+            $response = $this->get($this->getRoute($user->id));
             $response->assertStatus(302);
             $response->assertRedirect(route('login'));
         });
@@ -32,7 +32,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
         DB::transaction(function () {
             $user = User::factory()->create();
             $this->testAsNewUser();
-            $response = $this->get(route('users.edit', $user->id));
+            $response = $this->get($this->getRoute($user->id));
             $response->assertSessionHas(config('constants.authenticationErrorKey'));
             $response->assertStatus(302);
         });
@@ -61,7 +61,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
             /** @var User */
             $user = $this->testAsNewUserWithRolePermission('role' . Str::random(10), 'perm' . Str::random(10));
             $this->testAsUserWithSuperAdmin();
-            $response = $this->get(route('users.edit', $user->id));
+            $response = $this->get($this->getRoute($user->id));
             $response->assertStatus(200);
             $response->assertJson(
                 fn (AssertableJson $json) => $json
@@ -86,7 +86,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
             /** @var User */
             $user = $this->testAsNewUserWithRolePermission('role' . Str::random(10), 'perm' . Str::random(10));
             $this->testAsNewUserWithRolePermission('admin', 'users-update');
-            $response = $this->get(route('users.edit', $user->id));
+            $response = $this->get($this->getRoute($user->id));
             $response->assertStatus(200);
             $response->assertJson(
                 fn (AssertableJson $json) => $json
@@ -110,8 +110,13 @@ class EditUserTest extends AbstractMiddlewareTestCase
         DB::transaction(function () {
             $this->testAsUserWithSuperAdmin();
             $id = -1;
-            $response = $this->get(route('users.edit', $id));
+            $response = $this->get($this->getRoute($id));
             $response->assertStatus(Response::HTTP_NOT_FOUND);
         });
+    }
+
+    public function getRoute($id)
+    {
+        return route('users.edit', $id);
     }
 }
