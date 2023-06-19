@@ -104,3 +104,9 @@
 <div class="mt-3 mr-2 ml-2">
 {{ $products->links() }}
 </div>
+
+@if (count($products) === 0)
+<div class="alert alert-warning" role="alert">
+    <strong>no records!</strong>
+</div>
+@endif
