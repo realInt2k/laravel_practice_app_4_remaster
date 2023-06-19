@@ -20,14 +20,18 @@ class PermissionCheck
         /** @var \App\Models\User */
         $user = auth()->user();
         if (!$user->isSuperAdmin()) {
-            if (!$this->calculate($user, $expression)) {
+            $validatePermissionExpression = !$this->calculate($user, $expression);
+            if (!$validatePermissionExpression) {
                 if ($request->ajax()) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'You do not have permission to perform this action.',
                     ], Response::HTTP_FORBIDDEN);
                 } else {
-                    return redirect()->back()->with(config('constants.authenticationErrorKey'), 'you don\'t have permission to perform this action!');
+                    return redirect()->back()->with(
+                        config('constants.authenticationErrorKey'),
+                        'you don\'t have permission to perform this action!'
+                    );
                 }
             }
         }
