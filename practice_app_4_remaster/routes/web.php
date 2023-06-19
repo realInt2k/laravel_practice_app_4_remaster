@@ -13,9 +13,4 @@ use App\Helpers\RouteHelper;
 |
 */
 
-use Illuminate\Support\Facades\Auth;
-
-
-Auth::routes();
-
 RouteHelper::requireRoute();
