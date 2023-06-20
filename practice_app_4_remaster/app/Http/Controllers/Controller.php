@@ -17,14 +17,6 @@ class Controller extends BaseController
     const DEFAULT_SEARCH_STRING = 'search?';
     const PER_PAGE = 5;
 
-    public function responseWithHtml($html, $status = Response::HTTP_OK, $message = null)
-    {
-        return response()->json([
-            'html' => $html,
-            'message' => $message,
-        ], $status);
-    }
-
     public function responseWithData($data, $status = Response::HTTP_OK, $message = "OK")
     {
         return response()->json([
@@ -32,6 +24,7 @@ class Controller extends BaseController
             'message' => $message,
         ], $status);
     }
+    
     public function returnAjaxResponse($status, $e)
     {
         return response()->json([

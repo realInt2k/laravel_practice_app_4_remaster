@@ -27,14 +27,14 @@ class CategoryController extends Controller
     {
         $categories = $this->categoryService->search($request, self::PER_PAGE);
         $viewHtml = view('pages.categories.pagination', compact('categories'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function show(Request $request, $id)
     {
         $category = $this->categoryService->getById($id);
         $viewHtml = view('pages.categories.show', compact('category'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function edit(Request $request, $id)
@@ -42,14 +42,14 @@ class CategoryController extends Controller
         $categories = $this->categoryService->getAllCategories();
         $category = $this->categoryService->getById($id);
         $viewHtml = view('pages.categories.edit', compact('category', 'categories'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function create(Request $request)
     {
         $categories = $this->categoryService->getAllCategories();
         $viewHtml = view('pages.categories.create', compact('categories'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function store(StoreCategoryRequest $request)
@@ -75,6 +75,6 @@ class CategoryController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseWithHtml('', Response::HTTP_NO_CONTENT);
+        return $this->responseWithData($category, Response::HTTP_NO_CONTENT);
     }
 }

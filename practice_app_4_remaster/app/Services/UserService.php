@@ -76,13 +76,14 @@ class UserService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $this->userRepo->destroy($id);
+            $user = $this->userRepo->destroy($id);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e);
             throw new InvalidArgumentException("cannot destroy user data");
         }
         DB::commit();
+        return $user;
     }
 
     public function search(Request $request, int $perPage)

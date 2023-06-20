@@ -40,14 +40,14 @@ class UserController extends Controller
             'pages.users.pagination',
             compact('users', 'roles', 'permissions')
         )->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function show(Request $request, $id)
     {
         $user = $this->userService->getById($id);
         $viewHtml = view('pages.users.show', compact('user'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function create()
@@ -55,7 +55,7 @@ class UserController extends Controller
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
         $viewHtml = view('pages.users.create', compact('roles', 'permissions'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function store(StoreUserRequest $request)
@@ -71,7 +71,7 @@ class UserController extends Controller
         $permissions = $this->permissionService->getAllPermissions();
 
         $viewHtml = view('pages.users.edit', compact('user', 'roles', 'permissions'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function updateProfile(UpdateProfileRequest $request)
@@ -101,10 +101,10 @@ class UserController extends Controller
             auth()->logout();
         }
         try {
-            $this->userService->destroy($id);
+            $user = $this->userService->destroy($id);
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseWithHtml('', Response::HTTP_NO_CONTENT);
+        return $this->responseWithData($user, Response::HTTP_NO_CONTENT);
     }
 }

@@ -31,21 +31,21 @@ class RoleController extends Controller
         $roles = $this->roleService->search($request, self::PER_PAGE);
         $oldFilter = $request->all();
         $viewHtml = view('pages.roles.pagination', compact('permissions', 'roles', 'oldFilter'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function show(Request $request, $id)
     {
         $role = $this->roleService->getById($id);
         $viewHtml = view('pages.roles.show', compact('role'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function create(Request $request)
     {
         $permissions = $this->permissionService->getAllPermissions();
         $viewHtml = view('pages.roles.create', compact('permissions'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function store(StoreRoleRequest $request)
@@ -59,7 +59,7 @@ class RoleController extends Controller
         $role = $this->roleService->getById($id);
         $permissions = $this->permissionService->getAllPermissions();
         $viewHtml = view('pages.roles.edit', compact('role', 'permissions'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function update(UpdateRoleRequest $request, $id)
@@ -79,6 +79,6 @@ class RoleController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseWithHtml('', Response::HTTP_NO_CONTENT);
+        return $this->responseWithData($role, Response::HTTP_NO_CONTENT);
     }
 }

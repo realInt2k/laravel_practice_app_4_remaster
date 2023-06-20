@@ -46,7 +46,7 @@
             userAction.getPageInfo();
             userAction.sendAjax({ url: url, method: 'get', data: {} })
                 .done(function (response) {
-                    userAction.openModal({ populateHtml: response.html });
+                    userAction.openModal({ populateHtml: response.data });
                 })
                 .fail(function (response) {
                     if (userAction.debug) {
@@ -63,7 +63,7 @@
             userAction.getPageInfo();
             userAction.sendAjax({ url: url, method: 'get', data: {} })
                 .done(function (response) {
-                    userAction.openModal({ populateHtml: response.html });
+                    userAction.openModal({ populateHtml: response.data });
                 })
                 .fail(function (response) {
                     if (userAction.debug) {
@@ -80,7 +80,7 @@
             userAction.getPageInfo();
             userAction.sendAjax({ url: url, method: 'get', data: {} })
                 .done(function (response) {
-                    userAction.openModal({ modalId: "#show-modal", populateHtml: response.html });
+                    userAction.openModal({ modalId: "#show-modal", populateHtml: response.data });
                 })
                 .fail(function (response) {
                     if (userAction.debug) {

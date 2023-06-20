@@ -38,14 +38,14 @@ class ProductController extends Controller
             'pages.products.pagination',
             compact('products', 'categories')
         )->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function show(Request $request, $id)
     {
         $product = $this->productService->getById($id);
         $viewHtml = view('pages.products.show', compact('product'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function edit(Request $request, $id)
@@ -53,14 +53,14 @@ class ProductController extends Controller
         $product = $this->productService->getById($id);
         $categories = $this->categoryService->getAllCategories();
         $viewHtml = view('pages.products.edit', compact('product', 'categories'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function create(Request $request)
     {
         $categories = $this->categoryService->getAllCategories();
         $viewHtml = view('pages.products.create', compact('categories'))->render();
-        return $this->responseWithHtml($viewHtml);
+        return $this->responseWithData($viewHtml);
     }
 
     public function store(StoreProductRequest $request)
@@ -82,10 +82,10 @@ class ProductController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $this->productService->destroy($id);
+            $product = $this->productService->destroy($id);
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseWithHtml('', Response::HTTP_NO_CONTENT);
+        return $this->responseWithData($product, Response::HTTP_NO_CONTENT);
     }
 }
