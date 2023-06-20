@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\RoleRepository;
-use App\Http\Requests\UpdateRoleRequest;
 
 class RoleService extends BaseService
 {
@@ -40,11 +39,7 @@ class RoleService extends BaseService
                 $saveData['permissions'] = [];
             }
             $role = $this->roleRepo->saveNewRole($saveData);
-            /** @var User */
-            $authUser = auth()->user();
-            if ($authUser->isSuperAdmin()) {
-                $role->syncPermissionIds($saveData['permissions']);
-            }
+            $role->syncPermissionIds($saveData['permissions']);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());
@@ -54,7 +49,7 @@ class RoleService extends BaseService
         return $role;
     }
 
-    public function update(UpdateRoleRequest $request, $id)
+    public function update($request, $id)
     {
         DB::beginTransaction();
         try {
@@ -63,11 +58,7 @@ class RoleService extends BaseService
                 $updateData['permissions'] = [];
             }
             $role = $this->roleRepo->updateRole($updateData, $id);
-            /** @var User */
-            $authUser = auth()->user();
-            if ($authUser->isSuperAdmin()) {
-                $role->syncPermissionIds($updateData['permissions']);
-            }
+            $role->syncPermissionIds($updateData['permissions']);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());
