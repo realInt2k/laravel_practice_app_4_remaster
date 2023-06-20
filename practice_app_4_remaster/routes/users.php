@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 Route::prefix('/users')->group(function () {
-    
+
     Route::put('/profile', [UserController::class, 'updateProfile'])
         ->name('users.profile.update');
 
@@ -14,34 +14,32 @@ Route::prefix('/users')->group(function () {
         return view('pages.users.user-profile');
     })->name('users.profile');
 
-    Route::middleware('check.permission_or_role:r_admin')->group(function () {
-        Route::get('/search', [UserController::class, 'search'])
-            ->name('users.search');
+    Route::get('/search', [UserController::class, 'search'])
+        ->name('users.search');
 
-        Route::get('/', [UserController::class, 'index'])
-            ->name('users.index');
+    Route::get('/', [UserController::class, 'index'])
+        ->name('users.index');
 
-        Route::get('/create', [UserController::class, 'create'])
-            ->name('users.create')
-            ->middleware('check.permission_or_role:p_users-store');
+    Route::get('/create', [UserController::class, 'create'])
+        ->name('users.create')
+        ->middleware('check.permission_or_role:users-store');
 
-        Route::get('/{id}', [UserController::class, 'show'])
-            ->name('users.show');
+    Route::get('/{id}', [UserController::class, 'show'])
+        ->name('users.show');
 
-        Route::get('/{id}/edit', [UserController::class, 'edit'])
-            ->name('users.edit')
-            ->middleware('check.permission_or_role:p_users-update');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])
+        ->name('users.edit')
+        ->middleware('check.permission_or_role:users-update');
 
-        Route::post('/', [UserController::class, 'store'])
-            ->name('users.store')
-            ->middleware('check.permission_or_role:p_users-store');
+    Route::post('/', [UserController::class, 'store'])
+        ->name('users.store')
+        ->middleware('check.permission_or_role:users-store');
 
-        Route::put('/{id}', [UserController::class, 'update'])
-            ->name('users.update')
-            ->middleware('check.permission_or_role:p_users-update');
+    Route::put('/{id}', [UserController::class, 'update'])
+        ->name('users.update')
+        ->middleware('check.permission_or_role:users-update');
 
-        Route::delete('/{id}', [UserController::class, 'destroy'])
-            ->name('users.destroy')
-            ->middleware('check.permission_or_role:p_users-destroy');
-    });
+    Route::delete('/{id}', [UserController::class, 'destroy'])
+        ->name('users.destroy')
+        ->middleware('check.permission_or_role:users-destroy');
 });

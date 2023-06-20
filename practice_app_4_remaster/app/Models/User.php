@@ -93,6 +93,22 @@ class User extends Authenticatable
         return $result;
     }
 
+    /**
+     * This function is used for access-related controls
+     */
+    public function hasPermission(string $name): bool
+    {
+        return $this->isSuperAdmin() || $this->hasPermissionNames($name);
+    }
+
+    /**
+     * This function is used for access-related controls
+     */
+    public function hasRole(string $name): bool
+    {
+        return $this->isSuperAdmin() || $this->hasRoleNames($name);
+    }
+
     public function getAllPermissionNames(): array
     {
         $result = $this->permissions->pluck('name')->toArray();

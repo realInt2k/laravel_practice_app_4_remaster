@@ -7,13 +7,13 @@ use App\Http\Controllers\RoleController;
 
 
 Route::prefix('/roles')->group(function () {
-    Route::middleware('check.permission_or_role:r_super-admin')->group(function () {
+    Route::middleware('check.permission_or_role:super-admin')->group(function () {
         Route::get('/search', [RoleController::class, 'search'])
             ->name('roles.search');
 
         Route::get('/create', [RoleController::class, 'create'])
             ->name('roles.create')
-            ->middleware('check.permission_or_role:p_roles-store');
+            ->middleware('check.permission_or_role:roles-store');
 
         Route::get('/', [RoleController::class, 'index'])
             ->name('roles.index');
@@ -23,18 +23,18 @@ Route::prefix('/roles')->group(function () {
 
         Route::get('/{id}/edit', [RoleController::class, 'edit'])
             ->name('roles.edit')
-            ->middleware('check.permission_or_role:p_roles-update');
+            ->middleware('check.permission_or_role:roles-update');
 
         Route::post('/', [RoleController::class, 'store'])
             ->name('roles.store')
-            ->middleware('check.permission_or_role:p_roles-store');
+            ->middleware('check.permission_or_role:roles-store');
 
         Route::put('/{id}', [RoleController::class, 'update'])
             ->name('roles.update')
-            ->middleware('check.permission_or_role:p_roles-update');
+            ->middleware('check.permission_or_role:roles-update');
 
         Route::delete('/{id}', [RoleController::class, 'destroy'])
             ->name('roles.destroy')
-            ->middleware('check.permission_or_role:p_roles-destroy');
+            ->middleware('check.permission_or_role:roles-destroy');
     });
 });

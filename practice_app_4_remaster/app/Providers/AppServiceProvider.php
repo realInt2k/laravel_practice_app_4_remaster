@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
             if ($authUser->isSuperAdmin()) {
                 return true;
             } else if ($authUser->isAdmin()) {
-                $checkPermission = $authUser->hasPermissionNames($action);
+                $checkPermission = $authUser->hasPermission($action);
                 if (!$user) {
                     return $checkPermission;
                 }
@@ -49,13 +49,13 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('hasRole', function (string $roleName) {
             /** @var User */
             $authUser = auth()->user();
-            return $authUser->hasRoleNames($roleName);
+            return $authUser->hasRole($roleName);
         });
 
         Blade::if('hasPermission', function (string $permissionName) {
             /** @var User */
             $authUser = auth()->user();
-            return $authUser->hasPermissionNames($permissionName);
+            return $authUser->hasPermission($permissionName);
         });
     }
 }

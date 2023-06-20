@@ -2,14 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Traits\PermissionExpression;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class PermissionOrRole
 {
-    use PermissionExpression;
     /**
      * Handle an incoming request.
      *
@@ -19,20 +17,30 @@ class PermissionOrRole
     {
         /** @var \App\Models\User */
         $user = auth()->user();
-        if (!$user->isSuperAdmin()) {
-            $validatePermissionExpression = $this->calculate($user, $expression);
-            if (!$validatePermissionExpression) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'You do not have permission to perform this action.',
-                    ], Response::HTTP_FORBIDDEN);
-                } else {
-                    return redirect()->back()->with(
-                        config('constants.authenticationErrorKey'),
-                        'you don\'t have permission to perform this action!'
-                    );
-                }
+        $permissionCheck = false;
+        $roleCheck = false;
+        $expression = explode('|', $expression);
+        foreach ($expression as $operand) {
+            if ($user->hasPermission($operand)) {
+                $permissionCheck = true;
+                break;
+            }
+            if ($user->hasRole($operand)) {
+                $roleCheck = true;
+                break;
+            }
+        }
+        if (!$roleCheck && !$permissionCheck) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'You do not have permission to perform this action.',
+                ], Response::HTTP_FORBIDDEN);
+            } else {
+                return redirect()->back()->with(
+                    config('constants.authenticationErrorKey'),
+                    'you don\'t have permission to perform this action!'
+                );
             }
         }
         return $next($request);
