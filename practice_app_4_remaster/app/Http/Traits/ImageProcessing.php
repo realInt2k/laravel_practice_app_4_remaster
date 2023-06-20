@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 trait ImageProcessing
 {
-    const PUBLIC_DIR = 'storage/images/';
+    const PUBLIC_DIR = 'images/';
 
     public function verify($request)
     {
@@ -17,11 +17,11 @@ trait ImageProcessing
     public function saveFile($request)
     {
         if ($this->verify($request)) {
-            $path = $this->createPublicDirIfNotExist();
+            $dir = $this->createPublicDirIfNotExist();
             $name = $this->nameTheImage($request);
-            $image = $this->makeImage($request->file('image'));
-            if (!file_exists($path . $name)) {
-                $this->saveImage($image, $path . $name);
+            $image = Image::make($request->file('image'));
+            if (!file_exists($dir . $name)) {
+                $image->save($dir . $name);
             }
             return $name;
         }
@@ -44,7 +44,8 @@ trait ImageProcessing
             $image = $this->saveFile($request);
             return $image;
         } else {
-            return $oldImage;
+            return (isset($request->remove_image_request) && $request->remove_image_request == "true") ?
+                null : $oldImage;
         }
     }
 
@@ -64,15 +65,10 @@ trait ImageProcessing
 
     protected function createPublicDirIfNotExist($dir = self::PUBLIC_DIR): string
     {
-        $path = public_path($dir);
-        !is_dir($path) &&
-            mkdir($path, 0777, true);
-        return $path;
-    }
-
-    public function makeImage($image)
-    {
-        return Image::make($image);
+        if (!Storage::disk('public')->exists($dir)) {
+            Storage::disk('public')->makeDirectory($dir);
+        }
+        return Storage::disk('public')->path($dir);
     }
 
     /**
@@ -117,13 +113,5 @@ trait ImageProcessing
             return;
         }
         $image->brightness($intensity);
-    }
-
-    /**
-     * @param \Intervention\Image\Image $image 
-     */
-    public function saveImage(&$image, $path)
-    {
-        $image->save($path);
     }
 }
