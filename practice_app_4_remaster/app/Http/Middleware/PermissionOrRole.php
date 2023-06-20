@@ -2,12 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Traits\AccessDenied;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class PermissionOrRole
 {
+    use AccessDenied;
     /**
      * Handle an incoming request.
      *
@@ -31,17 +33,7 @@ class PermissionOrRole
             }
         }
         if (!$roleCheck && !$permissionCheck) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'You do not have permission to perform this action.',
-                ], Response::HTTP_FORBIDDEN);
-            } else {
-                return redirect()->back()->with(
-                    config('constants.authenticationErrorKey'),
-                    'you don\'t have permission to perform this action!'
-                );
-            }
+            return $this->accessDenied($request);
         }
         return $next($request);
     }

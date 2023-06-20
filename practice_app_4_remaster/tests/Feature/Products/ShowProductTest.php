@@ -32,7 +32,7 @@ class ShowProductTest extends AbstractMiddlewareTestCase
         $response->assertJson(
             fn (AssertableJson $json) => $json
                 ->has(
-                    'html',
+                    'data',
                 )
                 ->etc()
         );

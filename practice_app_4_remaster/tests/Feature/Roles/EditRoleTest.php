@@ -27,23 +27,14 @@ class EditRoleTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function admin_can_see_edit_role_form_with_role_update_permission(): void
+    public function admin_cannot_see_edit_role_form_with_role_update_permission(): void
     {
         DB::transaction(function () {
             $this->testAsNewUserWithRolePermission('admin', 'roles-update');
             $role = Role::factory()->create();
             $response = $this->get(route('roles.edit', $role->id));
-            $response->assertStatus(Response::HTTP_OK);
-            $response->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has(
-                        'html',
-                    )
-                    ->etc()
-            );
-            $rolePermissionNames = $role->permissions()->pluck('name')->toArray();
-            $response->assertSee($role->name);
-            $response->assertSee($rolePermissionNames);
+            $response->assertStatus(302);
+            $response->assertSessionHas(config('constants.authenticationErrorKey'));
         });
     }
 

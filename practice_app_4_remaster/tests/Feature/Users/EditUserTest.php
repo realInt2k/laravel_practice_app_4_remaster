@@ -66,7 +66,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
             $response->assertJson(
                 fn (AssertableJson $json) => $json
                 ->has(
-                    'html'
+                    'data'
                 )
                 ->etc()
             );
@@ -91,7 +91,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
             $response->assertJson(
                 fn (AssertableJson $json) => $json
                 ->has(
-                    'html'
+                    'data'
                 )
                 ->etc()
             );

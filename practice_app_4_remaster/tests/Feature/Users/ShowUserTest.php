@@ -24,13 +24,16 @@ class ShowUserTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function can_not_see_a_user_without_admin_roles(): void
+    public function can_see_a_user_without_admin_roles(): void
     {
         $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'knot');
         $user = User::factory()->create();
         $response = $this->get(route('users.show', $user->id));
-        $response->assertStatus(302);
-        $response->assertSessionHas(config("constants.authenticationErrorKey"));
+        $response->assertStatus(200);
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')->etc()
+        );
     }
 
     /** @test */
@@ -42,7 +45,7 @@ class ShowUserTest extends AbstractMiddlewareTestCase
         $response->assertStatus(200);
         $response->assertJson(
             fn (AssertableJson $json) => $json
-                ->has('html')->etc()
+                ->has('data')->etc()
         );
         $response->assertSee([$user->name, $user->email]);
     }

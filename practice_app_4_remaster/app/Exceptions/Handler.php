@@ -61,10 +61,6 @@ class Handler extends ExceptionHandler
             case 405:
                 $response['message'] = $message ?? 'Method Not Allowed';
                 break;
-            case 422:
-                $response['message'] = $exception->original['message'];
-                $response['errors'] = $exception->original['errors'];
-                break;
             default:
                 $response['message'] = ($statusCode == 500) ? $message ??
                     'Whoops, looks like something went wrong' : $exception->getMessage();
@@ -81,25 +77,24 @@ class Handler extends ExceptionHandler
         $exception = $this->prepareException($exception);
 
         if ($exception instanceof HttpResponseException) {
+            // dd('responseException');
             $exception = $exception->getResponse();
         }
 
         if ($exception instanceof AuthenticationException) {
+            // dd('AuthenticationException');
             $exception = $this->unauthenticated($request, $exception);
         }
 
         if ($exception instanceof ValidationException) {
+            // dd('ValidationException');
             $exception = $this->convertValidationExceptionToResponse($exception, $request);
         }
-
         return $this->customApiResponse($exception);
     }
 
     public function render($request, Throwable $e)
     {
-        if ($e instanceof ValidationException) {
-            return $this->handleApiException($request, $e);
-        }
         return parent::render($request, $e);
     }
 }

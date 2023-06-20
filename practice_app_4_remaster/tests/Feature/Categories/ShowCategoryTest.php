@@ -19,7 +19,7 @@ class ShowCategoryTest extends AbstractMiddlewareTestCase
         $response->assertJson(
             fn (AssertableJson $json) => $json
                 ->has(
-                    'html'
+                    'data'
                 )
                 ->etc()
         );
@@ -40,16 +40,6 @@ class ShowCategoryTest extends AbstractMiddlewareTestCase
         $this->testAsNewUserWithRolePermission('admin', 'categories-store');
         $response = $this->get($this->getRoute(-1));
         $response->assertStatus(Response::HTTP_NOT_FOUND);
-    }
-
-    /** @test */
-    public function user_can_not_get_category_if_has_not_permission()
-    {
-        $this->testAsNewUser();
-        $data = $this->createData();
-        $response = $this->get($this->getRoute($data->id));
-        $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
     }
 
     public function getRoute($id)

@@ -40,7 +40,7 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function admin_with_roles_update_permission_can_update_role(): void
+    public function admin_with_roles_update_permission_cannot_update_role(): void
     {
         DB::transaction(function () {
             $this->testAsNewUserWithRolePermission('admin', 'roles-update');
@@ -50,17 +50,8 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
             $newRole->id = $role->id;
             $response = $this->from(route('roles.edit', $role->id))
                 ->put(route('roles.update', $role->id), $newRole->toArray());
-            $this->assertDatabaseHas('roles', $newRole->toArray());
-            $response->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has(
-                        'data',
-                        fn (AssertableJson $json) =>
-                        $json->where('id', $newRole->id)
-                            ->etc()
-                    )
-                    ->etc()
-            );
+            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $this->assertDatabaseMissing('roles', $newRole->toArray());
         });
     }
 

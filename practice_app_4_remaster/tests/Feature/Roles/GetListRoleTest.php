@@ -2,9 +2,6 @@
 
 namespace Tests\Feature\Roles;
 
-use App\Models\Role;
-use App\Models\Permission;
-use Illuminate\Support\Facades\DB;
 use Tests\Feature\AbstractMiddlewareTestCase;
 
 class GetListRoleTest extends AbstractMiddlewareTestCase
@@ -34,12 +31,12 @@ class GetListRoleTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function can_see_role_list_as_admin(): void
+    public function cannot_see_role_list_as_admin(): void
     {
         $this->withoutExceptionHandling();
         $this->testAsNewUserWithRolePermission('admin', 'roles-store');
-        $response = $this->get(route('roles.index'));
-        $response->assertStatus(200);
-        $response->assertViewIs('pages.roles.index');
+        $response = $this->from(route('dashboard'))->get(route('roles.index'));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('dashboard'));
     }
 }

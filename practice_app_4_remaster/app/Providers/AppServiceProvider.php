@@ -47,15 +47,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::if('hasRole', function (string $roleName) {
-            /** @var User */
-            $authUser = auth()->user();
-            return $authUser->hasRole($roleName);
+            return auth()->user()->hasRole($roleName);
         });
 
         Blade::if('hasPermission', function (string $permissionName) {
-            /** @var User */
-            $authUser = auth()->user();
-            return $authUser->hasPermission($permissionName);
+            return auth()->user()->hasPermission($permissionName);
         });
     }
 }
