@@ -23,13 +23,6 @@ class CategoryService extends BaseService
         return $this->categoryRepo->all();
     }
 
-    public function store($request)
-    {
-        $dataStore = $request->all();
-        $category = $this->categoryRepo->saveNewCategory($dataStore);
-        return $category;
-    }
-
     public function getById($id)
     {
         $category = $this->categoryRepo->findOrFail($id);
@@ -38,8 +31,16 @@ class CategoryService extends BaseService
 
     public function getAllRelevantIdsFromCategoryId($id): array
     {
-        $ids = $this->categoryRepo->getAllRelevantIdsFromCategoryId($id);
-        return $ids;
+        $category = $this->categoryRepo->findOrFail($id);
+        $childIds = $category->getAllChildIds();
+        return $childIds;
+    }
+
+    public function store($request)
+    {
+        $storeData = $request->all();
+        $category = $this->categoryRepo->saveNewCategory($storeData);
+        return $category;
     }
 
     public function destroy($id)
@@ -56,18 +57,12 @@ class CategoryService extends BaseService
         return $category;
     }
 
-    public function updateAjaxValidation($request, $id)
-    {
-        $category = $this->categoryRepo->findOrFail($id);
-        return $category;
-    }
-
     public function update($request, $id)
     {
-        $input = $request->all();
         DB::beginTransaction();
         try {
-            $category = $this->categoryRepo->updateCategory($input, $id);
+            $updateData = $request->all();
+            $category = $this->categoryRepo->updateCategory($updateData, $id);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());

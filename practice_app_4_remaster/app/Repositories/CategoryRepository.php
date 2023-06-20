@@ -19,21 +19,9 @@ class CategoryRepository extends BaseRepository
         return Category::class;
     }
 
-    public function getAll()
+    public function saveNewCategory($storeData)
     {
-        return $this->all();
-    }
-
-    public function getAllRelevantIdsFromCategoryId($id): array
-    {
-        $category = $this->findOrFail($id);
-        $childIds = $category->getAllChildIds();
-        return array_merge([$id], $childIds);
-    }
-
-    public function saveNewCategory($dataStore)
-    {
-        $category = $this->create($dataStore);
+        $category = $this->create($storeData);
         return $category;
     }
 
@@ -47,10 +35,10 @@ class CategoryRepository extends BaseRepository
         return $category;
     }
 
-    public function updateCategory($input, $id)
+    public function updateCategory($updateData, $id)
     {
         $category = $this->findOrFail($id);
-        $category->update($input);
+        $category->update($updateData);
         return $category;
     }
 
