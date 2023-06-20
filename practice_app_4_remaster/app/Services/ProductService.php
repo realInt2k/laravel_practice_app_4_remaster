@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Traits\ImageProcessing;
 use App\Repositories\ProductRepository;
 use App\Http\Requests\StoreProductRequest;
-use Illuminate\Validation\UnauthorizedException;
 
 class ProductService extends BaseService
 {
@@ -35,8 +34,8 @@ class ProductService extends BaseService
         try {
             $storeData = $request->all();
             $storeData['user_id'] = auth()->user()->id;
-            $this->extractCategoryIdsFromInput($storeData);
-            $this->processRequestImageToInput($request, $storeData, null);
+            $storeData['category_ids'] = $this->extractCategoryIdsFromInput($storeData);
+            $storeData['image'] = $this->saveFile($request);
             $product = $this->productRepo->saveNewProduct($storeData);
             $product->syncCategories($storeData['category_ids']);
         } catch (Exception $e) {
@@ -54,8 +53,8 @@ class ProductService extends BaseService
         try {
             $updateData = $request->all();
             $product = $this->productRepo->findOrFail($id);
-            $this->extractCategoryIdsFromInput($updateData);
-            $this->processRequestImageToInput($request, $updateData, $product);
+            $updateData['category_ids'] = $this->extractCategoryIdsFromInput($updateData);
+            $updateData['image'] = $this->updateFile($request, $product->image);
             $product = $this->productRepo->updateProduct($updateData, $id);
             $product->syncCategories($updateData['category_ids']);
         } catch (Exception $e) {
@@ -71,13 +70,16 @@ class ProductService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $this->productRepo->destroy($id);
+            $product = $this->productRepo->destroy($id);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());
             throw new InvalidArgumentException("cannot destroy product data");
         }
         DB::commit();
+
+        $this->deleteFile($product->image);
+        return $product;
     }
 
     public function search($request, $perPage, $categoryIds)
@@ -93,39 +95,8 @@ class ProductService extends BaseService
         return $products;
     }
 
-    private function removeProductImage($product)
+    private function extractCategoryIdsFromInput($input)
     {
-        if ($product) {
-            $this->removeFileFromPublicStorage('images/' . $product->image);
-        }
-    }
-
-    private function processRequestImageToInput($request, &$input, $product)
-    {
-        if (isset($request->remove_image_request) && $request->remove_image_request == 'true') {
-            $this->removeProductImage($product);
-            $input['image'] = null;
-        } else {
-            if ($request->image !== null) {
-                $this->removeProductImage($product);
-                $path = $this->createPublicDirIfNotExist('storage/images/');
-                $name = $this->nameTheImage($request);
-                $image = $this->makeImage($request->file('image'));
-                $this->resizeImage($image, 300, null, true);
-                if (!file_exists($path . $name)) {
-                    $this->saveImage($image, $path . $name);
-                }
-                $input['image'] = $name;
-            } else {
-                // no remove image requested and request->image isn't null => no need to update.
-            }
-        }
-    }
-
-    private function extractCategoryIdsFromInput(&$input)
-    {
-        if (!isset($input['category_ids'])) {
-            $input['category_ids'] = [];
-        }
+        return isset($input['category_ids']) ? $input['category_ids'] : [];
     }
 }
