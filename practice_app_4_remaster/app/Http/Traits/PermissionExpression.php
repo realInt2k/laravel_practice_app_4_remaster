@@ -11,12 +11,12 @@ trait PermissionExpression
         return !str_contains('|&()', $char);
     }
 
-    private function hasRole(User &$user, $roleName): bool
+    private function hasRole(User $user, $roleName): bool
     {
         return $user->hasRoleNames([$roleName]);
     }
 
-    private function hasPermission(User &$user, $permissionName): bool
+    private function hasPermission(User $user, $permissionName): bool
     {
         return $user->hasPermissionNames([$permissionName]);
     }
@@ -36,7 +36,7 @@ trait PermissionExpression
     }
 
     
-    public function calculate(User &$user, string $expression)
+    public function calculate(User $user, string $expression)
     {
         $stack = array();
         $top = -1;

@@ -17,18 +17,6 @@ class Controller extends BaseController
     const DEFAULT_SEARCH_STRING = 'search?';
     const PER_PAGE = 5;
 
-    public function getSearchString($request)
-    {
-        $pathWithSearchParam = self::DEFAULT_SEARCH_STRING;
-        foreach ($request->all() as $searchParam => $searchValue) {
-            if ($searchParam == 'page') {
-                continue;
-            }
-            $pathWithSearchParam .= '&' . $searchParam . $searchValue;
-        }
-        return $pathWithSearchParam;
-    }
-
     public function responseWithHtml($html, $status = Response::HTTP_OK, $message = null)
     {
         return response()->json([

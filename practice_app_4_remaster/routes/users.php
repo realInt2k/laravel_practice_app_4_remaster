@@ -14,7 +14,7 @@ Route::prefix('/users')->group(function () {
         return view('pages.users.user-profile');
     })->name('users.profile');
 
-    Route::middleware('permissionCheck:r_admin')->group(function () {
+    Route::middleware('check.permission_or_role:r_admin')->group(function () {
         Route::get('/search', [UserController::class, 'search'])
             ->name('users.search');
 
@@ -23,25 +23,25 @@ Route::prefix('/users')->group(function () {
 
         Route::get('/create', [UserController::class, 'create'])
             ->name('users.create')
-            ->middleware('permissionCheck:p_users-store');
+            ->middleware('check.permission_or_role:p_users-store');
 
         Route::get('/{id}', [UserController::class, 'show'])
             ->name('users.show');
 
         Route::get('/{id}/edit', [UserController::class, 'edit'])
             ->name('users.edit')
-            ->middleware('permissionCheck:p_users-update');
+            ->middleware('check.permission_or_role:p_users-update');
 
         Route::post('/', [UserController::class, 'store'])
             ->name('users.store')
-            ->middleware('permissionCheck:p_users-store');
+            ->middleware('check.permission_or_role:p_users-store');
 
         Route::put('/{id}', [UserController::class, 'update'])
             ->name('users.update')
-            ->middleware('permissionCheck:p_users-update');
+            ->middleware('check.permission_or_role:p_users-update');
 
         Route::delete('/{id}', [UserController::class, 'destroy'])
             ->name('users.destroy')
-            ->middleware('permissionCheck:p_users-destroy');
+            ->middleware('check.permission_or_role:p_users-destroy');
     });
 });
