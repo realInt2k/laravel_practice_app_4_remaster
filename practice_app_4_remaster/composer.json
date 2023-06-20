@@ -29,14 +29,12 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
-            "LaravelFrontendPresets\\MaterialPreset\\": "presets/material/src"
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/",
-            "LaravelFrontendPresets\\MaterialPreset\\": "presets/material/src"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
