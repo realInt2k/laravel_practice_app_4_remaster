@@ -3,11 +3,11 @@
     @method('put')
     <div class="row">
         <div class="col-sm-1"></div>
-        @allowedToChangeRoleAndPermission()
+        @hasRole('super-admin')
             <div class="col-sm-5">
         @else
             <div class="col-sm-10">
-        @endallowedToChangeRoleAndPermission
+        @endhasRole
             <h3>
                 <small class="text-muted">User details</small>
             </h3>
@@ -40,7 +40,7 @@
                     placeholder="update password">
             </div>
         </div>
-        @allowedToChangeRoleAndPermission()
+        @hasRole('super-admin')
         <div class="col-sm-5">
             <h3>
                 <small class="text-muted">roles</small>
@@ -62,7 +62,7 @@
                     @endforeach
                 </select>
         </div>
-        @endallowedToChangeRoleAndPermission
+        @endhasRole
         <div class="col-sm-1"></div>
     </div>
 </form>

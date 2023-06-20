@@ -17,6 +17,7 @@
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Control Panel</h6>
             </li>
+            
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'user-profile' ? 'active bg-gradient-primary' : '' }} "
                     href="{{ route('users.profile') }}">
@@ -26,41 +27,28 @@
                     <span class="nav-link-text ms-1">User Profile</span>
                 </a>
             </li>
-            @adminOnly()
-                <li class="nav-item">
-                    <a class="nav-link text-white {{ $activePage == 'user-management' ? ' active bg-gradient-primary' : '' }} "
-                        href="{{ route('users.index') }}">
-                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">User Management</span>
-                    </a>
-                </li>
-            @endadminOnly
 
-            @adminOnly()
-                <li class="nav-item">
-                    <a class="nav-link text-white {{ $activePage == 'product-management' ? ' active bg-gradient-primary' : '' }} "
-                        href="{{ route('products.index') }}">
-                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Product Management</span>
-                    </a>
-                </li>
-            @else
-                <li class="nav-item">
-                    <a class="nav-link text-white {{ $activePage == 'product-management' ? ' active bg-gradient-primary' : '' }} "
-                        href="{{ route('products.index') }}">
-                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Browse Product</span>
-                    </a>
-                </li>
-            @endadminOnly
+            <li class="nav-item">
+                <a class="nav-link text-white {{ $activePage == 'user-management' ? ' active bg-gradient-primary' : '' }} "
+                    href="{{ route('users.index') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">User Management</span>
+                </a>
+            </li>
 
-            @adminOnly()
+            <li class="nav-item">
+                <a class="nav-link text-white {{ $activePage == 'product-management' ? ' active bg-gradient-primary' : '' }} "
+                    href="{{ route('products.index') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Product Management</span>
+                </a>
+            </li>
+
+            @hasRole('super-admin')
                 <li class="nav-item">
                     <a class="nav-link text-white {{ $activePage == 'role-management' ? ' active bg-gradient-primary' : '' }} "
                         href="{{ route('roles.index') }}">
@@ -70,16 +58,17 @@
                         <span class="nav-link-text ms-1">Role Management</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white {{ $activePage == 'category-management' ? ' active bg-gradient-primary' : '' }} "
-                        href="{{ route('categories.index') }}">
-                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Category Management</span>
-                    </a>
-                </li>
-            @endadminOnly
+            @endhasRole
+
+            <li class="nav-item">
+                <a class="nav-link text-white {{ $activePage == 'category-management' ? ' active bg-gradient-primary' : '' }} "
+                    href="{{ route('categories.index') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Category Management</span>
+                </a>
+            </li>
         </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">

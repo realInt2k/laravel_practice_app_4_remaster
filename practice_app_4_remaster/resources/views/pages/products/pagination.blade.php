@@ -1,11 +1,11 @@
-@canManipulateProduct('products-store')
+@hasPermission('products-store')
 <div class=" me-3 my-3 text-end">
     <a class="btn bg-gradient-dark mb-0 button-create" data-url="{{ route('products.create') }}"
         data-page-number={{ $products->currentPage() }} data-page-count-elements={{ $products->count() }}><i
             class="material-icons text-sm">add</i>&nbsp;&nbsp;Create New
         Product</a>
 </div>
-@endcanManipulateProduct
+@endhasPermission
 <div id="page-info" data-page-number={{ $products->currentPage() }} data-page-count-elements={{ $products->count() }}
     hidden>
 </div>
@@ -69,7 +69,7 @@
             </td>
             <td class="align-middle">
                 <div class="btn-group">
-                    @canManipulateProduct('products-update', $product)
+                    @hasPermission('products-update')
                     <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit"
                         data-id="{{ $product->id }}" data-page-number={{ $products->currentPage() }}
                         data-page-count-elements={{ $products->count() }}
@@ -77,8 +77,8 @@
                         <span class="material-icons" style="font-size: 150%;">edit</span>
                         <div class="ripple-container"></div>
                     </a>
-                    @endcanManipulateProduct
-                    @canManipulateProduct('products-destroy', $product)
+                    @endhasPermission
+                    @hasPermission('products-destroy')
                     <button type="button" class="btn btn-danger btn-sm btn-link button-delete"
                         data-page-number={{ $products->currentPage() }} data-id="{{ $product->id }}"
                         data-page-count-elements={{ $products->count() }}
@@ -86,7 +86,7 @@
                         <span class="material-icons" style="font-size: 150%;">close</span>
                         <div class="ripple-container"></div>
                     </button>
-                    @endcanManipulateProduct
+                    @endhasPermission
                     <a rel="tooltip" class="btn btn-info btn-link btn-sm button-show"
                         data-id="{{ $product->id }}" data-page-number={{ $products->currentPage() }}
                         data-page-count-elements={{ $products->count() }}

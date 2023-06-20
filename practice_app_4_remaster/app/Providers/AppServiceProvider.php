@@ -24,50 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::useBootstrap();
-
-        if(auth()->user()) {
-            
-        }
-        Blade::if('adminOnly', function () {
-            /** @var User */
-            $authUser = auth()->user();
-            return
-                $authUser->isSuperAdmin() ||
-                $authUser->isAdmin();
-        });
-
-        Blade::if('canManipulateCategory', function (string $action) {
-            /** @var User */
-            $authUser = auth()->user();
-            return
-                $authUser->isSuperAdmin() ||
-                ($authUser->isAdmin() && $authUser->hasPermissionNames($action));
-        });
-
-        Blade::if('canManipulateRole', function (string $action, Role | null $role = null) {
-            /** @var User */
-            $authUser = auth()->user();
-            if ($role) {
-                if ($role->name == 'admin' || $role->name == 'super-admin') {
-                    return $authUser->isSuperAdmin();
-                }
-            }
-            return
-                $authUser->isSuperAdmin() ||
-                ($authUser->isAdmin() && $authUser->hasPermissionNames($action));
-        });
-
-        Blade::if('canManipulateProduct', function (string $action, Product | null $product = null) {
-            /** @var User */
-            $authUser = auth()->user();
-            $authOwnProduct = $product ? $authUser->hasProduct($product->id) : true;
-            return
-                $authUser->isSuperAdmin() ||
-                ($authUser->hasPermissionNames($action) && $authUser->isAdmin()) ||
-                ($authUser->hasPermissionNames($action) && $authOwnProduct);
-        });
-
         Blade::if('canManipulateUser', function (string $action, User | null $user = null) {
             /** @var User */
             $authUser = auth()->user();
@@ -90,16 +46,16 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        Blade::if('hasRoleName', function (string $roleName) {
+        Blade::if('hasRole', function (string $roleName) {
             /** @var User */
             $authUser = auth()->user();
             return $authUser->hasRoleNames($roleName);
         });
 
-        Blade::if('allowedToChangeRoleAndPermission', function () {
+        Blade::if('hasPermission', function (string $permissionName) {
             /** @var User */
             $authUser = auth()->user();
-            return $authUser->isSuperAdmin();
+            return $authUser->hasPermissionNames($permissionName);
         });
     }
 }

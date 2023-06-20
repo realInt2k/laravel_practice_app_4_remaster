@@ -3,11 +3,7 @@
     @method('put')
     <div class="row">
         <div class="col-sm-1"></div>
-        @allowedToChangeRoleAndPermission()
-            <div class="col-sm-5">
-        @else
-            <div class="col-sm-10">
-        @endallowedToChangeRoleAndPermission
+        <div class="col-sm-5">
             <h3>
                 <small class="text-muted">Role details</small>
             </h3>
@@ -21,7 +17,6 @@
                     value="{{ $role->name }}">
             </div>
         </div>
-        @allowedToChangeRoleAndPermission()
         <div class="col-sm-5">
             <h3>
                 <small class="text-muted">permissions</small>
@@ -33,7 +28,6 @@
                 @endforeach
             </select>
         </div>
-        @endallowedToChangeRoleAndPermission
         <div class="col-sm-1"></div>
     </div>
 </form>
@@ -43,8 +37,7 @@
         yourcode(window.jQuery, window, document);
     }(function($, window, document) {
         $(function() {
-            $(".select2").select2({
-            });
+            $(".select2").select2({});
         })
     }))
 </script>

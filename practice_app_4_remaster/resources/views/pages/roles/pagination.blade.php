@@ -1,4 +1,3 @@
-@canManipulateRole('roles-store')
 <div class=" me-3 my-3 text-end">
     <a class="btn bg-gradient-dark mb-0 button-create" data-url="{{ route('roles.create') }}"
         data-page-number={{ $roles->currentPage() }} data-page-count-elements={{ $roles->count() }}>
@@ -6,7 +5,6 @@
         &nbsp;&nbsp;Create New Role
     </a>
 </div>
-@endcanManipulateRole
 <div id="page-info" data-page-number={{ $roles->currentPage() }} data-page-count-elements={{ $roles->count() }} hidden>
 </div>
 <table class="table align-items-center mb-0">
@@ -49,21 +47,17 @@
             </td>
             <td class="align-middle">
                 <div class="btn-group">
-                    @canManipulateRole('roles-update', $role)
                     <a rel="tooltip" class="btn btn-success btn-sm btn-link button-edit"
                         data-id="{{ $role->id }}" data-url="{{ route('roles.edit', $role->id) }}">
                         <span class="material-icons" style="font-size: 150%;">edit</span>
                         <div class="ripple-container"></div>
                     </a>
-                    @endcanManipulateRole
 
-                    @canManipulateRole('roles-destroy', $role)
                     <button type="button" class="btn btn-danger btn-sm btn-link button-delete"
                         data-id="{{ $role->id }}" data-url="{{ route('roles.destroy', $role->id) }}">
                         <span class="material-icons" style="font-size: 150%;">close</span>
                         <div class="ripple-container"></div>
                     </button>
-                    @endcanManipulateRole
 
                     <a rel="tooltip" class="btn btn-info btn-link btn-sm button-show"
                         data-id="{{ $role->id }}" data-url="{{ route('roles.show', $role->id) }}">
