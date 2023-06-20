@@ -38,12 +38,7 @@ class UserService extends BaseService
             $storeData = $request->all();
             $this->extractRoleOrPermissionInput($storeData);
             $user = $this->userRepo->saveNewUser($storeData);
-            /** @var User */
-            $auth = auth()->user();
-            if ($auth->isSuperAdmin()) {
-                $user->syncRoles($storeData['roles']);
-                $user->syncPermissions($storeData['permissions']);
-            }
+            $this->syncPermissionsIfSuperAdmin($storeData, $user);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e);
@@ -59,22 +54,13 @@ class UserService extends BaseService
         try {
             $updateData = $request->all();
             $user = $this->userRepo->findOrFail($id);
-            if ($updateData['password'] === null || empty($updateData['password'])) {
-                $updateData['password'] = $user->password;
-            } else {
-                $updateData['password'] = Hash::make($updateData['password']);
-            }
-            $this->extractRoleOrPermissionInput($updateData);
-            /** @var User */
-            $auth = auth()->user();
-            if ($auth->isSuperAdmin()) {
-                $user->syncRoles($updateData['roles']);
-                $user->syncPermissions($updateData['permissions']);
-            }
+            $this->getUpdateDataPassword($updateData, $user);
             if ($isProfile) {
-                $user = $this->userRepo->updateProfile($updateData, $id);
-            } else {
                 $user = $this->userRepo->updateUser($updateData, $id);
+            } else {
+                $this->extractRoleOrPermissionInput($updateData);
+                $user = $this->userRepo->updateUser($updateData, $id);
+                $this->syncPermissionsIfSuperAdmin($updateData, $user);
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -119,6 +105,25 @@ class UserService extends BaseService
         }
         if (!isset($updateData['permissions'])) {
             $updateData['permissions'] = [];
+        }
+    }
+
+    private function getUpdateDataPassword(&$updateData, $targetUser)
+    {
+        if ($updateData['password'] === null || empty($updateData['password'])) {
+            $updateData['password'] = $targetUser->password;
+        } else {
+            $updateData['password'] = Hash::make($updateData['password']);
+        }
+    }
+
+    private function syncPermissionsIfSuperAdmin($data, $targetUser)
+    {
+        /** @var User */
+        $auth = auth()->user();
+        if ($auth->isSuperAdmin()) {
+            $targetUser->syncRoles($data['roles']);
+            $targetUser->syncPermissions($data['permissions']);
         }
     }
 }

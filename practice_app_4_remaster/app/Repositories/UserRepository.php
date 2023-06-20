@@ -26,13 +26,6 @@ class UserRepository extends BaseRepository
         return $user;
     }
 
-    public function updateProfile($updateData, $id)
-    {
-        /** @var User */
-        $user = $this->update($updateData, $id);
-        return $user;
-    }
-
     public function updateUser($updateData, $id)
     {
         /** @var User */

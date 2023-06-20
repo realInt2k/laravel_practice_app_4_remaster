@@ -78,7 +78,7 @@
                             </div>
                         @endif
                         <form method='POST' action='{{ route('user-profile.update') }}' id="form-data"
-                            data-method="post">
+                            data-method="put">
                             @csrf
                             <div class="row">
 
