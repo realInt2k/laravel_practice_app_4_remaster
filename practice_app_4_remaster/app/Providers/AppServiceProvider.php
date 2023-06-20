@@ -29,20 +29,17 @@ class AppServiceProvider extends ServiceProvider
             $authUser = auth()->user();
             if ($authUser->isSuperAdmin()) {
                 return true;
-            } else if ($authUser->isAdmin()) {
+            } else {
                 $checkPermission = $authUser->hasPermission($action);
                 if (!$user) {
+                    // action is store/create action
                     return $checkPermission;
                 }
                 if ($user->isSuperAdmin()) {
                     return false;
-                } else if ($user->isAdmin()) {
-                    return $checkPermission && $user->id === $authUser->id;
                 } else {
                     return $checkPermission;
                 }
-            } else {
-                return false;
             }
         });
 

@@ -1,11 +1,11 @@
-@hasPermission('users-store')
+@canManipulateUser('users-store')
 <div class=" me-3 my-3 text-end">
     <a class="btn bg-gradient-dark mb-0 button-create" data-url="{{ route('users.create') }}"
         data-page-number={{ $users->currentPage() }} data-page-count-elements={{ $users->count() }}>
         <i class="material-icons text-sm">add</i>&nbsp;&nbsp;Add New
         User</a>
 </div>
-@endhasPermission
+@endcanManipulateUser
 <div id="page-info" data-page-number={{ $users->currentPage() }} data-page-count-elements={{ $users->count() }} hidden>
 </div>
 <table class="table align-items-center mb-0 table-hover">
@@ -61,23 +61,23 @@
                 </td>
                 <td class="align-middle">
                     <div class="btn-group">
-                        @hasPermission('users-update')
+                        @canManipulateUser('users-update', $user)
                         <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit"
                             data-id="{{ $user->id }}"
                             data-url="{{ route('users.edit', $user->id) }}">
                             <span class="material-icons" style="font-size: 150%;">edit</span>
                             <div class="ripple-container"></div>
                         </a>
-                        @endhasPermission
+                        @endcanManipulateUser
 
-                        @hasPermission('users-destroy')
+                        @canManipulateUser('users-destroy', $user)
                         <button type="button" class="btn btn-danger btn-link btn-sm button-delete"
                             data-id="{{ $user->id }}"
                             data-url="{{ route('users.destroy', $user->id) }}">
                             <span class="material-icons" style="font-size: 150%;">close</span>
                             <div class="ripple-container"></div>
                         </button>
-                        @endhasPermission
+                        @endcanManipulateUser
 
                         <a rel="tooltip" class="btn btn-info btn-link btn-sm button-show"
                             data-id="{{ $user->id }}"
