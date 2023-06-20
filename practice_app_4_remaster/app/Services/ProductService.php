@@ -33,11 +33,12 @@ class ProductService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $input = $request->all();
-            $input['user_id'] = auth()->user()->id;
-            $this->extractCategoryIdsFromInput($input);
-            $this->processRequestImageToInput($request, $input, null);
-            $product = $this->productRepo->saveNewProduct($input);
+            $storeData = $request->all();
+            $storeData['user_id'] = auth()->user()->id;
+            $this->extractCategoryIdsFromInput($storeData);
+            $this->processRequestImageToInput($request, $storeData, null);
+            $product = $this->productRepo->saveNewProduct($storeData);
+            $product->syncCategories($storeData['category_ids']);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());
@@ -51,11 +52,12 @@ class ProductService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $input = $request->all();
-            $this->extractCategoryIdsFromInput($input);
+            $updateData = $request->all();
             $product = $this->productRepo->findOrFail($id);
-            $this->processRequestImageToInput($request, $input, $product);
-            $product = $this->productRepo->updateProduct($input, $id);
+            $this->extractCategoryIdsFromInput($updateData);
+            $this->processRequestImageToInput($request, $updateData, $product);
+            $product = $this->productRepo->updateProduct($updateData, $id);
+            $product->syncCategories($updateData['category_ids']);
         } catch (Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());

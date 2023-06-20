@@ -20,19 +20,17 @@ class ProductRepository extends BaseRepository
         return Product::class;
     }
 
-    public function saveNewProduct($input)
+    public function saveNewProduct($storeData)
     {
-        $product = $this->create($input);
-        $product->syncCategories($input['category_ids']);
+        $product = $this->create($storeData);
         return $product;
     }
 
 
-    public function updateProduct($input, $id)
+    public function updateProduct($updateData, $id)
     {
         $product = $this->findOrFail($id);
-        $product->update($input);
-        $product->syncCategories($input['category_ids']);
+        $product->update($updateData);
         return $product;
     }
 
