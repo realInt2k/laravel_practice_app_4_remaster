@@ -19,13 +19,7 @@ class RoleRepository extends BaseRepository
         return Role::class;
     }
 
-    public function indexCore()
-    {
-        $roles = $this->model->withPermissions()->get();
-        return $roles;
-    }
-
-    public function saveNewRole(array $saveData)
+    public function saveNewRole($saveData)
     {
         $role = $this->create($saveData);
         return $role;
