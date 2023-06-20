@@ -1,11 +1,11 @@
 userAction = (function () {
     let modules = {};
-    modules.debug = true;
+    modules.debug = false;
 
     modules.pageNumber = -1;
     modules.pageCount = -1;
 
-    const DELAY_TIMEOUT = 500;
+    const DELAY_TIMEOUT = 300;
 
     modules.getPageInfo = function () {
         const pageInfo = $("#page-info");
@@ -25,18 +25,9 @@ userAction = (function () {
         return function () {
             clearTimeout(timer);
             timer = setTimeout(() => {
-                callback.apply(this, arguments); // why use apply
+                callback.apply(this, arguments);
             }, delay)
         }
-    }
-
-    modules.show = function ({ modalId = "#show-modal", populateHtml = "" } = {}) {
-        if (userAction.debug) {
-            console.log("open modal", modalId);
-        }
-        const modal = $(modalId);
-        $(modalId + "-body").html(populateHtml);
-        modal.modal("show");
     }
 
     modules.openModal = function ({ modalId = "#form-modal", populateHtml = "" } = {}) {

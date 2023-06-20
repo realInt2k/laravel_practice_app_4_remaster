@@ -74,7 +74,7 @@
             userAction.getPageInfo();
             userAction.sendAjax({ url: url, method: 'get', data: {} })
                 .done(function (response) {
-                    userAction.show({ populateHtml: response.html });
+                    userAction.openModal({modalId:"#show-modal", populateHtml: response.html });
                 })
                 .fail(function (response) {
                     if (userAction.debug) {
