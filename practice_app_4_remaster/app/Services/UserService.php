@@ -112,11 +112,6 @@ class UserService extends BaseService
         return $users;
     }
 
-    public function getPaginatedUsers($users, $perPage, $path)
-    {
-        return $this->userRepo->customPaginate($users, $perPage, null, ['path' => $path]);
-    }
-
     private function extractRoleOrPermissionInput(&$updateData)
     {
         if (!isset($updateData['roles'])) {

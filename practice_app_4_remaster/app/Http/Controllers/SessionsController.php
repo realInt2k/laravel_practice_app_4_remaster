@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-Use Str;
 Use Hash;
-use Illuminate\Auth\Events\PasswordReset;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Validation\ValidationException;
 
 class SessionsController extends Controller
 {

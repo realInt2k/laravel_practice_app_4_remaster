@@ -36,10 +36,9 @@ class UserController extends Controller
         $users = $this->userService->search($request, self::PER_PAGE);
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
-        $oldSearch = $request->all();
         $viewHtml = view(
             'pages.users.pagination',
-            compact('users', 'roles', 'permissions', 'oldSearch')
+            compact('users', 'roles', 'permissions')
         )->render();
         return $this->responseWithHtml($viewHtml);
     }

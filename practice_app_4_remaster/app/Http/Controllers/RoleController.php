@@ -27,12 +27,8 @@ class RoleController extends Controller
 
     public function search(Request $request)
     {
-        $pathWithSearchParam = $this->getSearchString($request);
-        if ($pathWithSearchParam == self::DEFAULT_SEARCH_STRING) {
-            $pathWithSearchParam = 'roles';
-        }
         $permissions = $this->permissionService->getAllPermissions();
-        $roles = $this->roleService->search($request, self::PER_PAGE, $pathWithSearchParam);
+        $roles = $this->roleService->search($request, self::PER_PAGE);
         $oldFilter = $request->all();
         $viewHtml = view('pages.roles.pagination', compact('permissions', 'roles', 'oldFilter'))->render();
         return $this->responseWithHtml($viewHtml);

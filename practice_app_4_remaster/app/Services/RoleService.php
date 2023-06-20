@@ -91,14 +91,13 @@ class RoleService extends BaseService
         return $role;
     }
 
-    public function search(Request $request, $perPage, $path)
+    public function search(Request $request, $perPage)
     {
         $searchData = [];
         $searchData['id'] = $request->id;
         $searchData['name'] = $request->name;
         $searchData['permission'] = $request->permission;
         $searchData['perPage'] = $perPage;
-        $searchData['path'] = $path;
         return $this->roleRepo->search($searchData);
     }
 }
