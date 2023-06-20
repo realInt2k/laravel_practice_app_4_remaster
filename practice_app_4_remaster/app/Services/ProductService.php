@@ -23,6 +23,12 @@ class ProductService extends BaseService
         $this->productRepo = $productRepo;
     }
 
+    public function getById($id)
+    {
+        $product = $this->productRepo->findOrFail($id);
+        return $product;
+    }
+
     public function store(StoreProductRequest $request)
     {
         DB::beginTransaction();
@@ -39,24 +45,6 @@ class ProductService extends BaseService
         }
         DB::commit();
         return $product;
-    }
-
-    public function getById($id)
-    {
-        $product = $this->productRepo->findOrFail($id);
-        return $product;
-    }
-
-    public function edit($id)
-    {
-        $product = $this->productRepo->findOrFail($id);
-        return $product;
-    }
-
-    public function updateAjaxValidation($id)
-    {
-        $user = $this->productRepo->findOrFail($id);
-        return $user;
     }
 
     public function update($request, $id)

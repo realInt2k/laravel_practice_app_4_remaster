@@ -50,7 +50,7 @@ class ProductController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $product = $this->productService->edit($id);
+        $product = $this->productService->getById($id);
         $categories = $this->categoryService->getAllCategories();
         $viewHtml = view('pages.products.edit', compact('product', 'categories'))->render();
         return $this->responseWithHtml($viewHtml);
