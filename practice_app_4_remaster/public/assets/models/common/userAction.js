@@ -80,7 +80,7 @@ userAction = (function () {
                 if (userAction.debug) {
                     console.log("get", link, "table ok");
                 }
-                $("#table-data").html(data.html);
+                $("#table-data").html(data.data);
                 hideLoading();
             })
             .fail(function (errors) {
