@@ -20,20 +20,18 @@ Route::prefix('/products')->group(function () {
         ->name('products.create')
         ->middleware('check.permission_or_role:products-store');
 
-    Route::middleware('productCheck')->group(function () {
-        Route::get('/{id}', [ProductController::class, 'show'])
-            ->name('products.show');
+    Route::get('/{id}', [ProductController::class, 'show'])
+        ->name('products.show');
 
-        Route::put('/{id}', [ProductController::class, 'update'])
-            ->name('products.update')
-            ->middleware('check.permission_or_role:products-update');
+    Route::put('/{id}', [ProductController::class, 'update'])
+        ->name('products.update')
+        ->middleware('check.permission_or_role:products-update');
 
-        Route::delete('/{id}', [ProductController::class, 'destroy'])
-            ->name('products.destroy')
-            ->middleware('check.permission_or_role:products-destroy');
+    Route::delete('/{id}', [ProductController::class, 'destroy'])
+        ->name('products.destroy')
+        ->middleware('check.permission_or_role:products-destroy');
 
-        Route::get('/{id}/edit', [ProductController::class, 'edit'])
-            ->name('products.edit')
-            ->middleware('check.permission_or_role:products-update');
-    });
+    Route::get('/{id}/edit', [ProductController::class, 'edit'])
+        ->name('products.edit')
+        ->middleware('check.permission_or_role:products-update');
 });
