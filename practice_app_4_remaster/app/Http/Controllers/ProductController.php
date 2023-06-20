@@ -34,10 +34,9 @@ class ProductController extends Controller
         }
         $products = $this->productService->search($request, self::PER_PAGE, $categoryIds);
         $categories = $this->categoryService->getAllCategories();
-        $oldFilter = $request->all();
         $viewHtml = view(
             'pages.products.pagination',
-            compact('products', 'categories', 'oldFilter')
+            compact('products', 'categories')
         )->render();
         return $this->responseWithHtml($viewHtml);
     }
