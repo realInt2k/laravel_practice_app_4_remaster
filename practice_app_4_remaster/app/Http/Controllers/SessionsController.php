@@ -30,7 +30,7 @@ class SessionsController extends Controller
 
         session()->regenerate();
 
-        return redirect('/dashboard');
+        return redirect(route('users.profile'));
 
     }
 

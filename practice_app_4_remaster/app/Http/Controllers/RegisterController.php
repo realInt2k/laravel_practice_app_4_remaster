@@ -19,6 +19,6 @@ class RegisterController extends Controller
         $user = User::create($request->all());
         auth()->login($user);
 
-        return redirect('/dashboard');
+        return redirect(route('users.profile'));
     }
 }
