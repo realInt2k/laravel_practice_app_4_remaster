@@ -77,12 +77,11 @@ class CategoryService extends BaseService
         return $category;
     }
 
-    public function search($request, $perPage, $path)
+    public function search($request, $perPage)
     {
         $searchData = [];
         $searchData['name'] = $request->name;
         $searchData['perPage'] = $perPage;
-        $searchData['path'] = $path;
         return $this->categoryRepo->search($searchData);
     }
 }

@@ -25,13 +25,8 @@ class CategoryController extends Controller
 
     public function search(Request $request)
     {
-        $searchParams = $this->getSearchString($request);
-        if ($searchParams == self::DEFAULT_SEARCH_STRING) {
-            $searchParams = 'categories';
-        }
-        $oldFilter = $request->all();
-        $categories = $this->categoryService->search($request, self::PER_PAGE, $searchParams);
-        $viewHtml = view('pages.categories.pagination', compact('categories', 'oldFilter'))->render();
+        $categories = $this->categoryService->search($request, self::PER_PAGE);
+        $viewHtml = view('pages.categories.pagination', compact('categories'))->render();
         return $this->responseWithHtml($viewHtml);
     }
 
