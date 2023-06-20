@@ -91,7 +91,7 @@
                         data-id="{{ $product->id }}" data-page-number={{ $products->currentPage() }}
                         data-page-count-elements={{ $products->count() }}
                         data-url="{{ route('products.show', $product->id) }}">
-                        <span class="material-icons" style="font-size: 150%;">search</span>
+                        <span class="material-icons" style="font-size: 150%;">info</span>
                         <div class="ripple-container"></div>
                     </a>
                 </div>

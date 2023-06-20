@@ -74,7 +74,7 @@
 
                     <a rel="tooltip" class="btn btn-info btn-link btn-sm btn-sm button-show"
                         data-id="{{ $category->id }}" data-url="{{ route('categories.show', $category->id) }}">
-                        <span class="material-icons" style="font-size: 150%;">search</span>
+                        <span class="material-icons" style="font-size: 150%;">info</span>
                         <div class="ripple-container"></div>
                     </a>
                 </div>

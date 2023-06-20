@@ -82,7 +82,7 @@
                         <a rel="tooltip" class="btn btn-info btn-link btn-sm button-show"
                             data-id="{{ $user->id }}"
                             data-url="{{ route('users.show', $user->id) }}">
-                            <span class="material-icons" style="font-size: 150%;">search</span>
+                            <span class="material-icons" style="font-size: 150%;">info</span>
                             <div class="ripple-container"></div>
                         </a>
                     </div>
