@@ -44,7 +44,7 @@ trait ImageProcessing
             $image = $this->saveFile($request);
             return $image;
         } else {
-            return null;
+            return $oldImage;
         }
     }
 
