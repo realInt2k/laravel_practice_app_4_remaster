@@ -1,7 +1,5 @@
 <?php
 
-use App\Helpers\RouteHelper;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,5 +10,3 @@ use App\Helpers\RouteHelper;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-RouteHelper::requireRoute();

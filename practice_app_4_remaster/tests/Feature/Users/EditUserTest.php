@@ -46,7 +46,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
         DB::transaction(function () {
             $user = User::factory()->create();
             $this->actingAs($user);
-            $response = $this->get(route('user-profile'));
+            $response = $this->get(route('users.profile'));
             $response->assertStatus(200);
             $response->assertViewIs('pages.users.user-profile');
         });

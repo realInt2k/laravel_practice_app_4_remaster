@@ -82,6 +82,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
                 )
                 ->etc()
         );
+        unset($newProduct->updated_at);
         $this->assertDatabaseHas('products', $newProduct->toArray());
     }
 

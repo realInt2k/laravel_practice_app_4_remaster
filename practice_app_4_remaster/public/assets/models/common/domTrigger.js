@@ -2,6 +2,7 @@
 (function (yourcode) {
     yourcode(window.jQuery, window, document);
 }(function ($, window, document) {
+
     document.addEventListener('keyup', function (event) {
         if (event.key === 'Enter' || event.key === "Escape") {
             Swal.close();
@@ -11,6 +12,11 @@
         userAction.getTable();
     })
     $(function () {
+        $(".search-select").each(function () {
+            $(this).select2({
+            });
+        })
+
         $(document).off("keypress", ".is-invalid").on("keypress", ".is-invalid", function () {
             $(this).removeClass("is-invalid");
         });
@@ -74,7 +80,7 @@
             userAction.getPageInfo();
             userAction.sendAjax({ url: url, method: 'get', data: {} })
                 .done(function (response) {
-                    userAction.openModal({modalId:"#show-modal", populateHtml: response.html });
+                    userAction.openModal({ modalId: "#show-modal", populateHtml: response.html });
                 })
                 .fail(function (response) {
                     if (userAction.debug) {

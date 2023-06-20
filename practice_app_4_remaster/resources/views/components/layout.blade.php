@@ -31,8 +31,13 @@
     <!-- Nucleo Icons -->
     <link href="{{ asset('assets') }}/css/nucleo-icons.css" rel="stylesheet" />
     <link href="{{ asset('assets') }}/css/nucleo-svg.css" rel="stylesheet" />
+    <!--input.css-->
     <link
         href="{{ asset('assets/css/common/input.css') }}?v={{ filemtime(public_path('assets/css/common/input.css')) }}"
+        rel="stylesheet" />
+    <!--spinner.css-->
+    <link
+        href="{{ asset('assets/css/common/spinner.css') }}?v={{ filemtime(public_path('assets/css/common/spinner.css')) }}"
         rel="stylesheet" />
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
@@ -53,6 +58,7 @@
 </head>
 
 <body class="{{ $bodyClass }}">
+    <div id="loading"></div>
     <!-- Modal -->
     @include('components.modals.form-modal', ['title' => ''])
     <!-- End Modal -->
@@ -85,6 +91,10 @@
     </script>
     <script
         src="{{ asset('assets/models/common/notification.js') }}?v={{ filemtime(public_path('assets/models/common/notification.js')) }}">
+    </script>
+    <!--spinner.css-->
+    <script
+        src="{{ asset('assets/models/common/spinner.js') }}?v={{ filemtime(public_path('assets/models/common/spinner.js')) }}">
     </script>
     {{ $slot }}
     <script src="{{ asset('assets') }}/js/core/popper.min.js"></script>

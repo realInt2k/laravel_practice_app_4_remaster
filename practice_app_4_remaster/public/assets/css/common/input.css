@@ -13,6 +13,7 @@ input:focus {
 .button-show:hover {
     cursor: pointer !important;
 }
+
 /* .select2 {
     font-size: 0.8rem !important;
 }

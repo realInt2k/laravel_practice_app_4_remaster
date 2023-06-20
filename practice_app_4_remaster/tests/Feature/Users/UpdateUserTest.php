@@ -94,7 +94,7 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
                     'password' => 'brand new password'
                 ]
             );
-            $response = $this->from(route('user-profile'))->put(route('user-profile.update'), $updateArray);
+            $response = $this->from(route('users.profile'))->put(route('users.profile.update'), $updateArray);
             $response->assertSessionMissing(config('constants.authenticationErrorKey'));
             $response->assertStatus(200);
             $response->assertJson(

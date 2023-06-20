@@ -74,16 +74,19 @@ userAction = (function () {
         const form = $("#form-search");
         const link = url ?? form.attr("action");
         const data = form.serialize();
+        showLoading();
         userAction.sendAjax({ url: link, method: "get", data: data })
             .done(function (data) {
                 if (userAction.debug) {
                     console.log("get", link, "table ok");
                 }
                 $("#table-data").html(data.html);
+                hideLoading();
             })
             .fail(function (errors) {
                 console.log("get table error", errors);
             });
     }
+    // modules.sleep = (ms) => new Promise(r => setTimeout(r, ms));
     return modules;
 }(window.jQuery, window, document))

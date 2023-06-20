@@ -29,7 +29,6 @@
                                     <option value={{ $role->name }}> {{ $role->name }} </option>
                                 @endforeach
                             </select>
-
                         </div>
                     </div>
                 </form>
