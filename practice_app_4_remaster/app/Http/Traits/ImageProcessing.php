@@ -28,7 +28,7 @@ trait ImageProcessing
         return null;
     }
 
-    public function deleteFile(string $name)
+    public function deleteFile($name)
     {
         if (isset($name)) {
             $this->removeFileFromPublicStorage(self::PUBLIC_DIR . $name);
