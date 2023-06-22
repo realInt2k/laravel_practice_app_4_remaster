@@ -115,6 +115,30 @@ class EditUserTest extends AbstractMiddlewareTestCase
         });
     }
 
+    /** @test */
+    public function normal_user_cannot_see_edit_form_of_admin_users(): void
+    {
+        DB::transaction(function () {
+            $adminUser = $this->testAsNewUserWithRolePermission('admin', 'users-update');
+            $user = $this->testAsNewUser();
+            $response = $this->get($this->getRoute($adminUser->id));
+            $response->assertStatus(302);
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        });
+    }
+
+    /** @test */
+    public function admin_user_cannot_see_edit_form_of_super_admin_user(): void
+    {
+        DB::transaction(function () {
+            $superAdminUser = $this->testAsNewUserWithSuperAdmin();
+            $user = $this->testAsNewUserWithRolePermission('admin', 'users-update');
+            $response = $this->get($this->getRoute($superAdminUser->id));
+            $response->assertStatus(302);
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        });
+    }
+
     public function getRoute($id)
     {
         return route('users.edit', $id);
