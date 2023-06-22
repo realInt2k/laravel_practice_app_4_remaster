@@ -60,11 +60,7 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        try {
-            $user = $this->userService->store($request);
-        } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
-        }
+        $user = $this->userService->store($request);
         return $this->responseWithData($user);
     }
 

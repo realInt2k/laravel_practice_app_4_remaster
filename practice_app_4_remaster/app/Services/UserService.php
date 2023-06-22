@@ -31,16 +31,10 @@ class UserService extends BaseService
 
     public function store(Request $request)
     {
-        try {
-            $storeData = $request->all();
-            $this->extractRoleOrPermissionInput($storeData);
-            $user = $this->userRepo->saveNewUser($storeData);
-            $this->syncPermissionsIfSuperAdmin($storeData, $user);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->throwException('cannot store user', $e);
-        }
-        DB::commit();
+        $storeData = $request->all();
+        $this->extractRoleOrPermissionInput($storeData);
+        $user = $this->userRepo->saveNewUser($storeData);
+        $this->syncPermissionsIfSuperAdmin($storeData, $user);
         return $user;
     }
 

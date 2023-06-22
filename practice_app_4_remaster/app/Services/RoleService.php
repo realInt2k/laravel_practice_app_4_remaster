@@ -32,20 +32,12 @@ class RoleService extends BaseService
 
     public function store($request)
     {
-        DB::beginTransaction();
-        try {
-            $saveData = $request->all();
-            if (!isset($saveData['permissions'])) {
-                $saveData['permissions'] = [];
-            }
-            $role = $this->roleRepo->saveNewRole($saveData);
-            $role->syncPermissionIds($saveData['permissions']);
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot update role data");
+        $saveData = $request->all();
+        if (!isset($saveData['permissions'])) {
+            $saveData['permissions'] = [];
         }
-        DB::commit();
+        $role = $this->roleRepo->saveNewRole($saveData);
+        $role->syncPermissionIds($saveData['permissions']);
         return $role;
     }
 
@@ -61,8 +53,7 @@ class RoleService extends BaseService
             $role->syncPermissionIds($updateData['permissions']);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot update role data");
+            $this->throwException('cannot update role', $e);
         }
         DB::commit();
         return $role;
@@ -75,8 +66,7 @@ class RoleService extends BaseService
             $role = $this->roleRepo->destroyRole($id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot destroy role data");
+            $this->throwException('cannot destroy role', $e);
         }
         DB::commit();
         return $role;
