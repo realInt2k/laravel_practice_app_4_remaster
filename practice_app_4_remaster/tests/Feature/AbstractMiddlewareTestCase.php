@@ -9,17 +9,6 @@ use App\Services\UserRolePermissionUtility;
 
 abstract class AbstractMiddlewareTestCase extends TestCase
 {
-    protected function getRequestData($curPage, $lastPage, $perPage, $href, $count)
-    {
-        return [
-            'curPage' => $curPage,
-            'lastPage' => $lastPage,
-            'perPage' => $perPage,
-            'href' => $href,
-            'count' => $count
-        ];
-    }
-
     protected function deleteGetRedirectPage($request)
     {
         $redirectPage = $request['curPage'];
