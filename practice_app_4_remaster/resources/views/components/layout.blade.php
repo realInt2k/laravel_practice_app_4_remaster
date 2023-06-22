@@ -59,7 +59,7 @@
 
 <body class="{{ $bodyClass }}">
     @debug
-        {{ print_r(session()->all()) }}
+        {{-- {{ auth()->name() }} --}}
     @enddebug
     <div id="loading"></div>
     <!-- Modal -->

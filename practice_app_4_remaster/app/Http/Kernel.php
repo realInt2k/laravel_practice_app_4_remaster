@@ -66,7 +66,8 @@ class Kernel extends HttpKernel
         'check.permission_or_role' => \App\Http\Middleware\PermissionOrRole::class,
         'check.permission' => \App\Http\Middleware\Permission::class,
         'check.role' => \App\Http\Middleware\Role::class,
-        'productCheck' => \App\Http\Middleware\ProductMiddleware::class,
+        'protect.admin' => \App\Http\Middleware\AdminProtectionMiddleware::class,
+        'check.product' => \App\Http\Middleware\ProductMiddleware::class,
     ];
 
     /**

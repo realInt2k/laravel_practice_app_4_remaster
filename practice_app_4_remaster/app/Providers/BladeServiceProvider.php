@@ -26,23 +26,7 @@ class BladeServiceProvider extends ServiceProvider
         });
 
         Blade::if('canManipulateUser', function (string $action, User | null $user = null) {
-            /** @var User */
-            $authUser = auth()->user();
-            if ($authUser->isSuperAdmin()) {
-                return true;
-            } elseif ($authUser->isAdmin()) {
-                if ($user != null && $user->isSuperAdmin()) {
-                    return false;
-                } else {
-                    return $authUser->hasPermission($action);
-                }
-            } else {
-                if ($user != null && ($user->isSuperAdmin() || $user->isAdmin())) {
-                    return false;
-                } else {
-                    return $authUser->hasPermission($action);
-                }
-            }
+            return auth()->canPerformAction($action, $user);
         });
 
         Blade::if('hasRole', function (string $roleName) {
