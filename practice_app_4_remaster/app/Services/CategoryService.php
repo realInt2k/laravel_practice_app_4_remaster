@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Exception;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\CategoryRepository;
@@ -64,7 +63,6 @@ class CategoryService extends BaseService
             $category = $this->categoryRepo->updateCategory($updateData, $id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
             $this->throwException('cannot update category', $e);
         }
         DB::commit();
