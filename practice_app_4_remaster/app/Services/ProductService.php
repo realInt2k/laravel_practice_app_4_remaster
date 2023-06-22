@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use Exception;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Traits\ImageProcessing;
 use App\Repositories\ProductRepository;
 use App\Http\Requests\StoreProductRequest;
