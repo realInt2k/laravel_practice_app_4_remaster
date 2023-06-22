@@ -22,8 +22,7 @@ class ProductRepository extends BaseRepository
 
     public function saveNewProduct($storeData)
     {
-        $product = $this->create($storeData);
-        return $product;
+        return $this->create($storeData);
     }
 
 
@@ -36,13 +35,13 @@ class ProductRepository extends BaseRepository
 
     public function search($searchData)
     {
-        $products = $this->model->withCategories()
+        return $this->model->withCategories()
             ->whereCategoryIds($searchData['category_ids'])
             ->whereId($searchData['id'])
             ->whereUserId($searchData['user_id'])
             ->whereName($searchData['name'])
-            ->whereDescription($searchData['description']);
-        return $products->paginate($searchData['perPage']);
+            ->whereDescription($searchData['description'])
+            ->paginate($searchData['perPage']);
     }
 
     public function destroy($id)

@@ -96,7 +96,7 @@ class Product extends Model
 
     public function scopeWhereCategoryIds($query, $ids)
     {
-        return $ids ? $query->whereHas('categories', fn ($query) =>
+        return $ids ? $query->whereRelation('categories', fn ($query) =>
         $query->wherein('id', $ids)) :
             null;
     }
