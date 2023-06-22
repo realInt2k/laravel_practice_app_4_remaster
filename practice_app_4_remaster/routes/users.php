@@ -22,26 +22,27 @@ Route::prefix('/users')->group(function () {
 
     Route::get('/create', [UserController::class, 'create'])
         ->name('users.create')
-        ->middleware('check.permission:users-store');
+        ->middleware('check.permission:users.store');
 
     Route::get('/{id}', [UserController::class, 'show'])
         ->name('users.show');
 
-    Route::middleware('protect.admin')->group(function () {
-        Route::get('/{id}/edit', [UserController::class, 'edit'])
-            ->name('users.edit')
-            ->middleware('check.permission:users-update');
+    Route::post('/', [UserController::class, 'store'])
+        ->name('users.store')
+        ->middleware('check.permission:users.store');
 
-        Route::post('/', [UserController::class, 'store'])
-            ->name('users.store')
-            ->middleware('check.permission:users-store');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])
+        ->name('users.edit')
+        ->middleware('check.permission:users.update')
+        ->middleware('protect.admin:users.update');
 
-        Route::put('/{id}', [UserController::class, 'update'])
-            ->name('users.update')
-            ->middleware('check.permission:users-update');
+    Route::put('/{id}', [UserController::class, 'update'])
+        ->name('users.update')
+        ->middleware('check.permission:users.update')
+        ->middleware('protect.admin:users.update');
 
-        Route::delete('/{id}', [UserController::class, 'destroy'])
-            ->name('users.destroy')
-            ->middleware('check.permission:users-destroy');
-    });
+    Route::delete('/{id}', [UserController::class, 'destroy'])
+        ->name('users.destroy')
+        ->middleware('check.permission:users.destroy')
+        ->middleware('protect.admin:users.destroy');
 });

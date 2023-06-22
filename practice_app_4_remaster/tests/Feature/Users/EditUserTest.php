@@ -85,7 +85,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
         DB::transaction(function () {
             /** @var User */
             $user = $this->testAsNewUserWithRolePermission('role' . Str::random(10), 'perm' . Str::random(10));
-            $this->testAsNewUserWithRolePermission('admin', 'users-update');
+            $this->testAsNewUserWithRolePermission('admin', 'users.update');
             $response = $this->get($this->getRoute($user->id));
             $response->assertStatus(200);
             $response->assertJson(
@@ -119,7 +119,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
     public function normal_user_cannot_see_edit_form_of_admin_users(): void
     {
         DB::transaction(function () {
-            $adminUser = $this->testAsNewUserWithRolePermission('admin', 'users-update');
+            $adminUser = $this->testAsNewUserWithRolePermission('admin', 'users.update');
             $user = $this->testAsNewUser();
             $response = $this->get($this->getRoute($adminUser->id));
             $response->assertStatus(302);
@@ -132,7 +132,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
     {
         DB::transaction(function () {
             $superAdminUser = $this->testAsNewUserWithSuperAdmin();
-            $user = $this->testAsNewUserWithRolePermission('admin', 'users-update');
+            $user = $this->testAsNewUserWithRolePermission('admin', 'users.update');
             $response = $this->get($this->getRoute($superAdminUser->id));
             $response->assertStatus(302);
             $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));

@@ -30,7 +30,7 @@ class EditRoleTest extends AbstractMiddlewareTestCase
     public function admin_cannot_see_edit_role_form_with_role_update_permission(): void
     {
         DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles-update');
+            $this->testAsNewUserWithRolePermission('admin', 'roles.update');
             $role = Role::factory()->create();
             $response = $this->get(route('roles.edit', $role->id));
             $response->assertStatus(302);
@@ -44,7 +44,7 @@ class EditRoleTest extends AbstractMiddlewareTestCase
     public function authenticated_cannot_see_edit_role_form_with_invalid_id(): void
     {
         DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('python2' . Str::random(10), 'roles-update');
+            $this->testAsNewUserWithRolePermission('python2' . Str::random(10), 'roles.update');
             $id = -1;
             $response = $this->get(route('roles.edit', $id));
             $response->assertStatus(Response::HTTP_NOT_FOUND);

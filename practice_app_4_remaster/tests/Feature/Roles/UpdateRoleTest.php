@@ -43,7 +43,7 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
     public function admin_with_roles_update_permission_cannot_update_role(): void
     {
         DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles-update');
+            $this->testAsNewUserWithRolePermission('admin', 'roles.update');
             $role = Role::factory()->create();
             $newRole = Role::factory()->make($role->toArray());
             $newRole['name'] = $role->name . 'new';
@@ -88,7 +88,7 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
     public function cannot_update_role_with_invalid_id(): void
     {
         DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles-update');
+            $this->testAsNewUserWithRolePermission('admin', 'roles.update');
             $id = -1;
             $data = ['name' => 'bullshit'];
             $response = $this->put(route('roles.update', $id), $data);

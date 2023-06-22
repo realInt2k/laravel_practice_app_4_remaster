@@ -26,7 +26,7 @@ class CreateProductTest extends AbstractMiddlewareTestCase
      */
     public function authenticated_can_see_create_product_with_products_store_permission(): void
     {
-        $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products-store');
+        $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products.store');
         $data = Product::factory()->make();
         $response = $this->get(route('products.create'), $data->toArray());
         $response->assertStatus(200);

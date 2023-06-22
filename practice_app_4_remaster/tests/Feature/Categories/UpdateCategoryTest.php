@@ -12,7 +12,7 @@ class UpdateCategoryTest extends AbstractMiddlewareTestCase
     /** @test */
     public function admin_can_updated_category()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-update');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.update');
         $data = $this->createData();
         $dataUpdate = $this->makeData();
         $response = $this->put($this->getRoute($data->id), $dataUpdate);
@@ -31,7 +31,7 @@ class UpdateCategoryTest extends AbstractMiddlewareTestCase
     /** @test */
     public function cannot_update_with_invalid_data()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-update');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.update');
         $data = $this->createData();
         $dataUpdate = $this->makeStupidData();
         $response = $this->from($this->getEditViewRoute($data->id))->put($this->getRoute($data->id), $dataUpdate);
@@ -52,7 +52,7 @@ class UpdateCategoryTest extends AbstractMiddlewareTestCase
     /** @test */
     public function can_not_update_if_category_not_exist()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-update');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.update');
         $dataUpdate = $this->makeData();
         $response = $this->put($this->getRoute(-1), $dataUpdate);
         $response->assertStatus(Response::HTTP_NOT_FOUND);

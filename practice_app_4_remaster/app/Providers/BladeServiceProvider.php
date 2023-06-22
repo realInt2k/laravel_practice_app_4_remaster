@@ -26,7 +26,10 @@ class BladeServiceProvider extends ServiceProvider
         });
 
         Blade::if('canManipulateUser', function (string $action, User | null $user = null) {
-            return auth()->canPerformAction($action, $user);
+            if (!auth()->user()->hasPermission($action)) {
+                return false;
+            }
+            return auth()->hierarchyActionCheck($action, $user);
         });
 
         Blade::if('hasRole', function (string $roleName) {

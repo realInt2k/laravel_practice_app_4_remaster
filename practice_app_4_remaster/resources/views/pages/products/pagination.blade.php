@@ -1,4 +1,4 @@
-@hasPermission('products-store')
+@hasPermission('products.store')
 <div class=" me-3 my-3 text-end">
     <a class="btn bg-gradient-dark mb-0 button-create" data-url="{{ route('products.create') }}"
         data-page-number={{ $products->currentPage() }} data-page-count-elements={{ $products->count() }}><i
@@ -69,7 +69,7 @@
             </td>
             <td class="align-middle">
                 <div class="btn-group">
-                    @hasPermission('products-update')
+                    @hasPermission('products.update')
                     <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit"
                         data-id="{{ $product->id }}" data-page-number={{ $products->currentPage() }}
                         data-page-count-elements={{ $products->count() }}
@@ -78,7 +78,7 @@
                         <div class="ripple-container"></div>
                     </a>
                     @endhasPermission
-                    @hasPermission('products-destroy')
+                    @hasPermission('products.destroy')
                     <button type="button" class="btn btn-danger btn-sm btn-link button-delete"
                         data-page-number={{ $products->currentPage() }} data-id="{{ $product->id }}"
                         data-page-count-elements={{ $products->count() }}

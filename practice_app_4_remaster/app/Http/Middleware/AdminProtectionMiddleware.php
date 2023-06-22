@@ -21,11 +21,10 @@ class AdminProtectionMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, string $action): Response
     {
         $targetUser = $this->userService->getById($request->id);
-        $action = $request->route()->getName();
-        if(!auth()->canPerformAction($action, $targetUser)) {
+        if (!auth()->hierarchyActionCheck($action, $targetUser)) {
             return $this->accessDenied($request);
         }
         return $next($request);

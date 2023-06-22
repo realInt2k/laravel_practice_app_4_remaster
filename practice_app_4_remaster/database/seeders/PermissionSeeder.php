@@ -20,10 +20,10 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $defaultPermissions = [
-            'users-store', 'users-update', 'users-destroy',
-            'roles-store', 'roles-update', 'roles-destroy',
-            'products-store', 'products-update', 'products-destroy',
-            'categories-store', 'categories-update', 'categories-destroy'
+            'users.store', 'users.update', 'users.destroy',
+            'roles.store', 'roles.update', 'roles.destroy',
+            'products.store', 'products.update', 'products.destroy',
+            'categories.store', 'categories.update', 'categories.destroy'
         ];
         foreach ($defaultPermissions as $permission) {
             $this->createIfNotExist($permission);

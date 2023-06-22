@@ -45,7 +45,7 @@ class CreateUserTest extends AbstractMiddlewareTestCase
      */
     public function authenticated_with_super_admin_privilege_can_see_create_user_form(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'users-store');
+        $this->testAsNewUserWithRolePermission('admin', 'users.store');
         $response = $this->get($this->getRoute());
         $response->assertStatus(200);
         $response->assertJson(

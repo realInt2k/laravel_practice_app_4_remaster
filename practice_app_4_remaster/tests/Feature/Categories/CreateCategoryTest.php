@@ -28,7 +28,7 @@ class CreateCategoryTest extends AbstractMiddlewareTestCase
     /** @test */
     public function admin_can_see_create_category_form_with_categories_store()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-store');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
         $response = $this->get($this->getRoute());
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJson(

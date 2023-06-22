@@ -30,7 +30,7 @@ class StoreCategoryTest extends AbstractMiddlewareTestCase
     /** @test */
     public function admin_can_see_store_category_with_categories_store()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-store');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
         $data = $this->makeData();
         $response = $this->post($this->getRoute(), $data);
         $response->assertStatus(Response::HTTP_OK);

@@ -38,7 +38,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function authenticated_can_update_product_with_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('role' . Str::random(5), 'products-update');
+        $this->testAsNewUserWithRolePermission('role' . Str::random(5), 'products.update');
         $product = Product::factory()->create();
         $id = $product->id;
         $newProduct =   Product::factory()->make();
@@ -78,7 +78,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function can_update_product_with_valid_id_and_valid_data_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['name'] = $product->name . ' new name';
@@ -105,7 +105,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function cannot_update_product_with_valid_id_and_invalid_data_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['name'] = '';
@@ -122,7 +122,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function cannot_update_product_with_valid_id_and_invalid_name_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['name'] = '';
@@ -138,7 +138,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function cannot_update_product_with_valid_id_and_invalid_description_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['description'] = '';

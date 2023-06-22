@@ -45,7 +45,7 @@ class DeleteRoleTest extends AbstractMiddlewareTestCase
     public function admin_with_roles_destroy_permission_cannot_delete(): void
     {
         DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles-destroy');
+            $this->testAsNewUserWithRolePermission('admin', 'roles.destroy');
             $role = Role::factory()->create();
             $roleCountBefore = Role::count();
             $response = $this->from(route('roles.index'))->delete(route('roles.destroy', $role->id));

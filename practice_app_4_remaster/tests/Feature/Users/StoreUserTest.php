@@ -47,7 +47,7 @@ class StoreUserTest extends AbstractMiddlewareTestCase
     public function authenticated_with_users_store_permission_and_admin_privilege_can_store(): void
     {
         DB::transaction(function () {
-            $user = $this->testAsNewUserWithRolePermissions('admin', ['users-store']);
+            $user = $this->testAsNewUserWithRolePermissions('admin', ['users.store']);
             $user = User::factory()->make();
             $userWithPassword = $user->toArray();
             $userWithPassword['password'] = $user->password;

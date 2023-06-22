@@ -23,9 +23,9 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $defaultPermissions = [
-            'users-store', 'users-update', 'users-destroy',
-            'products-store', 'products-update', 'products-destroy',
-            'roles-store', 'roles-update', 'roles-destroy'
+            'users.store', 'users.update', 'users.destroy',
+            'products.store', 'products.update', 'products.destroy',
+            'roles.store', 'roles.update', 'roles.destroy'
         ];
 
         // admin

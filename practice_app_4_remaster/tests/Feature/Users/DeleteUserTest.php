@@ -54,7 +54,7 @@ class DeleteUserTest extends AbstractMiddlewareTestCase
     public function admin_can_delete_user_with_user_destroy_permission(): void
     {
         DB::transaction(function () {
-            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users-destroy');
+            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users.destroy');
             $otherUser = User::factory()->create();
             $response = $this->from(route('users.index'))
                 ->delete($this->getRoute($otherUser->id));

@@ -32,7 +32,7 @@ class CreateRoleTest extends AbstractMiddlewareTestCase
     /** @test */
     public function admin_with_roles_store_permission_cannot_see_create_role_form(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'roles-store');
+        $this->testAsNewUserWithRolePermission('admin', 'roles.store');
         $response = $this->from(route('users.profile'))->get(route('roles.create'));
         $response->assertStatus(302);
         $response->assertRedirect(route('users.profile'));

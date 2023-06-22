@@ -23,23 +23,15 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        SessionGuard::macro('canPerformAction', function ($action, User | null $user = null) {
+        SessionGuard::macro('hierarchyActionCheck', function ($action, User | null $user = null) {
             /** @var User */
             $authUser = auth()->user();
             if ($authUser->isSuperAdmin()) {
                 return true;
             } elseif ($authUser->isAdmin()) {
-                if ($user != null && $user->isSuperAdmin()) {
-                    return false;
-                } else {
-                    return $authUser->hasPermission($action);
-                }
+                return $user === null || !$user->isSuperAdmin();
             } else {
-                if ($user != null && ($user->isSuperAdmin() || $user->isAdmin())) {
-                    return false;
-                } else {
-                    return $authUser->hasPermission($action);
-                }
+                return $user === null || !($user->isSuperAdmin() || $user->isAdmin());
             }
         });
     }
