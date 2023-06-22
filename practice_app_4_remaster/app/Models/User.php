@@ -156,22 +156,6 @@ class User extends Authenticatable
         return $this->permissions()->sync($permissionIds);
     }
 
-
-    /** 
-     * TODO: DELETE THIS
-     */
-    public function scopeWhereProductName($query, string $key, string $op, string $value)
-    {
-        $query->whereHas('products', function ($query) use ($key, $op, $value) {
-            $query->where($key, $op, $value);
-        });
-    }
-
-    public function scopeWhereProductId($query, $id)
-    {
-        $query->whereHas('products', fn ($query) => $query->where('id', $id));
-    }
-
     public function hasProduct(int $id)
     {
         return $this->products()->where('id', $id)->count() > 0;
