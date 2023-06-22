@@ -48,6 +48,6 @@ class CreateProductTest extends AbstractMiddlewareTestCase
         $data = Product::factory()->make();
         $response = $this->get(route('products.create'), $data->toArray());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 }

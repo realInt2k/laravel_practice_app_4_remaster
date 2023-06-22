@@ -58,6 +58,9 @@
 </head>
 
 <body class="{{ $bodyClass }}">
+    @debug
+        {{ print_r(session()->all()) }}
+    @enddebug
     <div id="loading"></div>
     <!-- Modal -->
     @include('components.modals.form-modal', ['title' => ''])

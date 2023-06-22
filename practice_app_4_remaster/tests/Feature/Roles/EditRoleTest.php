@@ -34,7 +34,7 @@ class EditRoleTest extends AbstractMiddlewareTestCase
             $role = Role::factory()->create();
             $response = $this->get(route('roles.edit', $role->id));
             $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
         });
     }
 

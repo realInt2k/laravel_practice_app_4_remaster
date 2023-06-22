@@ -36,7 +36,7 @@ class DeleteRoleTest extends AbstractMiddlewareTestCase
             $id = rand(0, Role::count());
             $response = $this->delete(route('roles.destroy', $id), $requestData);
             $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
             $this->assertDatabaseCount('roles', $roleCountBefore);
         });
     }

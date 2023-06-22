@@ -33,7 +33,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
             $user = User::factory()->create();
             $this->testAsNewUser();
             $response = $this->get($this->getRoute($user->id));
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
             $response->assertStatus(302);
         });
     }

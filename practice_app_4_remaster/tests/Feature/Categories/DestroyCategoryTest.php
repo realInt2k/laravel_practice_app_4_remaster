@@ -35,7 +35,7 @@ class DestroyCategoryTest extends AbstractMiddlewareTestCase
         $data = $this->createData();
         $response = $this->delete($this->getRoute($data->id));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     public function createData()

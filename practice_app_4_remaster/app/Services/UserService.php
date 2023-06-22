@@ -4,9 +4,7 @@ namespace App\Services;
 
 use Exception;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
@@ -33,7 +31,6 @@ class UserService extends BaseService
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
         try {
             $storeData = $request->all();
             $this->extractRoleOrPermissionInput($storeData);
@@ -41,8 +38,7 @@ class UserService extends BaseService
             $this->syncPermissionsIfSuperAdmin($storeData, $user);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e);
-            throw new InvalidArgumentException("cannot create user data");
+            $this->throwException('cannot store user', $e);
         }
         DB::commit();
         return $user;
@@ -64,8 +60,7 @@ class UserService extends BaseService
             }
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e);
-            throw new InvalidArgumentException("cannot update user data");
+            $this->throwException('cannot update user', $e);
         }
         DB::commit();
 
@@ -79,8 +74,7 @@ class UserService extends BaseService
             $user = $this->userRepo->destroy($id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e);
-            throw new InvalidArgumentException("cannot destroy user data");
+            $this->throwException('cannot destroy user', $e);
         }
         DB::commit();
         return $user;
@@ -120,11 +114,7 @@ class UserService extends BaseService
 
     private function syncPermissionsIfSuperAdmin($data, $targetUser)
     {
-        /** @var User */
-        $auth = auth()->user();
-        if ($auth->isSuperAdmin()) {
-            $targetUser->syncRoles($data['roles']);
-            $targetUser->syncPermissions($data['permissions']);
-        }
+        $targetUser->syncRoles($data['roles']);
+        $targetUser->syncPermissions($data['permissions']);
     }
 }

@@ -43,6 +43,6 @@ class EditProductTest extends AbstractMiddlewareTestCase
         $product = Product::factory()->create();
         $response = $this->get(route('products.edit', $product->id));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 }

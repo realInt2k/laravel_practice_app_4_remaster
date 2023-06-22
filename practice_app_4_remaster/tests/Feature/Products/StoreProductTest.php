@@ -32,7 +32,7 @@ class StoreProductTest extends AbstractMiddlewareTestCase
         $response = $this->from(route('products.create'))
             ->post(route('products.store'), $data->toArray());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**

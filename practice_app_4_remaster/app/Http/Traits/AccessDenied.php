@@ -13,7 +13,7 @@ trait AccessDenied {
             ], Response::HTTP_FORBIDDEN);
         } else {
             return redirect()->back()->with(
-                config('constants.authenticationErrorKey'),
+                config('constants.AUTHENTICATION_ERROR_KEY'),
                 'you don\'t have permission to perform this action!'
             );
         }

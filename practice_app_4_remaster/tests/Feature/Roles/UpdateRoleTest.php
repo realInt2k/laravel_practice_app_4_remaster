@@ -33,7 +33,7 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
             $role = Role::factory()->create();
             $response = $this->put(route('roles.update', $role->id));
             $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
         });
     }
 
@@ -50,7 +50,7 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
             $newRole->id = $role->id;
             $response = $this->from(route('roles.edit', $role->id))
                 ->put(route('roles.update', $role->id), $newRole->toArray());
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
             $this->assertDatabaseMissing('roles', $newRole->toArray());
         });
     }

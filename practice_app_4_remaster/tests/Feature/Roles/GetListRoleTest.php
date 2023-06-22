@@ -25,7 +25,7 @@ class GetListRoleTest extends AbstractMiddlewareTestCase
         $this->testAsNewUser();
         $response = $this->get(route('roles.index'));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**

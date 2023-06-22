@@ -26,7 +26,7 @@ class CreateUserTest extends AbstractMiddlewareTestCase
         $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'play all day long');
         $response = $this->get($this->getRoute());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**
@@ -37,7 +37,7 @@ class CreateUserTest extends AbstractMiddlewareTestCase
         $this->testAsNewUserWithRolePermission('admin', 'play all day long');
         $response = $this->get($this->getRoute());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**

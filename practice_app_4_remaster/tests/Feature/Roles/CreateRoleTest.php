@@ -26,7 +26,7 @@ class CreateRoleTest extends AbstractMiddlewareTestCase
         $this->testAsNewUser();
         $response = $this->get(route('roles.create'));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */

@@ -24,7 +24,7 @@ class DestroyProductTest extends AbstractMiddlewareTestCase
         $product = Product::factory()->create();
         $response = $this->delete(route('products.destroy', $product->id));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */

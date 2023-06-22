@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'authenticationErrorKey' => 'authenticationErrors',
+    'AUTHENTICATION_ERROR_KEY' => 'authenticationErrors',
+    'FRONT_END_DEBUG' => true
 ];
