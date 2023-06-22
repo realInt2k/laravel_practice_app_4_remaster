@@ -36,14 +36,28 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function authenticated_cannot_update_product_if_it_isnt_yours(): void
+    public function authenticated_can_update_product_with_permission(): void
     {
         $this->testAsNewUserWithRolePermission('role' . Str::random(5), 'products-update');
         $product = Product::factory()->create();
         $id = $product->id;
-        $response = $this->from('/')->put(route('products.update', $id), $product->toArray());
-        $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $newProduct =   Product::factory()->make();
+        $response = $this->from('/')->put(route('products.update', $id), $newProduct->toArray());
+        $response->assertStatus(200);
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has(
+                    'data',
+                    fn (AssertableJson $json) =>
+                    $json
+                        ->where('id', $product->id)
+                        ->where('name', $newProduct->name)
+                        ->where('description', $newProduct->description)
+                        ->etc()
+                )
+                ->etc()
+        );
+        $this->assertDatabaseHas('products', $newProduct->toArray());
     }
 
     /**

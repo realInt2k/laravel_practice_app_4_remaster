@@ -35,8 +35,8 @@ class GetListRoleTest extends AbstractMiddlewareTestCase
     {
         $this->withoutExceptionHandling();
         $this->testAsNewUserWithRolePermission('admin', 'roles-store');
-        $response = $this->from(route('dashboard'))->get(route('roles.index'));
+        $response = $this->from(route('users.profile'))->get(route('roles.index'));
         $response->assertStatus(302);
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('users.profile'));
     }
 }
