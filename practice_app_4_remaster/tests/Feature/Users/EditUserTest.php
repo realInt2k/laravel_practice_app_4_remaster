@@ -27,7 +27,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function authenticated_but_cannot_edit_because_not_admins(): void
+    public function cannot_see_edit_form_without_permission(): void
     {
         DB::transaction(function () {
             $user = User::factory()->create();
@@ -55,7 +55,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function authenticated_can_edit_with_super_admin_privilege(): void
+    public function can_see_edit_form_as_super_admin(): void
     {
         DB::transaction(function () {
             /** @var User */
@@ -65,10 +65,10 @@ class EditUserTest extends AbstractMiddlewareTestCase
             $response->assertStatus(200);
             $response->assertJson(
                 fn (AssertableJson $json) => $json
-                ->has(
-                    'data'
-                )
-                ->etc()
+                    ->has(
+                        'data'
+                    )
+                    ->etc()
             );
             $response->assertSee($user->name);
             $response->assertSee($user->email);
@@ -80,7 +80,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function authenticated_can_edit_with_admin_privilege_and_permission(): void
+    public function can_see_edit_form_with_permission(): void
     {
         DB::transaction(function () {
             /** @var User */
@@ -90,10 +90,10 @@ class EditUserTest extends AbstractMiddlewareTestCase
             $response->assertStatus(200);
             $response->assertJson(
                 fn (AssertableJson $json) => $json
-                ->has(
-                    'data'
-                )
-                ->etc()
+                    ->has(
+                        'data'
+                    )
+                    ->etc()
             );
             $response->assertSee($user->name);
             $response->assertSee($user->email);
@@ -105,7 +105,7 @@ class EditUserTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function cannot_edit_user_with_invalid_id(): void
+    public function cannot_see_edit_form_with_invalid_id(): void
     {
         DB::transaction(function () {
             $this->testAsUserWithSuperAdmin();

@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
-class BladeProvider extends ServiceProvider
+class BladeServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -30,16 +30,17 @@ class BladeProvider extends ServiceProvider
             $authUser = auth()->user();
             if ($authUser->isSuperAdmin()) {
                 return true;
-            } else {
-                $checkPermission = $authUser->hasPermission($action);
-                if (!$user) {
-                    // action is store/create action
-                    return $checkPermission;
-                }
-                if ($user->isSuperAdmin()) {
+            } elseif ($authUser->isAdmin()) {
+                if ($user != null && $user->isSuperAdmin()) {
                     return false;
                 } else {
-                    return $checkPermission;
+                    return $authUser->hasPermission($action);
+                }
+            } else {
+                if ($user != null && ($user->isSuperAdmin() || $user->isAdmin())) {
+                    return false;
+                } else {
+                    return $authUser->hasPermission($action);
                 }
             }
         });
