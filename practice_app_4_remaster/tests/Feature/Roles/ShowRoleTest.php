@@ -27,7 +27,7 @@ class ShowRoleTest extends AbstractMiddlewareTestCase
      */
     public function cannot_see_role_with_invalid_id(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'roles-store');
+        $this->testAsNewUserWithRolePermission('admin', 'roles.store');
         $id = -1;
         $response = $this->get(route('roles.show', -1));
         $response->assertStatus(Response::HTTP_NOT_FOUND);

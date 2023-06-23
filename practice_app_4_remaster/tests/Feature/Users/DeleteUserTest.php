@@ -33,7 +33,7 @@ class DeleteUserTest extends AbstractMiddlewareTestCase
             $otherUser = User::factory()->create();
             $response = $this->delete($this->getRoute($otherUser->id));
             $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
         });
     }
 
@@ -46,7 +46,7 @@ class DeleteUserTest extends AbstractMiddlewareTestCase
             $response = $this->from(route('users.index'))
                 ->delete($this->getRoute($otherUser->id));
             $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
         });
     }
 
@@ -54,11 +54,11 @@ class DeleteUserTest extends AbstractMiddlewareTestCase
     public function admin_can_delete_user_with_user_destroy_permission(): void
     {
         DB::transaction(function () {
-            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users-destroy');
+            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users.destroy');
             $otherUser = User::factory()->create();
             $response = $this->from(route('users.index'))
                 ->delete($this->getRoute($otherUser->id));
-            $response->assertSessionMissing(config('constants.authenticationErrorKey'));
+            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
             $response->assertStatus(Response::HTTP_NO_CONTENT);
             $this->assertDatabaseMissing('users', $otherUser->toArray());
         });
@@ -72,7 +72,7 @@ class DeleteUserTest extends AbstractMiddlewareTestCase
             $otherUser = User::factory()->create();
             $response = $this->from(route('users.index'))
                 ->delete($this->getRoute($otherUser->id));
-            $response->assertSessionMissing(config('constants.authenticationErrorKey'));
+            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
             $response->assertStatus(Response::HTTP_NO_CONTENT);
             $this->assertDatabaseMissing('users', $otherUser->toArray());
         });

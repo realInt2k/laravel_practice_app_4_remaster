@@ -21,17 +21,17 @@ Route::prefix('/categories')->group(function () {
 
     Route::get('/create', [CategoryController::class, 'create'])
         ->name('categories.create')
-        ->middleware('check.permission:categories-store');
+        ->middleware('check.permission:categories.store');
 
     Route::delete('/{id}', [CategoryController::class, 'destroy'])
         ->name('categories.destroy')
-        ->middleware('check.permission:categories-destroy');
+        ->middleware('check.permission:categories.destroy');
 
     Route::put('/{id}', [CategoryController::class, 'update'])
         ->name('categories.update')
-        ->middleware('check.permission:categories-update');
+        ->middleware('check.permission:categories.update');
 
     Route::post('/', [CategoryController::class, 'store'])
         ->name('categories.store')
-        ->middleware('check.permission:categories-store');
+        ->middleware('check.permission:categories.store');
 });

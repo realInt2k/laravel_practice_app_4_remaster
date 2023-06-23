@@ -24,13 +24,13 @@ class DestroyProductTest extends AbstractMiddlewareTestCase
         $product = Product::factory()->create();
         $response = $this->delete(route('products.destroy', $product->id));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */
     public function authenticated_cannot_delete_a_product_with_products_destroy_permission_but_wrong_id()
     {
-        $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products-destroy');
+        $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products.destroy');
         $product = Product::factory()->create();
         $maxId = Product::max('id');
         $response = $this->delete(route('products.destroy', -1));
@@ -40,7 +40,7 @@ class DestroyProductTest extends AbstractMiddlewareTestCase
     /** @test */
     public function can_delete_a_product_with_products_destroy_permission_and_correct_id()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-destroy');
+        $this->testAsNewUserWithRolePermission('admin', 'products.destroy');
         $product = Product::factory()->create();
         $maxId = Product::max('id');
         $response = $this->delete(route('products.destroy', $maxId));

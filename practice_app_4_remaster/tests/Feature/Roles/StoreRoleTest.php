@@ -29,13 +29,13 @@ class StoreRoleTest extends AbstractMiddlewareTestCase
         $response = $this->from(route('roles.create'))
             ->post(route('roles.store'), $data->toArray());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */
     public function can_store_role_with_roles_store_permission_and_valid_data(): void
     {
-        $user = $this->testAsNewUserWithRolePermission('super-admin', 'roles-store');
+        $user = $this->testAsNewUserWithRolePermission('super-admin', 'roles.store');
         $permission = $this->getTestingPermission();
         $data = Role::factory()->make();
         $numberOfRoleBefore = Role::count();
@@ -63,7 +63,7 @@ class StoreRoleTest extends AbstractMiddlewareTestCase
     /** @test */
     public function authenticated_cannot_store_role_with_roles_store_permission_and_invalid_name_as_number(): void
     {
-        $user = $this->testAsNewUserWithRolePermission('super-admin', 'roles-store');
+        $user = $this->testAsNewUserWithRolePermission('super-admin', 'roles.store');
         $data = Role::factory()->make();
         $data->name = 123;
         $numberOfRoleBefore = Role::count();
@@ -78,7 +78,7 @@ class StoreRoleTest extends AbstractMiddlewareTestCase
     public function authenticated_cannot_store_role_with_roles_store_permission_and_invalid_name_length_smaller_than_3(): void
     {
         // $this->withoutExceptionHandling();
-        $user = $this->testAsNewUserWithRolePermission('super-admin', 'roles-store');
+        $user = $this->testAsNewUserWithRolePermission('super-admin', 'roles.store');
         $data = Role::factory()->make();
         $data->name = 'a';
         $numberOfRoleBefore = Role::count();

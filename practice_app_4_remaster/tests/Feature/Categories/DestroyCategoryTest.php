@@ -11,7 +11,7 @@ class DestroyCategoryTest extends AbstractMiddlewareTestCase
     /** @test */
     public function admin_can_deleted_category()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-destroy');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.destroy');
         $data = $this->createData();
         $dataCount = $this->getDataCount();
         $response = $this->delete($this->getRoute($data->id));
@@ -35,7 +35,7 @@ class DestroyCategoryTest extends AbstractMiddlewareTestCase
         $data = $this->createData();
         $response = $this->delete($this->getRoute($data->id));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     public function createData()

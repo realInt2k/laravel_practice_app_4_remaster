@@ -12,7 +12,7 @@ class GetAllCategoriesTest extends AbstractMiddlewareTestCase
     public function admin_can_get_list_category()
     {
         $this->withoutExceptionHandling();
-        $this->testAsNewUserWithRolePermission('admin', 'categories-store');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
         $category = $this->createCategory();
         $response = $this->get($this->getRoute());
         $response->assertStatus(Response::HTTP_OK);

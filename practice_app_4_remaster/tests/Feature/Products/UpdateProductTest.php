@@ -36,14 +36,28 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function authenticated_cannot_update_product_if_it_isnt_yours(): void
+    public function authenticated_can_update_product_with_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('role' . Str::random(5), 'products-update');
+        $this->testAsNewUserWithRolePermission('role' . Str::random(5), 'products.update');
         $product = Product::factory()->create();
         $id = $product->id;
-        $response = $this->from('/')->put(route('products.update', $id), $product->toArray());
-        $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $newProduct =   Product::factory()->make();
+        $response = $this->from('/')->put(route('products.update', $id), $newProduct->toArray());
+        $response->assertStatus(200);
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has(
+                    'data',
+                    fn (AssertableJson $json) =>
+                    $json
+                        ->where('id', $product->id)
+                        ->where('name', $newProduct->name)
+                        ->where('description', $newProduct->description)
+                        ->etc()
+                )
+                ->etc()
+        );
+        $this->assertDatabaseHas('products', $newProduct->toArray());
     }
 
     /**
@@ -56,7 +70,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
         $newProduct = Product::factory()->make();
         $response = $this->put(route('products.update', $product->id), $newProduct->toArray());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**
@@ -64,7 +78,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function can_update_product_with_valid_id_and_valid_data_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['name'] = $product->name . ' new name';
@@ -91,7 +105,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function cannot_update_product_with_valid_id_and_invalid_data_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['name'] = '';
@@ -108,7 +122,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function cannot_update_product_with_valid_id_and_invalid_name_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['name'] = '';
@@ -124,7 +138,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
      */
     public function cannot_update_product_with_valid_id_and_invalid_description_and_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products-update');
+        $this->testAsNewUserWithRolePermission('admin', 'products.update');
         $product = Product::factory()->create();
         $newProduct = Product::factory()->make($product->toArray());
         $newProduct['description'] = '';

@@ -25,7 +25,7 @@ class GetListRoleTest extends AbstractMiddlewareTestCase
         $this->testAsNewUser();
         $response = $this->get(route('roles.index'));
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**
@@ -34,9 +34,9 @@ class GetListRoleTest extends AbstractMiddlewareTestCase
     public function cannot_see_role_list_as_admin(): void
     {
         $this->withoutExceptionHandling();
-        $this->testAsNewUserWithRolePermission('admin', 'roles-store');
-        $response = $this->from(route('dashboard'))->get(route('roles.index'));
+        $this->testAsNewUserWithRolePermission('admin', 'roles.store');
+        $response = $this->from(route('users.profile'))->get(route('roles.index'));
         $response->assertStatus(302);
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('users.profile'));
     }
 }

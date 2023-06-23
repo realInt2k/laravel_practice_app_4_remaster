@@ -1,4 +1,4 @@
-@hasPermission('categories-store')
+@hasPermission('categories.store')
     <div class=" me-3 my-3 text-end">
         <a class="btn bg-gradient-dark mb-0 button-create" data-url="{{ route('categories.create') }}"><i
                 class="material-icons text-sm">add</i>&nbsp;&nbsp;Create New
@@ -56,7 +56,7 @@
             </td>
             <td class="align-middle">
                 <div class="btn-group">
-                    @hasPermission('categories-update')
+                    @hasPermission('categories.update')
                         <a rel="tooltip" class="btn btn-success btn-link btn-sm button-edit"
                             data-id="{{ $category->id }}" data-url="{{ route('categories.edit', $category->id) }}">
                             <span class="material-icons" style="font-size: 150%;">edit</span>
@@ -64,7 +64,7 @@
                         </a>
                     @endhasPermission
 
-                    @hasPermission('categories-destroy')
+                    @hasPermission('categories.destroy')
                         <button type="button" class="btn btn-danger btn-link btn-sm button-delete"
                             data-id="{{ $category->id }}" data-url="{{ route('categories.destroy', $category->id) }}">
                             <span class="material-icons" style="font-size: 150%;">close</span>

@@ -64,9 +64,7 @@ class Product extends Model
     public function scopeWhereCategoryName($query, $categoryName)
     {
         return $categoryName ?
-            $query->whereHas('categories', fn ($query) =>
-            $query->where('name', 'like', '%' . $categoryName . '%')) :
-            null;
+            $query->whererelation('categories', 'name', 'like', '%' . $categoryName . '%') : null;
     }
 
     public function scopeWhereId($query, $id)

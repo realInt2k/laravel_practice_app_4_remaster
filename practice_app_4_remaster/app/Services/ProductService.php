@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use Exception;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Traits\ImageProcessing;
 use App\Repositories\ProductRepository;
 use App\Http\Requests\StoreProductRequest;
@@ -30,20 +28,12 @@ class ProductService extends BaseService
 
     public function store(StoreProductRequest $request)
     {
-        DB::beginTransaction();
-        try {
-            $storeData = $request->all();
-            $storeData['user_id'] = auth()->user()->id;
-            $storeData['category_ids'] = $this->extractCategoryIdsFromInput($storeData);
-            $storeData['image'] = $this->saveFile($request);
-            $product = $this->productRepo->saveNewProduct($storeData);
-            $product->syncCategories($storeData['category_ids']);
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot update product data");
-        }
-        DB::commit();
+        $storeData = $request->all();
+        $storeData['user_id'] = auth()->user()->id;
+        $storeData['category_ids'] = $this->extractCategoryIdsFromInput($storeData);
+        $storeData['image'] = $this->saveFile($request);
+        $product = $this->productRepo->saveNewProduct($storeData);
+        $product->syncCategories($storeData['category_ids']);
         return $product;
     }
 
@@ -59,8 +49,7 @@ class ProductService extends BaseService
             $product->syncCategories($updateData['category_ids']);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot update product data");
+            $this->throwException('cannot update product', $e);
         }
         DB::commit();
         return $product;
@@ -73,8 +62,7 @@ class ProductService extends BaseService
             $product = $this->productRepo->destroy($id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot destroy product data");
+            $this->throwException('cannot destroy product', $e);
         }
         DB::commit();
 

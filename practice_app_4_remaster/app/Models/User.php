@@ -79,11 +79,7 @@ class User extends Authenticatable
         }
         $result = true;
         foreach ($permissionNames as $name) {
-            $indirectPermissionCountCheck = $this->roles()->whereHas(
-                'permissions',
-                fn ($query) =>
-                $query->where('name', $name)
-            )->count();
+            $indirectPermissionCountCheck = $this->roles()->whereRelation('permissions', 'name', $name)->count();
             $directPermissionCountCheck = $this->permissions()->where('name', $name)->count();
             if ($indirectPermissionCountCheck + $directPermissionCountCheck <= 0) {
                 $result = false;
@@ -126,15 +122,13 @@ class User extends Authenticatable
     public function scopeWherePermissionName($query, $name)
     {
         return $name ?
-            $query->whereHas('permissions', fn ($query) => $query->where('name', 'like', '%' . $name . '%')) :
-            null;
+            $query->whereRelation('permissions', 'name', 'like', '%' . $name . '%') : null;
     }
 
     public function scopeWhereRoleName($query, $name)
     {
         return $name ?
-            $query->whereHas('roles', fn ($query) => $query->where('name', 'like', '%' . $name . '%')) :
-            null;
+            $query->whereRelation('roles', 'name', 'like', '%' . $name . '%') : null;
     }
 
     public function scopeWhereId($query, $id)
@@ -160,22 +154,6 @@ class User extends Authenticatable
     public function syncPermissions($permissionIds)
     {
         return $this->permissions()->sync($permissionIds);
-    }
-
-
-    /** 
-     * TODO: DELETE THIS
-     */
-    public function scopeWhereProductName($query, string $key, string $op, string $value)
-    {
-        $query->whereHas('products', function ($query) use ($key, $op, $value) {
-            $query->where($key, $op, $value);
-        });
-    }
-
-    public function scopeWhereProductId($query, $id)
-    {
-        $query->whereHas('products', fn ($query) => $query->where('id', $id));
     }
 
     public function hasProduct(int $id)
@@ -210,5 +188,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'udpated_at' => 'datetime'
     ];
 }

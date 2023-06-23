@@ -37,7 +37,7 @@ class ShowCategoryTest extends AbstractMiddlewareTestCase
     /** @test */
     public function can_not_get_if_category_not_exist()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-store');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
         $response = $this->get($this->getRoute(-1));
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }

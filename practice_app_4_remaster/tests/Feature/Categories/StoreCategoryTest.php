@@ -24,13 +24,13 @@ class StoreCategoryTest extends AbstractMiddlewareTestCase
         $this->testAsNewUser();
         $response = $this->post($this->getRoute(), $data);
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */
     public function admin_can_see_store_category_with_categories_store()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-store');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
         $data = $this->makeData();
         $response = $this->post($this->getRoute(), $data);
         $response->assertStatus(Response::HTTP_OK);

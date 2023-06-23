@@ -32,7 +32,7 @@ class StoreProductTest extends AbstractMiddlewareTestCase
         $response = $this->from(route('products.create'))
             ->post(route('products.store'), $data->toArray());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**
@@ -40,7 +40,7 @@ class StoreProductTest extends AbstractMiddlewareTestCase
      */
     public function authenticated_can_store_product_with_products_store_permission(): void
     {
-        $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products-store');
+        $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products.store');
         $numberOfProductPriorToStoring = Product::count();
         $data = Product::factory()->make();
         $response = $this->from(route('products.create'))
@@ -67,7 +67,7 @@ class StoreProductTest extends AbstractMiddlewareTestCase
      */
     public function authenticated_cannot_store_product_with_invalid_name_even_with_products_store_permission(): void
     {
-        $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products-store');
+        $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'products.store');
         $oldNumberOfProducts = Product::count();
         $data = Product::factory()->make();
         $data['name'] = '';
@@ -82,7 +82,7 @@ class StoreProductTest extends AbstractMiddlewareTestCase
      */
     public function authenticated_cannot_store_product_with_invalid_description_even_with_products_store_permission(): void
     {
-        $user = $this->testAsNewUserWithRolePermission('admin', 'products-store');
+        $user = $this->testAsNewUserWithRolePermission('admin', 'products.store');
         $oldNumberOfProducts = Product::count();
         $data = Product::factory()->make();
         $data['description'] = '';

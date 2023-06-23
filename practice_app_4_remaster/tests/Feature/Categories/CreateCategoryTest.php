@@ -22,13 +22,13 @@ class CreateCategoryTest extends AbstractMiddlewareTestCase
         $this->testAsNewUser();
         $response = $this->get($this->getRoute());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.authenticationErrorKey'));
+        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */
     public function admin_can_see_create_category_form_with_categories_store()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-store');
+        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
         $response = $this->get($this->getRoute());
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJson(

@@ -33,7 +33,7 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
             $role = Role::factory()->create();
             $response = $this->put(route('roles.update', $role->id));
             $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
         });
     }
 
@@ -43,14 +43,14 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
     public function admin_with_roles_update_permission_cannot_update_role(): void
     {
         DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles-update');
+            $this->testAsNewUserWithRolePermission('admin', 'roles.update');
             $role = Role::factory()->create();
             $newRole = Role::factory()->make($role->toArray());
             $newRole['name'] = $role->name . 'new';
             $newRole->id = $role->id;
             $response = $this->from(route('roles.edit', $role->id))
                 ->put(route('roles.update', $role->id), $newRole->toArray());
-            $response->assertSessionHas(config('constants.authenticationErrorKey'));
+            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
             $this->assertDatabaseMissing('roles', $newRole->toArray());
         });
     }
@@ -88,7 +88,7 @@ class UpdateRoleTest extends AbstractMiddlewareTestCase
     public function cannot_update_role_with_invalid_id(): void
     {
         DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles-update');
+            $this->testAsNewUserWithRolePermission('admin', 'roles.update');
             $id = -1;
             $data = ['name' => 'bullshit'];
             $response = $this->put(route('roles.update', $id), $data);

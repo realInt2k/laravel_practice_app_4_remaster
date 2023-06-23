@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Exception;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\CategoryRepository;
@@ -50,8 +49,7 @@ class CategoryService extends BaseService
             $category = $this->categoryRepo->destroyCategory($id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot delete category data");
+            $this->throwException('cannot destroy category', $e);
         }
         DB::commit();
         return $category;
@@ -65,8 +63,7 @@ class CategoryService extends BaseService
             $category = $this->categoryRepo->updateCategory($updateData, $id);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
-            throw new InvalidArgumentException("cannot update category data");
+            $this->throwException('cannot update category', $e);
         }
         DB::commit();
         return $category;

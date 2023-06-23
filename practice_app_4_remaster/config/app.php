@@ -168,6 +168,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\CustomPaginationServiceProvider::class,
+        App\Providers\BladeServiceProvider::class,
     ])->toArray(),
 
     /*

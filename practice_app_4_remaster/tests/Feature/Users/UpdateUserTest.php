@@ -5,6 +5,7 @@ namespace Tests\Feature\Users;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Feature\AbstractMiddlewareTestCase;
@@ -42,7 +43,7 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
             );
             $response = $this->put(route('users.update', $otherUser->id), $updateArray);
             $response->assertStatus(302);
-            $response->assertSessionHas(config("constants.authenticationErrorKey"));
+            $response->assertSessionHas(config("constants.AUTHENTICATION_ERROR_KEY"));
         });
     }
 
@@ -51,7 +52,7 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
     {
         DB::transaction(function () {
             /** @var User */
-            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users-update');
+            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users.update');
             $otherUser = User::factory()->create();
             $newData = User::factory()->make();
             $updateArray = array_merge(
@@ -61,7 +62,8 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
                 ]
             );
             $response = $this->from(route('users.index'))->put(route('users.update', $otherUser->id), $updateArray);
-            $response->assertSessionMissing(config('constants.authenticationErrorKey'));
+            $response->assertStatus(Response::HTTP_OK);
+            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
             $response->assertStatus(200);
             $response->assertJson(
                 fn (AssertableJson $json) => $json
@@ -95,7 +97,7 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
                 ]
             );
             $response = $this->from(route('users.profile'))->put(route('users.profile.update'), $updateArray);
-            $response->assertSessionMissing(config('constants.authenticationErrorKey'));
+            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
             $response->assertStatus(200);
             $response->assertJson(
                 fn (AssertableJson $json) => $json
@@ -130,7 +132,7 @@ class UpdateUserTest extends AbstractMiddlewareTestCase
                 ]
             );
             $response = $this->from(route('users.index'))->put(route('users.update', $otherUser->id), $updateArray);
-            $response->assertSessionMissing(config('constants.authenticationErrorKey'));
+            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
             $response->assertStatus(200);
             $response->assertJson(
                 fn (AssertableJson $json) => $json

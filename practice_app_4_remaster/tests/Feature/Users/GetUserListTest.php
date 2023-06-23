@@ -21,10 +21,10 @@ class GetUserListTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function admin_can_see_user_list(): void
+    public function authenticated_can_see_user_index_page(): void
     {
         $this->withoutExceptionHandling();
-        $this->testAsNewUserWithRolePermission('admin', 'reasoning');
+        $this->testAsNewUser();
         $response = $this->get(route('users.index'));
         $response->assertStatus(Response::HTTP_OK);
         $response->assertViewIs('pages.users.index');
@@ -34,14 +34,14 @@ class GetUserListTest extends AbstractMiddlewareTestCase
     /**
      * @test
      */
-    public function non_admin_can_see_user_list(): void
+    public function authenticated_can_get_user_list(): void
     {
         $this->withoutExceptionHandling();
         $this->testAsNewUser();
-        $response = $this->get(route('users.index'));
-        $response->assertStatus(200);
+        $response = $this->get(route('users.search'));
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertViewIs('pages.users.index');
-        $response->assertViewHas('roles');
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('data')
+            ->etc());
     }
 }

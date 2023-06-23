@@ -2,11 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Role;
-use App\Models\User;
-use App\Models\Product;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,31 +19,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Blade::if('canManipulateUser', function (string $action, User | null $user = null) {
-            /** @var User */
-            $authUser = auth()->user();
-            if ($authUser->isSuperAdmin()) {
-                return true;
-            } else {
-                $checkPermission = $authUser->hasPermission($action);
-                if (!$user) {
-                    // action is store/create action
-                    return $checkPermission;
-                }
-                if ($user->isSuperAdmin()) {
-                    return false;
-                } else {
-                    return $checkPermission;
-                }
-            }
-        });
-
-        Blade::if('hasRole', function (string $roleName) {
-            return auth()->user()->hasRole($roleName);
-        });
-
-        Blade::if('hasPermission', function (string $permissionName) {
-            return auth()->user()->hasPermission($permissionName);
-        });
     }
 }

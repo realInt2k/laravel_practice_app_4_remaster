@@ -24,7 +24,6 @@ class Controller extends BaseController
 
     public function responseWhenException(Request $request, Exception $e)
     {
-        report($e);
         throw ($e);
     }
 }
