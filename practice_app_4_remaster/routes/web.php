@@ -1,5 +1,9 @@
 <?php
 
+use App\Helpers\RouteHelper;
+use Illuminate\Support\Facades\Route;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,3 +14,20 @@
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+/*
+ * Backend Routes
+ *
+ * These routes can only be accessed by authenticated users
+ */
+
+Route::group(['middleware' => 'auth'], function () {
+    RouteHelper::includeRouteFiles(__DIR__ . '/backend/');
+});
+
+/*
+ * Frontend Routes
+ *
+ * These routes validates users, or let them signup
+ */
+RouteHelper::includeRouteFiles(__DIR__ . '/frontend/');

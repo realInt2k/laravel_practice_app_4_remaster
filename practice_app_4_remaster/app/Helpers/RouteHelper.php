@@ -2,14 +2,41 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\File;
+use Exception;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 class RouteHelper
 {
-    public static function requireRoute(): void
+    /**
+     * Loops through a folder and requires all PHP files
+     * Searches sub-directories as well.
+     *
+     * @param $folder
+     */
+    static function includeFilesInFolder($folder)
     {
-        foreach (File::allFiles(base_path('routes')) as $route_file) {
-            (basename($route_file) === 'web.php' || basename($route_file) === 'templates.php') ?: (require $route_file);
+        try {
+            $rdi = new RecursiveDirectoryIterator($folder);
+            /** @var RecursiveDirectoryIterator */
+            $it = new RecursiveIteratorIterator($rdi);
+
+            while ($it->valid()) {
+                if (!$it->isDot() && $it->isFile() && $it->isReadable() && $it->current()->getExtension() === 'php') {
+                    require $it->key();
+                }
+
+                $it->next();
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
+    }
+    /**
+     * @param $folder
+     */
+    static function includeRouteFiles($folder)
+    {
+        self::includeFilesInFolder($folder);
     }
 }

@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    const NORM_ROUTES = ['users', 'products', 'categories', 'roles'];
-    const AUTH_ROUTES = ['templates'];
     /**
      * The path to your application's "home" route.
      *
@@ -36,16 +34,9 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
-
-            foreach (self::NORM_ROUTES as $route) {
-                Route::middleware(['web', 'auth'])
-                    ->group(base_path('routes/' . $route . '.php'));
-            }
-
-            foreach (self::AUTH_ROUTES as $route) {
-                Route::middleware(['web'])
-                    ->group(base_path('routes/' . $route . '.php'));
-            }
+                
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
         });
     }
 }
