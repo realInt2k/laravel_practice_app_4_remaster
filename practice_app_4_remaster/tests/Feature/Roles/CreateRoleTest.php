@@ -2,39 +2,53 @@
 
 namespace Tests\Feature\Roles;
 
-use App\Models\Permission;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class CreateRoleTest extends AbstractMiddlewareTestCase
+class CreateRoleTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function unauthenticated_cannot_see_create_role_form(): void
     {
         $response = $this->get(route('roles.create'));
-        $response->assertStatus(302);
+        $response->assertStatus(Response::HTTP_FOUND);
         $response->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function authenticated_without_roles_create_permission_and_super_admin_cannot_see_create_role_form(): void
+    public function non_admin_cannot_see_create_role_form(): void
     {
-        $this->testAsNewUser();
-        $response = $this->get(route('roles.create'));
-        $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $this->loginAsNewUser();
+        $this->try_to_access_then_be_redirected();
     }
 
     /** @test */
-    public function admin_with_roles_store_permission_cannot_see_create_role_form(): void
+    public function admin_cannot_see_create_role_form(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'roles.store');
+        $this->loginAsNewUserWithRole('admin');
+        $this->try_to_access_then_be_redirected();
+    }
+
+    /** @test */
+    public function super_admin_can_see_create_role_form(): void
+    {
+        $this->loginAsNewUserWithRole('super-admin');
         $response = $this->from(route('users.profile'))->get(route('roles.create'));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('users.profile'));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertSessionMissing('constants.AUTHENTICATION_ERROR_KEY')
+            ->assertJson(fn(AssertableJson $json) => $json
+                ->where('data', fn($data)
+                    => !empty($data) && str_contains($data, 'name') && str_contains($data, 'permissions')
+                )
+                ->etc());
+    }
+
+    public function try_to_access_then_be_redirected(): void
+    {
+        $response = $this->from(route('users.profile'))->get(route('roles.create'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'))
+            ->assertRedirect(route('users.profile'));
     }
 }
