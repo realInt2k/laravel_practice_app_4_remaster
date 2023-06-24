@@ -2,13 +2,31 @@
 
 namespace Database\Factories;
 
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Role>
+ * @extends Factory<Role>
  */
 class RoleFactory extends Factory
 {
+    public function withRandomPermission(): Factory
+    {
+        return $this->afterCreating(function (Role $role) {
+            $permissionId = Permission::factory()->create()->id;
+            $role->permissions()->attach($permissionId);
+        });
+    }
+
+    public function withRandomPermissions(int $count): Factory
+    {
+        return $this->afterCreating(function (Role $role) use ($count) {
+            $permissionIds = Permission::factory($count)->create()->pluck('id')->toArray();
+            $role->permissions()->attach($permissionIds);
+        });
+    }
+
     /**
      * Define the model's default state.
      *
