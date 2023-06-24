@@ -25,8 +25,7 @@ class RoleService extends BaseService
 
     public function getById(int $id): Role
     {
-        $role = $this->roleRepo->findOrFail($id);
-        return $role;
+        return $this->roleRepo->findOrFail($id);
     }
 
     public function store(Request $request): Role
@@ -53,8 +52,7 @@ class RoleService extends BaseService
 
     public function destroy(int $id): Role
     {
-        $role = $this->roleRepo->destroyRole($id);
-        return $role;
+        return $this->roleRepo->destroyRole($id);
     }
 
     public function search(Request $request, int $perPage): LengthAwarePaginator
