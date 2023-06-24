@@ -4,102 +4,114 @@ namespace Tests\Feature\Users;
 
 use App\Models\User;
 use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class EditUserTest extends AbstractMiddlewareTestCase
+class EditUserTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
-    public function unauthenticated_cannot_see_edit_form(): void
+    /** @test */
+    public function unauthenticated_cannot_see_edit_user_form(): void
     {
-        DB::transaction(function () {
-            $user = User::factory()->create();
-            $response = $this->get($this->getRoute($user->id));
-            $response->assertStatus(302);
-            $response->assertRedirect(route('login'));
-        });
+        /** @var User $user */
+        $user = User::factory()->create();
+        $response = $this->get($this->getRoute($user->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
-    /**
-     * @test
-     */
-    public function cannot_see_edit_form_without_permission(): void
+    public function getRoute($id): string
     {
-        DB::transaction(function () {
-            $user = User::factory()->create();
-            $this->testAsNewUser();
-            $response = $this->get($this->getRoute($user->id));
-            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-            $response->assertStatus(302);
-        });
+        return route('users.edit', $id);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
+    public function authenticated_without_permission_cannot_see_edit_user_form(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->loginAsNewUser();
+        $response = $this->get($this->getRoute($user->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey());
+    }
+
+    /** @test */
+    public function admin_without_permission_cannot_see_edit_user_form(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $response = $this->get($this->getRoute($user->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey());
+    }
+
+    /** @test */
+    public function authenticated_with_permission_can_see_edit_user_form(): void
+    {
+        $user = $this->createNewUserWithRoleAndPermission('role' . Str::random(5), 'users.update');
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'users.update');
+        $response = $this->get($this->getRoute($user->id));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(
+                fn(AssertableJson $json) => $json
+                    ->where('data', fn($data) => !empty($data))
+                    ->etc()
+            )
+            ->assertSee($user->name)
+            ->assertSee($user->email)
+            ->assertDontSee($user->permissions()->pluck('name')->toArray())
+            ->assertDontSee($user->roles()->pluck('name')->toArray());
+    }
+
+    /** @test */
+    public function admin_with_permission_can_see_edit_user_form(): void
+    {
+        $user = $this->createNewUserWithRoleAndPermission('role' . Str::random(5), 'users.update');
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'users.update');
+        $response = $this->get($this->getRoute($user->id));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(
+                fn(AssertableJson $json) => $json
+                    ->where('data', fn($data) => !empty($data))
+                    ->etc()
+            )
+            ->assertSee($user->name)
+            ->assertSee($user->email)
+            ->assertDontSee($user->permissions()->pluck('name')->toArray())
+            ->assertDontSee($user->roles()->pluck('name')->toArray());
+    }
+
+    /** @test */
     public function authenticated_can_see_user_profile(): void
     {
-        DB::transaction(function () {
-            $user = User::factory()->create();
-            $this->actingAs($user);
-            $response = $this->get(route('users.profile'));
-            $response->assertStatus(200);
-            $response->assertViewIs('pages.users.user-profile');
-        });
+        /** @var User $user */
+        $user = $this->loginAsNewUser();
+        $response = $this->get(route('users.profile'));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('pages.users.user-profile')
+            ->assertSee([
+                'Email address', 'Name', 'Phone', 'Location',
+                'Update your password', 'About', $user->name, $user->email
+            ]);
     }
 
-    /**
-     * @test
-     */
-    public function can_see_edit_form_as_super_admin(): void
+    /** @test */
+    public function super_admin_can_see_edit_user_form(): void
     {
-        DB::transaction(function () {
-            /** @var User */
-            $user = $this->testAsNewUserWithRolePermission('role' . Str::random(10), 'perm' . Str::random(10));
-            $this->testAsUserWithSuperAdmin();
-            $response = $this->get($this->getRoute($user->id));
-            $response->assertStatus(200);
-            $response->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has(
-                        'data'
-                    )
-                    ->etc()
-            );
-            $response->assertSee($user->name);
-            $response->assertSee($user->email);
-            $response->assertSee($user->permissions()->pluck('name')->toArray());
-            $response->assertSee($user->roles()->pluck('name')->toArray());
-        });
-    }
-
-    /**
-     * @test
-     */
-    public function can_see_edit_form_with_permission(): void
-    {
-        DB::transaction(function () {
-            /** @var User */
-            $user = $this->testAsNewUserWithRolePermission('role' . Str::random(10), 'perm' . Str::random(10));
-            $this->testAsNewUserWithRolePermission('admin', 'users.update');
-            $response = $this->get($this->getRoute($user->id));
-            $response->assertStatus(200);
-            $response->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has(
-                        'data'
-                    )
-                    ->etc()
-            );
-            $response->assertSee($user->name);
-            $response->assertSee($user->email);
-            $response->assertDontSee($user->permissions()->pluck('name')->toArray());
-            $response->assertDontSee($user->roles()->pluck('name')->toArray());
-        });
+        $user = $this->createNewUser();
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $response = $this->get($this->getRoute($user->id));
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJson(
+            fn(AssertableJson $json) => $json
+                ->where('data', fn($data) => !empty($data))
+                ->etc()
+        )->assertSee($user->name)
+            ->assertSee($user->email)
+            ->assertSee($user->permissions()->pluck('name')->toArray())
+            ->assertSee($user->roles()->pluck('name')->toArray());
     }
 
     /**
@@ -107,40 +119,43 @@ class EditUserTest extends AbstractMiddlewareTestCase
      */
     public function cannot_see_edit_form_with_invalid_id(): void
     {
-        DB::transaction(function () {
-            $this->testAsUserWithSuperAdmin();
-            $id = -1;
-            $response = $this->get($this->getRoute($id));
-            $response->assertStatus(Response::HTTP_NOT_FOUND);
-        });
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $id = -1;
+        $response = $this->get($this->getRoute($id));
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
     /** @test */
-    public function normal_user_cannot_see_edit_form_of_admin_users(): void
+    public function non_admin_user_cannot_see_edit_form_of_admin_or_super_admin_users(): void
     {
-        DB::transaction(function () {
-            $adminUser = $this->testAsNewUserWithRolePermission('admin', 'users.update');
-            $user = $this->testAsNewUser();
-            $response = $this->get($this->getRoute($adminUser->id));
-            $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-        });
+        $adminUser = $this->createNewUserWithRole($this->getAdminRole());
+        $superAdminUser = $this->createNewUserWithRole($this->getSuperAdminRole());
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'users.update');
+        $response = $this->get($this->getRoute($adminUser->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey());
+        $response = $this->get($this->getRoute($superAdminUser->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey());
     }
 
     /** @test */
     public function admin_user_cannot_see_edit_form_of_super_admin_user(): void
     {
-        DB::transaction(function () {
-            $superAdminUser = $this->testAsNewUserWithSuperAdmin();
-            $user = $this->testAsNewUserWithRolePermission('admin', 'users.update');
-            $response = $this->get($this->getRoute($superAdminUser->id));
-            $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-        });
+        $superAdminUser = $this->createNewUserWithRole($this->getSuperAdminRole());
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $response = $this->get($this->getRoute($superAdminUser->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey());
     }
 
-    public function getRoute($id)
+    /** @test */
+    public function admin_user_cannot_see_edit_form_of_other_admin_user(): void
     {
-        return route('users.edit', $id);
+        $otherAdminUser = $this->createNewUserWithRole($this->getAdminRole());
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $response = $this->get($this->getRoute($otherAdminUser->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey());
     }
 }
