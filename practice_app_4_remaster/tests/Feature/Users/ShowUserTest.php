@@ -4,7 +4,7 @@ namespace Tests\Feature\Users;
 
 use App\Models\User;
 use Illuminate\Support\Str;
-use App\Services\UserRolePermissionUtility;
+
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Feature\AbstractMiddlewareTestCase;
 

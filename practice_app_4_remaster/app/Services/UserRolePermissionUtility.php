@@ -114,7 +114,7 @@ class UserRolePermissionUtility
                     'name' => $roleName
                 ]);
             }
-            $user->syncRoles($role->id);
+            $user->syncRoles([$role->id]);
             $permissionIds = $role->permissions->pluck('id')->toArray();
             $user->syncPermissions($permissionIds);
         }

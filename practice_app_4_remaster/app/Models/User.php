@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -161,7 +163,7 @@ class User extends Authenticatable
         return $this->roles()->sync($roleIds);
     }
 
-    public function syncPermissions(array $permissionIds): array
+    public function syncPermissions(Collection|Model|array $permissionIds): array
     {
         return $this->permissions()->sync($permissionIds);
     }
