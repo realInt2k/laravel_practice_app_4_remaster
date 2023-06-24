@@ -3,51 +3,66 @@
 namespace Tests\Feature\Roles;
 
 use App\Models\Role;
-use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class EditRoleTest extends AbstractMiddlewareTestCase
+class EditRoleTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function unauthenticated_cannot_see_edit_role_form(): void
     {
-        DB::transaction(function () {
-            $id = random_int(0, Role::count());
-            $response = $this->get(route('roles.edit', $id));
-            $response->assertStatus(302);
-            $response->assertRedirect(route('login'));
-        });
+        $id = random_int(0, Role::count());
+        $response = $this->get(route('roles.edit', $id));
+        $response->assertStatus(Response::HTTP_FOUND);
+        $response->assertRedirect(route('login'));
     }
 
-    /**
-     * @test
-     */
-    public function admin_cannot_see_edit_role_form_with_role_update_permission(): void
+    /** @test */
+    public function non_admin_cannot_see_edit_role_form(): void
     {
-        DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles.update');
-            $role = Role::factory()->create();
-            $response = $this->get(route('roles.edit', $role->id));
-            $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-        });
+        $this->loginAsNewUser();
+        $this->try_to_access_then_be_redirected();
     }
 
-    /**
-     * @test
-     */
-    public function authenticated_cannot_see_edit_role_form_with_invalid_id(): void
+    /** @test */
+    public function admin_cannot_see_edit_role_form(): void
     {
-        DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('python2' . Str::random(10), 'roles.update');
-            $id = -1;
-            $response = $this->get(route('roles.edit', $id));
-            $response->assertStatus(Response::HTTP_NOT_FOUND);
-        });
+        $this->loginAsNewUserWithRole(config('custom.aliases.admin_role'));
+        $this->try_to_access_then_be_redirected();
+    }
+
+    /** @test */
+    public function super_admin_can_see_edit_role_form(): void
+    {
+        $this->loginAsNewUserWithRole(config('custom.aliases.super_admin_role'));
+        $role = Role::factory()->withRandomPermission()->create();
+        $response = $this->from(route('users.profile'))->get(route('roles.edit', $role->id));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn (AssertableJson $json) => $json
+            ->where('data', fn($data)
+                    => !empty($data)
+                    && str_contains($data, $role->name)
+                )->etc()
+            )
+            ->assertSee($role->permissions->pluck('name')->toArray());
+    }
+
+    /** @test */
+    public function cannot_see_edit_role_form_with_invalid_id(): void
+    {
+        $this->loginAsNewUser();
+        $id = -1;
+        $response = $this->get(route('roles.edit', $id));
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    public function try_to_access_then_be_redirected(): void
+    {
+        $role = Role::factory()->create();
+        $response = $this->from(route('users.profile'))->get(route('roles.edit', $role->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'))
+            ->assertRedirect(route('users.profile'));
     }
 }

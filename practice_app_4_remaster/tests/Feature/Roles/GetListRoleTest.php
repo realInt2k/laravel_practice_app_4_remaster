@@ -49,9 +49,9 @@ class GetListRoleTest extends TestCaseUtils
                         'data',
                         fn ($data) =>
                         !empty($data)
-                            && strpos($data, 'ID') !== false
-                            && strpos($data, 'NAME') !== false
-                            && strpos($data, 'PERMISSIONS') !== false
+                            && str_contains($data, 'ID')
+                            && str_contains($data, 'NAME')
+                            && str_contains($data, 'PERMISSIONS')
                     )
                     ->etc()
             );
