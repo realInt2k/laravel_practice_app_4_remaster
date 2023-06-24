@@ -169,6 +169,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\CustomPaginationServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ])->toArray(),
 
     /*
