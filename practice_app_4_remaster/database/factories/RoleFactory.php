@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RoleFactory extends Factory
 {
-    public function withRandomPermission(): Factory
+    public function withRandomPermission(): RoleFactory
     {
         return $this->afterCreating(function (Role $role) {
             $permissionId = Permission::factory()->create()->id;
@@ -19,7 +19,7 @@ class RoleFactory extends Factory
         });
     }
 
-    public function withRandomPermissions(int $count): Factory
+    public function withRandomPermissions(int $count): RoleFactory
     {
         return $this->afterCreating(function (Role $role) use ($count) {
             $permissionIds = Permission::factory($count)->create()->pluck('id')->toArray();

@@ -31,20 +31,19 @@ class ShowRoleTest extends TestCaseUtils
             ->get(route('roles.show', $role->id));
         $response
             ->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas(config('custom.aliases.auth_error_key'));
+            ->assertSessionHas($this->getAuthErrorKey());
     }
 
     /** @test */
     public function super_admin_can_see_role_and_its_permissions(): void
     {
-        $this->loginAsNewUserWithRole('super-admin');
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
         $role = Role::factory()->withRandomPermissions(5)->create();
         $response = $this
             ->from(route('users.profile'))
             ->get(route('roles.show', $role->id));
         $response
             ->assertStatus(Response::HTTP_OK)
-            ->assertSessionMissing(config('custom.aliases.auth_error_key'))
             ->assertJson(fn(AssertableJson $json) => $json
                 ->where('data',
                     fn($data) => !empty($data)
@@ -52,13 +51,13 @@ class ShowRoleTest extends TestCaseUtils
                 )
                 ->etc()
             )
-            ->assertSee($role->permissions->pluck('name')->toArray());
+            ->assertSee($role->permissions()->pluck('name')->toArray());
     }
 
     /** @test */
     public function cannot_see_role_with_invalid_id(): void
     {
-        $this->loginAsNewUserWithRole('super-admin');
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
         $id = -1;
         $response = $this->get(route('roles.show', $id));
         $response->assertStatus(Response::HTTP_NOT_FOUND);

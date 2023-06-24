@@ -28,14 +28,14 @@ class EditRoleTest extends TestCaseUtils
     /** @test */
     public function admin_cannot_see_edit_role_form(): void
     {
-        $this->loginAsNewUserWithRole(config('custom.aliases.admin_role'));
+        $this->loginAsNewUserWithRole($this->getAdminRole());
         $this->try_to_access_then_be_redirected();
     }
 
     /** @test */
     public function super_admin_can_see_edit_role_form(): void
     {
-        $this->loginAsNewUserWithRole(config('custom.aliases.super_admin_role'));
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
         $role = Role::factory()->withRandomPermission()->create();
         $response = $this->from(route('users.profile'))->get(route('roles.edit', $role->id));
         $response->assertStatus(Response::HTTP_OK)
@@ -62,7 +62,7 @@ class EditRoleTest extends TestCaseUtils
         $role = Role::factory()->create();
         $response = $this->from(route('users.profile'))->get(route('roles.edit', $role->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'))
+            ->assertSessionHas($this->getAuthErrorKey())
             ->assertRedirect(route('users.profile'));
     }
 }

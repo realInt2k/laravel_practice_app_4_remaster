@@ -9,6 +9,21 @@ use App\Services\UserRolePermissionUtility;
 
 abstract class TestCaseUtils extends TestCase
 {
+    public function getAdminRole(): string
+    {
+        return config('custom.aliases.admin_role');
+    }
+
+    public function getSuperAdminRole(): string
+    {
+        return config('custom.aliases.super_admin_role');
+    }
+
+    public function getAuthErrorKey(): string
+    {
+        return config('custom.aliases.auth_error_key');
+    }
+
     protected function getTestingPermission()
     {
         if (count(Permission::where('name', 'permission to be sad')->get()) === 0) {

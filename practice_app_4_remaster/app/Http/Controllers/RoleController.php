@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use Illuminate\Http\Request;
-use App\Services\RoleService;
-use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use App\Services\PermissionService;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use Illuminate\Contracts\View\View;
+use App\Services\PermissionService;
+use App\Services\RoleService;
+use Exception;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
     public $roleService, $permissionService;
+
     public function __construct(RoleService $roleService, PermissionService $permissionService)
     {
         $this->roleService = $roleService;
@@ -38,14 +38,14 @@ class RoleController extends Controller
         return $this->responseJSON($viewHtml);
     }
 
-    public function show(Request $request, int $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         $role = $this->roleService->getById($id);
         $viewHtml = view('pages.roles.show', compact('role'))->render();
         return $this->responseJSON($viewHtml);
     }
 
-    public function create(Request $request): JsonResponse
+    public function create(): JsonResponse
     {
         $permissions = $this->permissionService->getAllPermissions();
         $viewHtml = view('pages.roles.create', compact('permissions'))->render();
@@ -58,7 +58,7 @@ class RoleController extends Controller
         return $this->responseJSON($role);
     }
 
-    public function edit(Request $request, int $id): JsonResponse
+    public function edit(int $id): JsonResponse
     {
         $role = $this->roleService->getById($id);
         $permissions = $this->permissionService->getAllPermissions();
@@ -79,7 +79,7 @@ class RoleController extends Controller
         return $this->responseJSON($role);
     }
 
-    public function destroy(Request $request, int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $role = $this->roleService->destroy($id);
@@ -87,6 +87,6 @@ class RoleController extends Controller
             DB::rollBack();
             $this->throwException('cannot destroy role', $e);
         }
-        return $this->responseJSON($role, Response::HTTP_NO_CONTENT);
+        return $this->responseJSON($role);
     }
 }

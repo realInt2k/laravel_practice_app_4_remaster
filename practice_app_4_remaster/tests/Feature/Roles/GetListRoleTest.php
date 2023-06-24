@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Roles;
 
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\Feature\TestCaseUtils;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -17,27 +17,29 @@ class GetListRoleTest extends TestCaseUtils
     }
 
     /** @test */
-    public function cannot_see_role_list_as_non_admin_user(): void
+    public function cannot_see_role_list_as_non_admin(): void
     {
         $this->loginAsNewUser();
-        $response = $this->get(route('roles.index'));
-        $response->assertStatus(Response::HTTP_FOUND);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-    }
-
-    /** @test */
-    public function cannot_see_role_list_as_admin_only_user(): void
-    {
-        $this->loginAsNewUserWithRoleAndPermission(config('custom.aliases.admin_role'), 'roles.store');
         $response = $this->from(route('users.profile'))->get(route('roles.index'));
-        $response->assertStatus(Response::HTTP_FOUND);
-        $response->assertRedirect(route('users.profile'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertRedirect(route('users.profile'));
     }
 
     /** @test */
-    public function can_see_role_list_as_super_admin_user(): void
+    public function cannot_see_role_list_as_admin(): void
     {
-        $this->loginAsNewUserWithRole(config('custom.aliases.super_admin_role'));
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'roles.store');
+        $response = $this->from(route('users.profile'))->get(route('roles.index'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertRedirect(route('users.profile'));
+    }
+
+    /** @test */
+    public function can_see_role_list_as_super_admin(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
         $response = $this->from(route('users.profile'))->get(route('roles.index'));
         $response->assertStatus(Response::HTTP_OK)
             ->assertViewIs('pages.roles.index');
