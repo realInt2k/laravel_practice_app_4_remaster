@@ -8,5 +8,6 @@ return [
     ],
     'constants' => [
         'FRONT_END_DEBUG' => true,
+        'IMAGE_DIR' => 'images/'
     ]
 ];

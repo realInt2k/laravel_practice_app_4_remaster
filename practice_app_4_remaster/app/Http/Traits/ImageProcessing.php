@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 trait ImageProcessing
 {
-    const PUBLIC_DIR = 'images/';
-
     public function verify($request)
     {
         return isset($request->image);
@@ -31,7 +29,7 @@ trait ImageProcessing
     public function deleteFile($name)
     {
         if (isset($name)) {
-            $this->removeFileFromPublicStorage(self::PUBLIC_DIR . $name);
+            $this->removeFileFromPublicStorage(config('custom.constants.IMAGE_DIR') . $name);
         }
     }
 
@@ -63,7 +61,7 @@ trait ImageProcessing
         Storage::disk('public')->delete($path);
     }
 
-    protected function createPublicDirIfNotExist($dir = self::PUBLIC_DIR): string
+    protected function createPublicDirIfNotExist(string $dir): string
     {
         if (!Storage::disk('public')->exists($dir)) {
             Storage::disk('public')->makeDirectory($dir);
@@ -72,7 +70,7 @@ trait ImageProcessing
     }
 
     /**
-     * @param \Intervention\Image\Image $image 
+     * @param \Intervention\Image\Image $image
      */
     public function resizeImage(&$image, $width, $height, bool $retainAspectRatio = true)
     {
@@ -86,7 +84,7 @@ trait ImageProcessing
     }
 
     /**
-     * @param \Intervention\Image\Image $image 
+     * @param \Intervention\Image\Image $image
      */
     public function cropImage(&$image, $width, $height, $x = null, $y = null)
     {
@@ -94,7 +92,7 @@ trait ImageProcessing
     }
 
     /**
-     * @param \Intervention\Image\Image $image 
+     * @param \Intervention\Image\Image $image
      */
     public function blurImage(&$image, $intensity = 1)
     {
@@ -105,7 +103,7 @@ trait ImageProcessing
     }
 
     /**
-     * @param \Intervention\Image\Image $image 
+     * @param \Intervention\Image\Image $image
      */
     public function brighten(&$image, $intensity = 0)
     {
