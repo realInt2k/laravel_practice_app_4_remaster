@@ -14,7 +14,10 @@ use App\Http\Requests\UpdateProfileRequest;
 
 class UserController extends Controller
 {
-    public $userService, $roleService, $permissionService;
+    public PermissionService $permissionService;
+    public RoleService $roleService;
+    public UserService $userService;
+
     public function __construct(
         UserService $userService,
         RoleService $roleService,
@@ -105,6 +108,6 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseJSON($user, Response::HTTP_NO_CONTENT);
+        return $this->responseJSON($user);
     }
 }
