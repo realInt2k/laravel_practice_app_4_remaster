@@ -44,19 +44,19 @@ class Role extends Model
         return $query->with('permissions');
     }
 
-    public function scopeWherePermissionName(Builder $query, $permissionName): Builder|null
+    public function scopeWherePermissionName(Builder $query, string|null $permissionName): Builder|null
     {
         return $permissionName ?
             $query->whereHas('permissions', fn ($query) => $query->where('name', 'like', '%' . $permissionName . '%')) :
             null;
     }
 
-    public function scopeWhereId(Builder $query, int $id): Builder|null
+    public function scopeWhereId(Builder $query, int|null $id): Builder|null
     {
         return $id ? $query->where('id', $id) : null;
     }
 
-    public function scopeWhereName(Builder $query, string $name): Builder|null
+    public function scopeWhereName(Builder $query, string|null $name): Builder|null
     {
         return $name ? $query->where('name', 'like', '%' . $name . '%') : null;
     }

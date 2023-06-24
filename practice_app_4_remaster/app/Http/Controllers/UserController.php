@@ -40,14 +40,14 @@ class UserController extends Controller
             'pages.users.pagination',
             compact('users', 'roles', 'permissions')
         )->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
     public function show(Request $request, $id)
     {
         $user = $this->userService->getById($id);
         $viewHtml = view('pages.users.show', compact('user'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
     public function create()
@@ -55,13 +55,13 @@ class UserController extends Controller
         $roles = $this->roleService->getAllRoles();
         $permissions = $this->permissionService->getAllPermissions();
         $viewHtml = view('pages.users.create', compact('roles', 'permissions'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
     public function store(StoreUserRequest $request)
     {
         $user = $this->userService->store($request);
-        return $this->responseWithData($user);
+        return $this->responseJSON($user);
     }
 
     public function edit(Request $request, $id)
@@ -71,7 +71,7 @@ class UserController extends Controller
         $permissions = $this->permissionService->getAllPermissions();
 
         $viewHtml = view('pages.users.edit', compact('user', 'roles', 'permissions'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
     public function updateProfile(UpdateProfileRequest $request)
@@ -82,7 +82,7 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseWithData($user);
+        return $this->responseJSON($user);
     }
 
     public function update(UpdateUserRequest $request, $id)
@@ -92,7 +92,7 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseWithData($user);
+        return $this->responseJSON($user);
     }
 
     public function destroy(Request $request, $id)
@@ -105,6 +105,6 @@ class UserController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseWithData($user, Response::HTTP_NO_CONTENT);
+        return $this->responseJSON($user, Response::HTTP_NO_CONTENT);
     }
 }

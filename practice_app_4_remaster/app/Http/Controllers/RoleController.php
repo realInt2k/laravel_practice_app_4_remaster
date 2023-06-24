@@ -6,9 +6,13 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Services\RoleService;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use App\Services\PermissionService;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use App\Services\PermissionService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 
 class RoleController extends Controller
 {
@@ -19,66 +23,70 @@ class RoleController extends Controller
         $this->permissionService = $permissionService;
     }
 
-    public function index()
+    public function index(): View|ViewFactory
     {
         $permissions = $this->permissionService->getAllPermissions();
         return view('pages.roles.index', compact('permissions'));
     }
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $permissions = $this->permissionService->getAllPermissions();
         $roles = $this->roleService->search($request, self::PER_PAGE);
         $oldFilter = $request->all();
         $viewHtml = view('pages.roles.pagination', compact('permissions', 'roles', 'oldFilter'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, int $id): JsonResponse
     {
         $role = $this->roleService->getById($id);
         $viewHtml = view('pages.roles.show', compact('role'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $permissions = $this->permissionService->getAllPermissions();
         $viewHtml = view('pages.roles.create', compact('permissions'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function store(StoreRoleRequest $request)
+    public function store(StoreRoleRequest $request): JsonResponse
     {
         $role = $this->roleService->store($request);
-        return $this->responseWithData($role);
+        return $this->responseJSON($role);
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, int $id): JsonResponse
     {
         $role = $this->roleService->getById($id);
         $permissions = $this->permissionService->getAllPermissions();
         $viewHtml = view('pages.roles.edit', compact('role', 'permissions'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function update(UpdateRoleRequest $request, $id)
+    public function update(UpdateRoleRequest $request, int $id): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $role = $this->roleService->update($request, $id);
         } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
+            DB::rollBack();
+            $this->throwException('cannot update role', $e);
         }
-        return $this->responseWithData($role);
+        DB::commit();
+        return $this->responseJSON($role);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, int $id): JsonResponse
     {
         try {
             $role = $this->roleService->destroy($id);
         } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
+            DB::rollBack();
+            $this->throwException('cannot destroy role', $e);
         }
-        return $this->responseWithData($role, Response::HTTP_NO_CONTENT);
+        return $this->responseJSON($role, Response::HTTP_NO_CONTENT);
     }
 }

@@ -2,16 +2,15 @@
 
 namespace App\Services;
 
-use Exception;
+use App\Models\Role;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Repositories\RoleRepository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class RoleService extends BaseService
 {
-    protected $roleRepo;
+    protected RoleRepository $roleRepo;
 
     public function __construct(
         RoleRepository $roleRepo,
@@ -19,18 +18,18 @@ class RoleService extends BaseService
         $this->roleRepo = $roleRepo;
     }
 
-    public function getAllRoles()
+    public function getAllRoles(): Collection
     {
         return $this->roleRepo->all();
     }
 
-    public function getById($id)
+    public function getById(int $id): Role
     {
         $role = $this->roleRepo->findOrFail($id);
         return $role;
     }
 
-    public function store($request)
+    public function store(Request $request): Role
     {
         $saveData = $request->all();
         if (!isset($saveData['permissions'])) {
@@ -41,38 +40,24 @@ class RoleService extends BaseService
         return $role;
     }
 
-    public function update($request, $id)
+    public function update(Request $request, int $id): Role
     {
-        DB::beginTransaction();
-        try {
-            $updateData = $request->all();
-            if (!isset($updateData['permissions'])) {
-                $updateData['permissions'] = [];
-            }
-            $role = $this->roleRepo->updateRole($updateData, $id);
-            $role->syncPermissionIds($updateData['permissions']);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->throwException('cannot update role', $e);
+        $updateData = $request->all();
+        if (!isset($updateData['permissions'])) {
+            $updateData['permissions'] = [];
         }
-        DB::commit();
+        $role = $this->roleRepo->updateRole($updateData, $id);
+        $role->syncPermissionIds($updateData['permissions']);
         return $role;
     }
 
-    public function destroy($id)
+    public function destroy(int $id): Role
     {
-        DB::beginTransaction();
-        try {
-            $role = $this->roleRepo->destroyRole($id);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->throwException('cannot destroy role', $e);
-        }
-        DB::commit();
+        $role = $this->roleRepo->destroyRole($id);
         return $role;
     }
 
-    public function search(Request $request, $perPage)
+    public function search(Request $request, int $perPage): LengthAwarePaginator
     {
         $searchData = [];
         $searchData['id'] = $request->id;
