@@ -31,9 +31,10 @@ class EditUserTest extends TestCaseUtils
         /** @var User $user */
         $user = User::factory()->create();
         $this->loginAsNewUser();
-        $response = $this->get($this->getRoute($user->id));
+        $response = $this->from(route('users.index'))->get($this->getRoute($user->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertRedirect(route('users.index'));
     }
 
     /** @test */
@@ -42,9 +43,10 @@ class EditUserTest extends TestCaseUtils
         /** @var User $user */
         $user = User::factory()->create();
         $this->loginAsNewUserWithRole($this->getAdminRole());
-        $response = $this->get($this->getRoute($user->id));
+        $response = $this->from(route('users.index'))->get($this->getRoute($user->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertRedirect(route('users.index'));
     }
 
     /** @test */
