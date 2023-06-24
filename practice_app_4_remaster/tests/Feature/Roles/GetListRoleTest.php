@@ -12,8 +12,8 @@ class GetListRoleTest extends TestCaseUtils
     public function unauthenticated_cannot_get_role_list(): void
     {
         $response = $this->get(route('roles.index'));
-        $response->assertStatus(Response::HTTP_FOUND);
-        $response->assertRedirect(route('login'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */

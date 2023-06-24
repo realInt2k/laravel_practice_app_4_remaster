@@ -143,7 +143,7 @@ class User extends Authenticatable
             $query->whereRelation('roles', 'name', 'like', '%' . $name . '%') : null;
     }
 
-    public function scopeWhereId(Builder $query, int $id): Builder|null
+    public function scopeWhereId(Builder $query, int|null $id): Builder|null
     {
         return $id ? $query->where('id', $id) : null;
     }
