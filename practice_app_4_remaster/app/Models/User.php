@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Contracts\Auth\CanResetPassword;
 
 class User extends Authenticatable
 {
@@ -28,27 +29,36 @@ class User extends Authenticatable
         'password_confirmation'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function products()
     {
         return $this->hasMany(Product::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function permissions()
     {
         return $this->belongsToMany(Permission::class, 'user_permission', 'user_id', 'permission_id');
     }
 
-    public function hasRoleId($roleId): bool
+    public function hasRoleId(int $roleId): bool
     {
         return $this->roles->where('id', $roleId)->count() > 0;
     }
 
-    public function hasPermissionId($permId): bool
+    public function hasPermissionId(int $permId): bool
     {
         return $this->permissions->where('id', $permId)->count() > 0;
     }
@@ -114,59 +124,59 @@ class User extends Authenticatable
         return array_unique($result);
     }
 
-    public function scopeWithRolesAndPermissions($query)
+    public function scopeWithRolesAndPermissions(Builder $query): Builder|null
     {
-        $query->with('roles')->with('permissions');
+        return $query->with('roles')->with('permissions');
     }
 
-    public function scopeWherePermissionName($query, $name)
+    public function scopeWherePermissionName(Builder $query, string|null $name): Builder|null
     {
         return $name ?
             $query->whereRelation('permissions', 'name', 'like', '%' . $name . '%') : null;
     }
 
-    public function scopeWhereRoleName($query, $name)
+    public function scopeWhereRoleName(Builder $query, string|null $name): Builder|null
     {
         return $name ?
             $query->whereRelation('roles', 'name', 'like', '%' . $name . '%') : null;
     }
 
-    public function scopeWhereId($query, $id)
+    public function scopeWhereId(Builder $query, int $id): Builder|null
     {
         return $id ? $query->where('id', $id) : null;
     }
 
-    public function scopeWhereName($query, $name)
+    public function scopeWhereName(Builder $query, string|null $name): Builder|null
     {
         return $name ? $query->where('name', 'like', '%' . $name . '%') : null;
     }
 
-    public function scopeWhereEmail($query, $email)
+    public function scopeWhereEmail(Builder $query, string|null $email): Builder|null
     {
         return $email ? $query->where('email', 'like', '%' . $email . '%') : null;
     }
 
-    public function syncRoles($roleIds)
+    public function syncRoles(array $roleIds): array
     {
         return $this->roles()->sync($roleIds);
     }
 
-    public function syncPermissions($permissionIds)
+    public function syncPermissions(array $permissionIds): array
     {
         return $this->permissions()->sync($permissionIds);
     }
 
-    public function hasProduct(int $id)
+    public function hasProduct(int $id): bool
     {
         return $this->products()->where('id', $id)->count() > 0;
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->hasRoleNames('admin');
     }
 
-    public function isSuperAdmin()
+    public function isSuperAdmin(): bool
     {
         return $this->hasRoleNames('super-admin');
     }

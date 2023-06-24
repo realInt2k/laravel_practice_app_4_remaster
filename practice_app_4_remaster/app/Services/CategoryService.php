@@ -31,7 +31,7 @@ class CategoryService extends BaseService
     public function getAllRelevantIdsFromCategoryId($id): array
     {
         $category = $this->categoryRepo->findOrFail($id);
-        $childIds = $category->getAllChildIds();
+        $childIds = $category->getAllDescendantIds();
         return $childIds;
     }
 

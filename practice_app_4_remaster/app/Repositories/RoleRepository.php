@@ -21,8 +21,7 @@ class RoleRepository extends BaseRepository
 
     public function saveNewRole($saveData)
     {
-        $role = $this->create($saveData);
-        return $role;
+        return $this->create($saveData);
     }
 
     public function updateRole($updateData, $id)
@@ -41,11 +40,10 @@ class RoleRepository extends BaseRepository
 
     public function search($searchData)
     {
-        $roles = $this->model->withPermissions()
+        return $this->model->withPermissions()
             ->whereId($searchData['id'])
             ->whereName($searchData['name'])
-            ->wherePermissionName($searchData['permission']);
-        $roles = $roles->paginate($searchData['perPage']);
-        return $roles;
+            ->wherePermissionName($searchData['permission'])
+            ->paginate($searchData['perPage']);
     }
 }

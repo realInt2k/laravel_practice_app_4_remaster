@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Role;
 use App\Models\User;
-use App\Models\UserRole;
 use App\Models\Permission;
 use App\Models\RolePermission;
 
@@ -12,8 +11,7 @@ class UserRolePermissionUtility
 {
     public static function getAllRoleIdsOfUser(User $user)
     {
-        $ids = UserRole::where('user_id', $user->id)->pluck('role_id')->toArray();
-        return $ids;
+        return $user->roles()->pluck('id')->toArray();
     }
 
     public static function getAllRoleNamesOfUser(User $user)
