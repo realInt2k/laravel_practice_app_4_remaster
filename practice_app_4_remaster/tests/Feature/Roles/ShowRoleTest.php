@@ -3,11 +3,11 @@
 namespace Tests\Feature\Roles;
 
 use App\Models\Role;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 use Illuminate\Support\Facades\DB;
-use Tests\Feature\AbstractMiddlewareTestCase;
 
-class ShowRoleTest extends AbstractMiddlewareTestCase
+class ShowRoleTest extends TestCaseUtils
 {
     /**
      * @test
@@ -22,14 +22,27 @@ class ShowRoleTest extends AbstractMiddlewareTestCase
         });
     }
 
+    /** @test */
+    public function non_admin_cannot_see_role(): void
+    {
+        $this->loginAsNewUser();
+        $role = Role::factory()->create();
+        $response = $this
+            ->from(route('users.profile'))
+            ->get(route('roles.show', $role->id));
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas(config('custom.aliases.auth_error_key'));
+    }
+
     /**
      * @test
      */
     public function cannot_see_role_with_invalid_id(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'roles.store');
+        $this->loginAsNewUserWithRole('super-admin');
         $id = -1;
-        $response = $this->get(route('roles.show', -1));
+        $response = $this->get(route('roles.show', $id));
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }
