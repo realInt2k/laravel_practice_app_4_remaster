@@ -36,8 +36,7 @@ abstract class TestCaseUtils extends TestCase
 
     protected function createNewUser(): User
     {
-        $user = User::factory()->create();
-        return $user;
+        return User::factory()->create();
     }
 
     protected function loginAsNewUserWithRoleAndPermission(string $roleName, string $permissionName): User
