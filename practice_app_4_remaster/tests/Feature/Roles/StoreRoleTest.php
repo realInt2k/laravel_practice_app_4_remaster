@@ -5,8 +5,10 @@ namespace Tests\Feature\Roles;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Support\Str;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Feature\TestCaseUtils;
+use Webmozart\Assert\Assert;
 
 class StoreRoleTest extends TestCaseUtils
 {
@@ -69,10 +71,17 @@ class StoreRoleTest extends TestCaseUtils
         $storeData = array_merge($newRole->toArray(), ['permissions' => [$permission->id]]);
         $response = $this->from(route('roles.create'))
             ->post(route('roles.store'), $storeData);
-        $response->assertStatus(Response::HTTP_OK);
-        $this->assertDatabaseHas('roles', $newRole->toArray())
-            ->assertDatabaseCount('roles', $numberOfRolesBefore + 1);
-        $this->assertDatabaseHas('role_permission', [
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn (AssertableJson $json) => $json
+                ->has('data', fn (AssertableJson $json) => $json
+                    ->where('name', $newRole->name)
+                    ->etc()
+                )
+                ->etc()
+            );
+        $this->assertDatabaseCount('roles', $numberOfRolesBefore + 1)
+            ->assertDatabaseHas('roles', $newRole->toArray())
+            ->assertDatabaseHas('role_permission', [
             'role_id' => Role::where('name', $newRole->name)->first()->id,
             'permission_id' => Permission::where('name', $permission->name)->first()->id
         ]);
