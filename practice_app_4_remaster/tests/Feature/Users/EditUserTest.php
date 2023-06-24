@@ -59,10 +59,11 @@ class EditUserTest extends TestCaseUtils
                     ->where('data', fn($data) => !empty($data))
                     ->etc()
             )
-            ->assertSee($user->name)
-            ->assertSee($user->email)
-            ->assertDontSee($user->permissions()->pluck('name')->toArray())
-            ->assertDontSee($user->roles()->pluck('name')->toArray());
+            ->assertSee([$user->name, $user->email])
+            ->assertDontSee(array_merge(
+                $user->permissions()->pluck('name')->toArray(),
+                $user->roles()->pluck('name')->toArray()
+            ));
     }
 
     /** @test */
@@ -77,10 +78,11 @@ class EditUserTest extends TestCaseUtils
                     ->where('data', fn($data) => !empty($data))
                     ->etc()
             )
-            ->assertSee($user->name)
-            ->assertSee($user->email)
-            ->assertDontSee($user->permissions()->pluck('name')->toArray())
-            ->assertDontSee($user->roles()->pluck('name')->toArray());
+            ->assertSee([$user->name, $user->email])
+            ->assertDontSee(array_merge(
+                $user->permissions()->pluck('name')->toArray(),
+                $user->roles()->pluck('name')->toArray()
+            ));
     }
 
     /** @test */
@@ -108,15 +110,14 @@ class EditUserTest extends TestCaseUtils
             fn(AssertableJson $json) => $json
                 ->where('data', fn($data) => !empty($data))
                 ->etc()
-        )->assertSee($user->name)
-            ->assertSee($user->email)
-            ->assertSee($user->permissions()->pluck('name')->toArray())
-            ->assertSee($user->roles()->pluck('name')->toArray());
+        )->assertSee([$user->name, $user->email])
+            ->assertSee(array_merge(
+                $user->permissions()->pluck('name')->toArray(),
+                $user->roles()->pluck('name')->toArray()
+            ));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function cannot_see_edit_form_with_invalid_id(): void
     {
         $this->loginAsNewUserWithRole($this->getAdminRole());
