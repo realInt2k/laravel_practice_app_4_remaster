@@ -24,16 +24,6 @@ abstract class TestCaseUtils extends TestCase
         return config('custom.aliases.auth_error_key');
     }
 
-    protected function getTestingPermission()
-    {
-        if (count(Permission::where('name', 'permission to be sad')->get()) === 0) {
-            $permission = Permission::create(['name' => 'permission to be sad']);
-        } else {
-            $permission = Permission::where('name', 'permission to be sad')->get()->first();
-        }
-        return $permission;
-    }
-
     protected function createNewUserWithRoleAndPermission(string $roleName, string $permissionName): User
     {
         $user = User::factory()->create();
@@ -68,7 +58,7 @@ abstract class TestCaseUtils extends TestCase
         return $user;
     }
 
-    protected function loginAsNewUser()
+    protected function loginAsNewUser(): User
     {
         $user = $this->createNewUser();
         $this->actingAs($user);
