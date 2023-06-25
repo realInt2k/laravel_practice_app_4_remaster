@@ -95,7 +95,7 @@ class Product extends Model
         return $name ? $query->where('name', 'like', "%$name%") : null;
     }
 
-    public function scopeWhereCategoryIds(Builder $query, int|null $ids): Builder|null
+    public function scopeWhereCategoryIds(Builder $query, array|null $ids): Builder|null
     {
         return $ids ? $query->whereHas('categories', fn ($query) =>
         $query->wherein('id', $ids)) :
