@@ -4,13 +4,13 @@ namespace App\Services;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use App\Http\Traits\ImageProcessing;
+use App\Http\Traits\ProcessImageTrait;
 use App\Repositories\ProductRepository;
 use App\Http\Requests\StoreProductRequest;
 
 class ProductService extends BaseService
 {
-    use ImageProcessing;
+    use ProcessImageTrait;
 
     protected $productRepo;
 

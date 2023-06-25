@@ -170,6 +170,7 @@ return [
         App\Providers\CustomPaginationServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        App\Providers\HelperServiceProvider::class
     ])->toArray(),
 
     /*

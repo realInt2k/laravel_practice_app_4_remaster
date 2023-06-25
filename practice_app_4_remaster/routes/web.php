@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::group(['middleware' => 'auth'], function () {
-    RouteHelper::includeRouteFiles(__DIR__ . '/backend/');
+    includeRouteFiles(__DIR__ . '/backend/');
 });
 
 /*
@@ -30,4 +30,4 @@ Route::group(['middleware' => 'auth'], function () {
  *
  * These routes validates users, or let them signup
  */
-RouteHelper::includeRouteFiles(__DIR__ . '/frontend/');
+includeRouteFiles(__DIR__ . '/frontend/');

@@ -5,7 +5,7 @@ namespace App\Http\Traits;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
-trait ImageProcessing
+trait ProcessImageTrait
 {
     public function verify($request)
     {
@@ -61,7 +61,7 @@ trait ImageProcessing
         Storage::disk('public')->delete($path);
     }
 
-    protected function createPublicDirIfNotExist(string $dir): string
+    protected function createPublicDirIfNotExist(string $dir = 'images/'): string
     {
         if (!Storage::disk('public')->exists($dir)) {
             Storage::disk('public')->makeDirectory($dir);
