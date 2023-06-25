@@ -151,7 +151,7 @@ class UpdateUserTest extends TestCaseUtils
             ->put($this->getUpdateRoute($targetUser->id), $updateData);
         $response->assertStatus(Response::HTTP_FOUND)
             ->assertRedirect($this->getCreateFormRoute($targetUser->id))
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(array_keys($updateData));
         $this->assertDatabaseMissing('users', array_merge(
             ['id' => $targetUser->id],
             $updateData
