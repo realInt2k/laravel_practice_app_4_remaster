@@ -31,7 +31,10 @@ class Controller extends BaseController
         throw ($e);
     }
 
-    public function throwException(string $message, Exception $e)
+    /**
+     * @throws Exception
+     */
+    public function throwException(string $message, Exception $e): void
     {
         throw new Exception($message . ": " . $e->getMessage());
     }
