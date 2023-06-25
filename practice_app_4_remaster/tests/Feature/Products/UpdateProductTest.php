@@ -3,150 +3,153 @@
 namespace Tests\Feature\Products;
 
 use App\Models\Product;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class UpdateProductTest extends AbstractMiddlewareTestCase
+class UpdateProductTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function unauthenticated_cannot_update_product(): void
     {
         $product = Product::factory()->create();
-        $response = $this->put(route('products.update', $product->id), $product->toArray());
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
+        $response = $this->put($this->getUpdateRoute($product->id), $product->toArray());
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
-    /**
-     * @test
-     */
-    public function authenticated_cannot_update_product_with_invalid_id(): void
+    /** @test */
+    public function cannot_update_product_with_invalid_id(): void
     {
-        $this->testAsUser();
+        $this->loginAsNewUser();
         $id = -1;
         $product = Product::factory()->make();
-        $response = $this->put(route('products.update', $id), $product->toArray());
-        $response->assertStatus(404);
+        $response = $this->put($this->getUpdateRoute($id), $product->toArray());
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function authenticated_can_update_product_with_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('role' . Str::random(5), 'products.update');
-        $product = Product::factory()->create();
-        $id = $product->id;
-        $newProduct =   Product::factory()->make();
-        $response = $this->from('/')->put(route('products.update', $id), $newProduct->toArray());
-        $response->assertStatus(200);
-        $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has(
-                    'data',
-                    fn (AssertableJson $json) =>
-                    $json
-                        ->where('id', $product->id)
-                        ->where('name', $newProduct->name)
-                        ->where('description', $newProduct->description)
-                        ->etc()
-                )
-                ->etc()
-        );
-        $this->assertDatabaseHas('products', $newProduct->toArray());
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'products.update');
+        $this->try_to_successfully_update_product();
     }
 
-    /**
-     * @test
-     */
+    /** @test */
+    public function admin_can_update_product_with_permission(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'products.update');
+        $this->try_to_successfully_update_product();
+    }
+
+    /** @test */
+    public function super_admin_can_update_product(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->try_to_successfully_update_product();
+    }
+
+    /** @test */
     public function authenticated_cannot_update_product_with_no_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'cry');
-        $product = Product::factory()->create();
-        $newProduct = Product::factory()->make();
-        $response = $this->put(route('products.update', $product->id), $newProduct->toArray());
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $this->loginAsNewUser();
+        $this->try_to_update_product_then_fail_because_no_permission();
     }
 
-    /**
-     * @test
-     */
-    public function can_update_product_with_valid_id_and_valid_data_and_products_update_permission(): void
+    /** @test */
+    public function admin_cannot_update_product_with_no_products_update_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products.update');
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $this->try_to_update_product_then_fail_because_no_permission();
+    }
+
+    /** @test */
+    public function cannot_update_product_with_empty_name(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $updateData = ['name' => ''];
+        $this->try_to_update_new_product_with_invalid_data($updateData);
+    }
+
+    /** @test */
+    public function cannot_update_product_with_empty_description(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $updateData = ['description' => ''];
+        $this->try_to_update_new_product_with_invalid_data($updateData);
+    }
+
+    /** @test */
+    public function cannot_update_product_with_non_image_file(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $file = UploadedFile::fake()->create('failedName');
+        $updateData['image'] = $file;
+        $this->try_to_update_new_product_with_invalid_data($updateData);
+    }
+
+    /** @test */
+    public function cannot_update_product_with_image_of_wrong_mime_type(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $file = UploadedFile::fake()->image('failed.failed');
+        $updateData['image'] = $file;
+        $this->try_to_update_new_product_with_invalid_data($updateData);
+    }
+
+    public function try_to_update_new_product_with_invalid_data(array $updateData): void
+    {
         $product = Product::factory()->create();
-        $newProduct = Product::factory()->make($product->toArray());
-        $newProduct['name'] = $product->name . ' new name';
-        $newProduct['description'] = $product->name . ' new description';
+        $countProductBefore = Product::count();
         $response = $this->from(route('products.edit', $product->id))
-            ->put(route('products.update', $product->id), $newProduct->toArray());
-        $response->assertStatus(200);
-        $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has(
-                    'data',
-                    fn (AssertableJson $json) =>
-                    $json->where('id', $newProduct->id)
-                        ->etc()
-                )
-                ->etc()
-        );
-        unset($newProduct->updated_at);
+            ->post(route('products.store'), $updateData);
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('products.edit', $product->id))
+            ->assertSessionHasErrors(array_keys($updateData));
+        $this->assertDatabaseCount('products', $countProductBefore);
+    }
+
+    public function try_to_update_product_then_fail_because_no_permission(): void
+    {
+        $product = Product::factory()->create();
+        $newProduct = Product::factory()->make();
+        $response = $this->from(route('products.edit', $product->id))
+            ->put($this->getUpdateRoute($product->id), $newProduct->toArray());
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('products.edit', $product->id))
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+    }
+
+    public function try_to_successfully_update_product(): void
+    {
+        $product = Product::factory()->create();
+        $id = $product->id;
+        $newProduct = Product::factory()->make();
+        $name = 'cat_' . time() . '.jpg';
+        $file = UploadedFile::fake()->image($name);
+        $updateData = $newProduct->toArray();
+        $updateData['image'] = $file;
+        $response = $this->from('/')->put(route('products.update', $id), $updateData);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(
+                fn(AssertableJson $json) => $json
+                    ->has(
+                        'data',
+                        fn(AssertableJson $json) => $json
+                            ->where('id', $product->id)
+                            ->where('name', $updateData['name'])
+                            ->where('description', $updateData['description'])
+                            ->etc()
+                    )
+                    ->etc()
+            );
         $this->assertDatabaseHas('products', $newProduct->toArray());
     }
 
-    /**
-     * @test
-     */
-    public function cannot_update_product_with_valid_id_and_invalid_data_and_products_update_permission(): void
+    public function getUpdateRoute(int $id): string
     {
-        $this->testAsNewUserWithRolePermission('admin', 'products.update');
-        $product = Product::factory()->create();
-        $newProduct = Product::factory()->make($product->toArray());
-        $newProduct['name'] = '';
-        $newProduct['description'] = null;
-        $response = $this->from(route('products.edit', $product->id))
-            ->put(route('products.update', $product->id), $newProduct->toArray());
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(['name', 'description']);
-        $response->assertRedirect(route('products.edit', $product->id));
-    }
-
-    /**
-     * @test
-     */
-    public function cannot_update_product_with_valid_id_and_invalid_name_and_products_update_permission(): void
-    {
-        $this->testAsNewUserWithRolePermission('admin', 'products.update');
-        $product = Product::factory()->create();
-        $newProduct = Product::factory()->make($product->toArray());
-        $newProduct['name'] = '';
-        $response = $this->from(route('products.edit', $product->id))
-            ->put(route('products.update', $product->id), $newProduct->toArray());
-        $response->assertSessionHasErrors(['name']);
-        $response->assertStatus(302);
-        $response->assertRedirect(route('products.edit', $product->id));
-    }
-
-    /**
-     * @test
-     */
-    public function cannot_update_product_with_valid_id_and_invalid_description_and_products_update_permission(): void
-    {
-        $this->testAsNewUserWithRolePermission('admin', 'products.update');
-        $product = Product::factory()->create();
-        $newProduct = Product::factory()->make($product->toArray());
-        $newProduct['description'] = '';
-        $response = $this->from(route('products.edit', $product->id))
-            ->put(route('products.update', $product->id), $newProduct->toArray());
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(['description']);
-        $response->assertStatus(302);
-        $response->assertRedirect(route('products.edit', $product->id));
+        return route('products.update', $id);
     }
 }
