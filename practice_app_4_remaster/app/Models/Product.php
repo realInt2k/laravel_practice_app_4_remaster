@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Traits\ToArrayCorrectTimeZone;
@@ -11,6 +14,37 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\belongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * App\Models\Product
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int|null $user_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $image
+ * @property-read Collection<int, Category> $categories
+ * @property-read int|null $categories_count
+ * @property-read User|null $user
+ * @method static ProductFactory factory($count = null, $state = [])
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product onlyUserId(int $id)
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereCategoryIds(?array $ids)
+ * @method static Builder|Product whereCategoryName(?string $categoryName)
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereDescription($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereImage($value)
+ * @method static Builder|Product whereName($value)
+ * @method static Builder|Product whereUpdatedAt($value)
+ * @method static Builder|Product whereUserId($value)
+ * @method static Builder|Product withCategories()
+ * @method static Builder|Product withName(?string $name)
+ * @mixin Builder
+ */
 class Product extends Model
 {
     use HasFactory, ToArrayCorrectTimeZone;

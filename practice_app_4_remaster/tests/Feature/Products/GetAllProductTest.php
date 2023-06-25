@@ -9,7 +9,7 @@ use Tests\Feature\TestCaseUtils;
 class GetAllProductTest extends TestCaseUtils
 {
     /** @test */
-    public function unauthenticated_cannot_see_product_page(): void
+    public function unauthenticated_cannot_get_product_list(): void
     {
         $response = $this->get(route('products.index'));
         $response->assertStatus(Response::HTTP_FOUND)

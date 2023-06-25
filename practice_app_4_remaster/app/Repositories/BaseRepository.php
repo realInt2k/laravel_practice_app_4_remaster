@@ -66,7 +66,7 @@ abstract class BaseRepository
         return $this->model->find($id, $columns);
     }
 
-    public function findOrFail($id, $columns = ['*']): User
+    public function findOrFail($id, $columns = ['*'])
     {
         return $this->model->findOrFail($id);
     }

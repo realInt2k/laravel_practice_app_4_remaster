@@ -4,39 +4,59 @@ namespace Tests\Feature\Products;
 
 use App\Models\Product;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class ShowProductTest extends AbstractMiddlewareTestCase
+class ShowProductTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
-    public function cannot_see_product_with_invalid_id(): void
+    /** @test */
+    public function unauthenticated_cannot_see_a_product(): void
     {
-        $this->testAsUser();
-        $id = -1;
-        $response = $this->get(route('products.show', $id));
-        $response->assertStatus(404);
+        $product = Product::factory()->create();
+        $response = $this->get($this->getRoute($product->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
-    /**
-     * @test
-     */
-    public function can_see_product_with_valid_id(): void
+    public function getRoute(int $id): string
     {
-        $this->testAsUser();
-        $product = Product::factory()->create();
+        return route('products.show', $id);
+    }
+
+    /** @test */
+    public function cannot_see_product_with_invalid_id(): void
+    {
+        $this->loginAsNewUser();
         $id = -1;
-        $response = $this->get(route('products.show', $product->id));
-        $response->assertStatus(200);
+        $response = $this->get($this->getRoute($id));
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    /** @test */
+    public function everyone_can_see_product_with_valid_id(): void
+    {
+        $this->withoutExceptionHandling();
+        $this->loginAsNewUser();
+        $product = Product::factory()
+            ->withRandomPhoto()
+            ->withRandomCategory()
+            ->create();
+        $response = $this->get($this->getRoute($product->id));
+        $response->assertStatus(Response::HTTP_OK);
         $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has(
-                    'data',
+            fn(AssertableJson $json) => $json
+                ->where('data', fn($data)
+                    => !empty($data)
+                    && str_contains($data, $product->imagePath)
                 )
                 ->etc()
-        );
-        $response->assertSee($product->name);
-        $response->assertSee($product->description);
+        )
+            ->assertSee([
+                $product->name,
+                $product->description
+            ])
+            ->assertSee(
+                $product->categories()->pluck('name')->toArray()
+            );
     }
 }

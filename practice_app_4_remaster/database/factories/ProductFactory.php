@@ -3,14 +3,36 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
+
+    public function withRandomPhoto(): ProductFactory
+    {
+        return $this->afterCreating(function (Product $product) {
+            $name = 'cat_' . time() . '.jpg';
+            $fakeImageUrl = $this->faker->imageUrl(640, 480, 'animals', true);
+            $file = file_get_contents($fakeImageUrl);
+            Storage::disk('public')->put('images/' . $name, $file);
+            $product->update(['image' => $name]);
+        });
+    }
+
+    public function withRandomCategory(): ProductFactory
+    {
+        return $this->afterCreating(function (Product $product) {
+            $category = Category::factory()->create();
+            $product->syncCategories([$category->id]);
+        });
+    }
+
     /**
      * Define the model's default state.
      *
