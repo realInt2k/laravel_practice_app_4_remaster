@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -65,7 +66,7 @@ abstract class BaseRepository
         return $this->model->find($id, $columns);
     }
 
-    public function findOrFail($id, $columns = ['*'])
+    public function findOrFail($id, $columns = ['*']): User
     {
         return $this->model->findOrFail($id);
     }
