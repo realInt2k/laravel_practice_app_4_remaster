@@ -2,43 +2,41 @@
 
 namespace Tests\Feature\categories;
 
-use App\Models\Category;
-use Illuminate\Http\Response;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class GetAllCategoriesTest extends AbstractMiddlewareTestCase
+class GetAllCategoriesTest extends TestCaseUtils
 {
     /** @test */
-    public function admin_can_get_list_category()
+    public function everyone_can_see_category_index()
     {
-        $this->withoutExceptionHandling();
-        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
-        $category = $this->createCategory();
-        $response = $this->get($this->getRoute());
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertViewIs($this->getView());
+        $this->loginAsNewUser();
+        $response = $this->get(route('categories.index'));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('pages.categories.index');
+    }
+
+    /** @test */
+    public function everyone_can_get_list_category()
+    {
+        $this->loginAsNewUser();
+        $response = $this->get(route('categories.search'));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn (AssertableJson $json) => $json
+                ->where('data', fn ($data)
+                    => !empty($data)
+                )
+                ->etc()
+            )
+            ->assertSee(['ID', 'NAME', 'PARENT CATEGORY', 'CHILDREN CATEGORIES']);
     }
 
     /** @test */
     public function can_not_get_list_category_if_unauthenticated()
     {
-        $response = $this->get($this->getRoute());
-        $response->assertStatus(Response::HTTP_FOUND);
-        $response->assertRedirect(route('login'));
-    }
-
-    public function createCategory()
-    {
-        return Category::factory()->create();
-    }
-
-    public function getRoute()
-    {
-        return route('categories.index');
-    }
-
-    public function getView()
-    {
-        return 'pages.categories.index';
+        $response = $this->get(route('categories.index'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 }
