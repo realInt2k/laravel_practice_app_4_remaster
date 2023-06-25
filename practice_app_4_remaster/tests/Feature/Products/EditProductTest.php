@@ -37,6 +37,18 @@ class EditProductTest extends TestCaseUtils
     public function authenticated_without_permission_cannot_see_edit_product_form(): void
     {
         $this->loginAsNewUser();
+        $this->cannot_see_product_edit_form_without_permission();
+    }
+
+    /** @test */
+    public function admin_without_permission_cannot_see_edit_product_form(): void
+    {
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $this->cannot_see_product_edit_form_without_permission();
+    }
+
+    public function cannot_see_product_edit_form_without_permission(): void
+    {
         $product = Product::factory()->create();
         $response = $this->from(route('products.index'))->get($this->getRoute($product->id));
         $response->assertStatus(Response::HTTP_FOUND)
@@ -47,7 +59,32 @@ class EditProductTest extends TestCaseUtils
     /** @test */
     public function authenticated_with_permission_can_see_edit_product_form(): void
     {
-        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'products.update');
+        $this->loginAsNewUserWithRoleAndPermission(
+            'role' . Str::random(5),
+            'products.update'
+        );
+        $this->can_see_product_edit_form_with_correct_permission();
+    }
+
+    /** @test */
+    public function admin_with_permission_can_see_edit_product_form(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission(
+            $this->getAdminRole(),
+            'products.update'
+        );
+        $this->can_see_product_edit_form_with_correct_permission();
+    }
+
+    /** @test */
+    public function super_admin_can_see_edit_product_form(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->can_see_product_edit_form_with_correct_permission();
+    }
+
+    public function can_see_product_edit_form_with_correct_permission(): void
+    {
         $product = Product::factory()->withRandomPhoto()->create();
         $response = $this->from(route('products.index'))->get($this->getRoute($product->id));
         $response->assertStatus(Response::HTTP_OK)
