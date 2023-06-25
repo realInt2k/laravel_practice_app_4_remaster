@@ -86,6 +86,6 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseJSON($product, Response::HTTP_NO_CONTENT);
+        return $this->responseJSON($product);
     }
 }
