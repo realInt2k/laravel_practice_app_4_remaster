@@ -70,6 +70,10 @@ class ProductService extends BaseService
         return $product;
     }
 
+    public function unAttachUser(int $userId): void {
+        $this->productRepo->unAttachUser($userId);
+    }
+
     public function search($request, $perPage, $categoryIds)
     {
         $searchData = [];

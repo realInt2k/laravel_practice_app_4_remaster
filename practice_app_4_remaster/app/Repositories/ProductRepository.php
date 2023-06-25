@@ -20,6 +20,13 @@ class ProductRepository extends BaseRepository
         return Product::class;
     }
 
+    public function unAttachUser(int $userId): void
+    {
+        $this->model->where('user_id', $userId)->update([
+            'user_id' => null
+        ]);
+    }
+
     public function saveNewProduct($storeData)
     {
         return $this->create($storeData);
