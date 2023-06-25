@@ -7,7 +7,7 @@ if (! function_exists('includeFilesInFolder')) {
      *
      * @param $folder
      */
-    function includeFilesInFolder($folder)
+    function includeFilesInFolder($folder): void
     {
         try {
             $rdi = new RecursiveDirectoryIterator($folder);
@@ -32,7 +32,7 @@ if (! function_exists('includeRouteFiles')) {
     /**
      * @param $folder
      */
-    function includeRouteFiles($folder)
+    function includeRouteFiles($folder): void
     {
         includeFilesInFolder($folder);
     }

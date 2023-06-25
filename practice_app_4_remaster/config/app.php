@@ -166,11 +166,11 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\CustomPaginationServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        App\Providers\HelperServiceProvider::class
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class
     ])->toArray(),
 
     /*
