@@ -31,7 +31,7 @@ class ShowRoleTest extends TestCaseUtils
             ->get(route('roles.show', $role->id));
         $response
             ->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
     }
 
     /** @test */

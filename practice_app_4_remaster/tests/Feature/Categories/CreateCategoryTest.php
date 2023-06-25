@@ -22,7 +22,7 @@ class CreateCategoryTest extends AbstractMiddlewareTestCase
         $this->testAsNewUser();
         $response = $this->get($this->getRoute());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $response->assertSessionHasErrors(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */

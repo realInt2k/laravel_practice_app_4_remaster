@@ -22,7 +22,7 @@ class GetListRoleTest extends TestCaseUtils
         $this->loginAsNewUser();
         $response = $this->from(route('users.profile'))->get(route('roles.index'));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertSessionHasErrors($this->getAuthErrorKey())
             ->assertRedirect(route('users.profile'));
     }
 
@@ -32,7 +32,7 @@ class GetListRoleTest extends TestCaseUtils
         $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'roles.store');
         $response = $this->from(route('users.profile'))->get(route('roles.index'));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertSessionHasErrors($this->getAuthErrorKey())
             ->assertRedirect(route('users.profile'));
     }
 

@@ -65,7 +65,7 @@ class UpdateCategoryTest extends AbstractMiddlewareTestCase
         $data = $this->createData();
         $dataUpdate = $this->makeData();
         $response = $this->put($this->getRoute($data->id), $dataUpdate);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $response->assertSessionHasErrors(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     public function createData()

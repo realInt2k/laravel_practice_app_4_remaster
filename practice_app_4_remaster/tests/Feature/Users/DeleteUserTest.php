@@ -36,7 +36,7 @@ class DeleteUserTest extends TestCaseUtils
         $otherUser = User::factory()->create();
         $response = $this->delete($this->getRoute($otherUser->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $this->assertDatabaseHas('users', ['id' => $otherUser->id]);
     }
 
@@ -48,7 +48,7 @@ class DeleteUserTest extends TestCaseUtils
         $otherUser = User::factory()->create();
         $response = $this->delete($this->getRoute($otherUser->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $this->assertDatabaseHas('users', ['id' => $otherUser->id]);
     }
 

@@ -48,7 +48,7 @@ class CreateRoleTest extends TestCaseUtils
     {
         $response = $this->from(route('users.profile'))->get(route('roles.create'));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'))
+            ->assertSessionHasErrors(config('constants.AUTHENTICATION_ERROR_KEY'))
             ->assertRedirect(route('users.profile'));
     }
 }

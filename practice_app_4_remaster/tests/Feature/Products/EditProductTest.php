@@ -2,47 +2,63 @@
 
 namespace Tests\Feature\Products;
 
-use App\Models\User;
 use App\Models\Product;
 use Illuminate\Support\Str;
-use App\Services\UserRolePermissionUtility;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class EditProductTest extends AbstractMiddlewareTestCase
+class EditProductTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
-    public function unauthenticated_cannot_edit_product(): void
+    /** @test */
+    public function unauthenticated_cannot_see_edit_product_form(): void
     {
         $product = Product::factory()->create();
-        $response = $this->get(route('products.edit', $product->id));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
+        $response = $this->get($this->getRoute($product->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
-    /**
-     * @test
-     */
-    public function authenticated_cannot_edit_product_with_invalid_id(): void
+    public function getRoute(int $id): string
     {
-        $this->testAsUser();
+        return route('products.edit', $id);
+    }
+
+    /** @test */
+    public function cannot_see_edit_product_form_with_invalid_id(): void
+    {
+        $this->loginAsNewUser();
         $id = -1;
-        $response = $this->get(route('products.edit', $id));
-        $response->assertStatus(404);
+        $response = $this->get($this->getRoute($id));
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @test
-     */
-    public function authenticated_cannot_edit_product_with_valid_id_but_without_products_update_permission(): void
+    /** @test */
+    public function authenticated_without_permission_cannot_see_edit_product_form(): void
     {
-        $user = User::factory()->create();
-        $this->assertFalse(UserRolePermissionUtility::checkIfUserHasPermission($user, 'product-update'));
-        $this->actingAs($user);
+        $this->loginAsNewUser();
         $product = Product::factory()->create();
-        $response = $this->get(route('products.edit', $product->id));
-        $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $response = $this->from(route('products.index'))->get($this->getRoute($product->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('products.index'))
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+    }
+
+    /** @test */
+    public function authenticated_with_permission_can_see_edit_product_form(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'products.update');
+        $product = Product::factory()->withRandomPhoto()->create();
+        $response = $this->from(route('products.index'))->get($this->getRoute($product->id));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn(AssertableJson $json) => $json
+                ->where('data', fn($data) => !empty($data)
+                    && str_contains($data, $product->imagePath)
+                )
+                ->etc()
+            )
+            ->assertSee([
+                $product->name, $product->description
+            ]);
     }
 }

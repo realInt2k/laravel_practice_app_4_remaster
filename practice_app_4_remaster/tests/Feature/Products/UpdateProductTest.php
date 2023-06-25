@@ -70,7 +70,7 @@ class UpdateProductTest extends AbstractMiddlewareTestCase
         $newProduct = Product::factory()->make();
         $response = $this->put(route('products.update', $product->id), $newProduct->toArray());
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $response->assertSessionHasErrors(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /**

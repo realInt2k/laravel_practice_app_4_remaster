@@ -49,7 +49,7 @@ class StoreUserTest extends TestCaseUtils
             ->post(route('users.store'), $storeData);
         $response->assertStatus(Response::HTTP_FOUND)
             ->assertRedirect(route('users.index'))
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $this->assertDatabaseCount('users', $countUserBefore);
     }
 

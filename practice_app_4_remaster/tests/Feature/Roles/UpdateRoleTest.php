@@ -31,7 +31,7 @@ class UpdateRoleTest extends TestCaseUtils
             $newRoleData = Role::factory()->make();
             $response = $this->put(route('roles.update', $role->id), $newRoleData->toArray());
             $response->assertStatus(Response::HTTP_FOUND)
-                ->assertSessionHas($this->getAuthErrorKey());
+                ->assertSessionHasErrors($this->getAuthErrorKey());
         });
     }
 
@@ -44,7 +44,7 @@ class UpdateRoleTest extends TestCaseUtils
             $newRoleData = Role::factory()->make();
             $response = $this->put(route('roles.update', $role->id), $newRoleData->toArray());
             $response->assertStatus(Response::HTTP_FOUND)
-                ->assertSessionHas($this->getAuthErrorKey());
+                ->assertSessionHasErrors($this->getAuthErrorKey());
         });
     }
 

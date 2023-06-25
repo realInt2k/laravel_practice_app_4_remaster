@@ -28,7 +28,7 @@ class DeleteRoleTest extends TestCaseUtils
         $roleCountBefore = Role::count();
         $response = $this->delete(route('roles.destroy', $role->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $this->assertDatabaseCount($role->getTable(), $roleCountBefore)
             ->assertDatabaseHas($role->getTable(), ['id' => $role->id]);
     }
@@ -42,7 +42,7 @@ class DeleteRoleTest extends TestCaseUtils
         $response = $this->from(route('roles.index'))
             ->delete(route('roles.destroy', $role->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $this->assertDatabaseCount($role->getTable(), $roleCountBefore)
             ->assertDatabaseHas($role->getTable(), ['id' => $role->id]);
     }

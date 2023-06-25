@@ -32,7 +32,7 @@ class StoreRoleTest extends TestCaseUtils
         $response = $this->from(route('roles.create'))
             ->post(route('roles.store'), $data->toArray());
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $this->assertDatabaseCount('roles', $numberOfRolesBefore);
     }
 
@@ -45,7 +45,7 @@ class StoreRoleTest extends TestCaseUtils
         $response = $this->from(route('roles.create'))
             ->post(route('roles.store'), $data->toArray());
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $this->assertDatabaseCount('roles', $numberOfRolesBefore);
     }
 

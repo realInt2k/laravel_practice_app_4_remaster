@@ -33,7 +33,7 @@ class EditUserTest extends TestCaseUtils
         $this->loginAsNewUser();
         $response = $this->from(route('users.index'))->get($this->getRoute($user->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertSessionHasErrors($this->getAuthErrorKey())
             ->assertRedirect(route('users.index'));
     }
 
@@ -45,7 +45,7 @@ class EditUserTest extends TestCaseUtils
         $this->loginAsNewUserWithRole($this->getAdminRole());
         $response = $this->from(route('users.index'))->get($this->getRoute($user->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertSessionHasErrors($this->getAuthErrorKey())
             ->assertRedirect(route('users.index'));
     }
 
@@ -136,10 +136,10 @@ class EditUserTest extends TestCaseUtils
         $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'users.update');
         $response = $this->get($this->getRoute($adminUser->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
         $response = $this->get($this->getRoute($superAdminUser->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
     }
 
     /** @test */
@@ -149,7 +149,7 @@ class EditUserTest extends TestCaseUtils
         $this->loginAsNewUserWithRole($this->getAdminRole());
         $response = $this->get($this->getRoute($superAdminUser->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
     }
 
     /** @test */
@@ -159,6 +159,6 @@ class EditUserTest extends TestCaseUtils
         $this->loginAsNewUserWithRole($this->getAdminRole());
         $response = $this->get($this->getRoute($otherAdminUser->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
     }
 }

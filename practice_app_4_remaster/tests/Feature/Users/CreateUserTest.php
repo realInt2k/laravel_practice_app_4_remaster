@@ -30,7 +30,7 @@ class CreateUserTest extends TestCaseUtils
         $this->loginAsNewUser();
         $response = $this->get($this->getRoute());
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
     }
 
     /** @test */
@@ -39,7 +39,7 @@ class CreateUserTest extends TestCaseUtils
         $this->loginAsNewUserWithRole($this->getAdminRole());
         $response = $this->get($this->getRoute());
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey());
+            ->assertSessionHasErrors($this->getAuthErrorKey());
     }
 
     /** @test */

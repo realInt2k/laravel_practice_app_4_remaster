@@ -62,7 +62,7 @@ class EditRoleTest extends TestCaseUtils
         $role = Role::factory()->create();
         $response = $this->from(route('users.profile'))->get(route('roles.edit', $role->id));
         $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas($this->getAuthErrorKey())
+            ->assertSessionHasErrors($this->getAuthErrorKey())
             ->assertRedirect(route('users.profile'));
     }
 }

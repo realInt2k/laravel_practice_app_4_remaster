@@ -24,7 +24,7 @@ class StoreCategoryTest extends AbstractMiddlewareTestCase
         $this->testAsNewUser();
         $response = $this->post($this->getRoute(), $data);
         $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $response->assertSessionHasErrors(config('constants.AUTHENTICATION_ERROR_KEY'));
     }
 
     /** @test */
