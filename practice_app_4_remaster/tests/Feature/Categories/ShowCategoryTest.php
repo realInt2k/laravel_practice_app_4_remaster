@@ -10,7 +10,7 @@ use Tests\Feature\TestCaseUtils;
 class ShowCategoryTest extends TestCaseUtils
 {
     /** @test */
-    public function unauthenticated_cannot_see_a_category()
+    public function unauthenticated_cannot_see_a_category(): void
     {
         $category = Category::factory()->create();
         $response = $this->get($this->getRoute($category->id));
@@ -19,7 +19,7 @@ class ShowCategoryTest extends TestCaseUtils
     }
 
     /** @test */
-    public function everyone_can_see_a_category()
+    public function everyone_can_see_a_category(): void
     {
         $this->loginAsNewUser();
         $category = Category::factory()->create();
@@ -31,11 +31,12 @@ class ShowCategoryTest extends TestCaseUtils
                     ->where('data', fn ($data) => !empty($data))
                     ->etc()
             )
-            ->assertSee($category->name);
+            ->assertSee($category->name)
+            ->assertSee('none');
     }
 
     /** @test */
-    public function cannot_see_category_with_invalid_id()
+    public function cannot_see_category_with_invalid_id(): void
     {
         $this->loginAsNewUser();
         $id = -1;
