@@ -13,8 +13,7 @@
     })
     $(function () {
         $(".search-select").each(function () {
-            $(this).select2({
-            });
+            $(this).select2({});
         })
 
         $(document).off("keypress", ".is-invalid").on("keypress", ".is-invalid", function () {
@@ -44,9 +43,9 @@
             e.stopPropagation();
             const url = $(this).data("url");
             userAction.getPageInfo();
-            userAction.sendAjax({ url: url, method: 'get', data: {} })
+            userAction.sendAjax({url: url, method: 'get', data: {}})
                 .done(function (response) {
-                    userAction.openModal({ populateHtml: response.data });
+                    userAction.openModal({populateHtml: response.data});
                 })
                 .fail(function (response) {
                     if (userAction.debug) {
@@ -61,9 +60,9 @@
             const id = $(this).data("id");
             const url = $(this).data("url");
             userAction.getPageInfo();
-            userAction.sendAjax({ url: url, method: 'get', data: {} })
+            userAction.sendAjax({url: url, method: 'get', data: {}})
                 .done(function (response) {
-                    userAction.openModal({ populateHtml: response.data });
+                    userAction.openModal({populateHtml: response.data});
                 })
                 .fail(function (response) {
                     if (userAction.debug) {
@@ -78,9 +77,9 @@
             const id = $(this).data("id");
             const url = $(this).data("url");
             userAction.getPageInfo();
-            userAction.sendAjax({ url: url, method: 'get', data: {} })
+            userAction.sendAjax({url: url, method: 'get', data: {}})
                 .done(function (response) {
-                    userAction.openModal({ modalId: "#show-modal", populateHtml: response.data });
+                    userAction.openModal({modalId: "#show-modal", populateHtml: response.data});
                 })
                 .fail(function (response) {
                     if (userAction.debug) {
@@ -135,7 +134,7 @@
             const method = formData.data("method");
             const url = formData.attr("action");
             const getTableUrl = userAction.getTableUrl();
-            userAction.sendAjax({ url: url, method: method, data: data, sendWithFile })
+            userAction.sendAjax({url: url, method: method, data: data, sendWithFile})
                 .done(function (response) {
                     notification.success("Success!", response.message);
                     userAction.getTable(getTableUrl);
@@ -155,6 +154,9 @@
         $(document).off("click", ".page-link").on("click", ".page-link", function (e) {
             e.preventDefault();
             const url = $(this).attr("href");
+            if (!url) {
+                return;
+            }
             userAction.getTable(url);
         })
     })
