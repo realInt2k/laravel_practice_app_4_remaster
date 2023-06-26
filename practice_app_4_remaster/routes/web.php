@@ -15,18 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 /*
- * Backend Routes
+ * Models Routes
  *
  * These routes can only be accessed by authenticated users
  */
 
 Route::group(['middleware' => 'auth'], function () {
-    includeRouteFiles(__DIR__ . '/backend/');
+    includeRouteFiles(__DIR__ . '/models/');
 });
 
 /*
- * Frontend Routes
+ * Sign-in Sign-up Routes
  *
  * These routes validates users, or let them signup
  */
-includeRouteFiles(__DIR__ . '/frontend/');
+includeRouteFiles(__DIR__ . '/authentication/');
