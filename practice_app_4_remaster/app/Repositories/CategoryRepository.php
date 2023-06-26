@@ -24,12 +24,15 @@ class CategoryRepository extends BaseRepository
         return $this->create($storeData);
     }
 
+    public function detachFromParent(int $id): void
+    {
+        $this->model->where('parent_id', $id)->update(['parent_id'=>null]);
+    }
+
     public function destroyCategory(int $id): Category
     {
         $category = $this->findOrFail($id);
-        foreach ($category->children as $cat) {
-            $cat->update(['parent_id' => null]);
-        }
+        $this->detachFromParent($id);
         $category->delete();
         return $category;
     }

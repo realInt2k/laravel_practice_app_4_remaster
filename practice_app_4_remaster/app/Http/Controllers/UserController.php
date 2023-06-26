@@ -135,7 +135,7 @@ class UserController extends Controller
             $this->throwException('cannot destroy user', $e);
         }
         DB::commit();
-        $this->productService->unAttachUser($user->id);
+        $this->productService->detachFromUser($user->id);
         return $this->responseJSON($user);
     }
 }

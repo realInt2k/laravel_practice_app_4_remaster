@@ -82,8 +82,8 @@ class ProductService extends BaseService
         return $product;
     }
 
-    public function unAttachUser(int $userId): void {
-        $this->productRepo->unAttachUser($userId);
+    public function detachFromUser(int $userId): void {
+        $this->productRepo->detachFromUser($userId);
     }
 
     public function search(Request $request, int $perPage, array $categoryIds): LengthAwarePaginator

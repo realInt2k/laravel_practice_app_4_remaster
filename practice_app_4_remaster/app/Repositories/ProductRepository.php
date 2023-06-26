@@ -21,7 +21,7 @@ class ProductRepository extends BaseRepository
         return Product::class;
     }
 
-    public function unAttachUser(int $userId): void
+    public function detachFromUser(int $userId): void
     {
         $this->model->where('user_id', $userId)->update([
             'user_id' => null
