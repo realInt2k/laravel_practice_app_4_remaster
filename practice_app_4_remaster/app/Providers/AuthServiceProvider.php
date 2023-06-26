@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         SessionGuard::macro('hierarchyActionCheck', function ($action, User | null $user = null) {
-            /** @var User */
+            /** @var User $authUser */
             $authUser = auth()->user();
             if ($authUser->isSuperAdmin()) {
                 return true;
