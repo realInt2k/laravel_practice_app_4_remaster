@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Http\Traits\CategoryTraits\GetsCategoryMeta;
 use Database\Factories\CategoryFactory;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -39,7 +40,7 @@ use Illuminate\Support\Carbon;
  */
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory, GetsCategoryMeta;
 
     protected $table = 'categories';
     protected $fillable = [
@@ -70,17 +71,5 @@ class Category extends Model
     public function scopeWhereName(Builder $query, string|null $name): ?Builder
     {
         return $name != null ? $query->where('name', 'like', '%' . $name . '%') : null;
-    }
-
-    public function getAllDescendantIds(): array
-    {
-        $childIds = [];
-        if (count($this->children) > 0) {
-            foreach ($this->children as $cat) {
-                $childIds = array_merge($childIds, $cat->getAllDescendantIds());
-            }
-        }
-        $childIds[] = $this->id;
-        return $childIds;
     }
 }
