@@ -4,17 +4,17 @@ namespace App\Models;
 
 use App\Http\Traits\ProductTraits\ChecksProductMeta;
 use App\Http\Traits\ProductTraits\SetsProductMeta;
+use App\Http\Traits\ToArrayCorrectTimeZone;
 use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\belongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
-use App\Http\Traits\ToArrayCorrectTimeZone;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\belongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Product
@@ -78,8 +78,7 @@ class Product extends Model
     protected function imagePath(): Attribute
     {
         return Attribute::make(
-            get: fn (string|null $value, array $attributes) =>
-            $attributes['image'] && Storage::disk('public')->exists('images/' . $attributes['image']) ?
+            get: fn(string|null $value, array $attributes) => $attributes['image'] && Storage::disk('public')->exists('images/' . $attributes['image']) ?
                 self::IMAGE_PATH . $attributes['image']
                 : self::DEFAULT_IMAGE
         );
@@ -89,7 +88,7 @@ class Product extends Model
     {
         return $query->where('user_id', $id);
     }
-    
+
     public function scopeWithCategories(Builder $query): Builder|null
     {
         return $query->with('categories');
@@ -128,8 +127,7 @@ class Product extends Model
 
     public function scopeWhereCategoryIds(Builder $query, array|null $ids): Builder|null
     {
-        return $ids ? $query->whereHas('categories', fn ($query) =>
-        $query->wherein('id', $ids)) :
+        return $ids ? $query->whereHas('categories', fn($query) => $query->wherein('id', $ids)) :
             null;
     }
 }

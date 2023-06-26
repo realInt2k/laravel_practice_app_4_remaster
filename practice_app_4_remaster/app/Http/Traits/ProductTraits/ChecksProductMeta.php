@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Traits\ProductTraits
+namespace App\Http\Traits\ProductTraits;
 
 trait ChecksProductMeta
 {
