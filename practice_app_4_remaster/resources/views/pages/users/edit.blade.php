@@ -45,7 +45,7 @@
             <h3>
                 <small class="text-muted">roles</small>
             </h3>
-                <select style="width: 100%" class="select2" multiple="multiple" name="roles[]">
+                <select style="width: 100%" class="custom_select2" multiple="multiple" name="roles[]">
                     @foreach ($roles as $role)
                         <option {{ $user->existsRoleId($role->id) ? 'selected' : '' }} value="{{ $role->id }}">
                             {{ $role->name }}</option>
@@ -54,7 +54,7 @@
             <h3>
                 <small class="text-muted">permissions</small>
             </h3>
-                <select style="width: 100%" class="form-control select2" multiple="multiple" name="permissions[]">
+                <select style="width: 100%" class="form-control custom_select2" multiple="multiple" name="permissions[]">
                     @foreach ($permissions as $permission)
                         <option {{ $user->existsPermissionId($permission->id) ? 'selected' : '' }}
                             value="{{ $permission->id }}">
@@ -72,7 +72,7 @@
         yourcode(window.jQuery, window, document);
     }(function($, window, document) {
         $(function() {
-            $(".select2").select2();
+            $(".custom_select2").select2();
         })
     }))
 </script>

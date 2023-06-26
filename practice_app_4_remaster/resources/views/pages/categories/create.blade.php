@@ -19,7 +19,7 @@
             <h3>
                 <small class="text-muted">parent category</small>
             </h3>
-            <select style="width: 100%" class="form-control select2" name="parent_id">
+            <select style="width: 100%" class="form-control custom_select2" name="parent_id">
                 <option value="">no parent category</option>
                 @foreach ($categories as $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -36,7 +36,7 @@
         yourcode(window.jQuery, window, document);
     }(function($, window, document) {
         $(function() {
-            $(".select2").select2({
+            $(".custom_select2").select2({
                 dropdownParent: $("#form-modal")
             });
         })

@@ -21,7 +21,7 @@
             </div>
             <span style="font-size:0.75rem" id="error-description" class="error text-danger"></span>
             <div class="input-group input-group-dynamic mb-4">
-                <textarea class="form-control" id="input-description" name="description" 
+                <textarea class="form-control" id="input-description" name="description"
                 placeholder="description" value=""></textarea>
             </div>
 
@@ -30,7 +30,7 @@
             <h3>
                 <small class="text-muted">Category assignment</small>
             </h3>
-            <select style="width: 100%" class="select2" multiple="multiple" name="category_ids[]">
+            <select style="width: 100%" class="custom_select2" multiple="multiple" name="category_ids[]">
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}">
                         {{ $category->name }}</option>

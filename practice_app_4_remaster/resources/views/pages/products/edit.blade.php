@@ -32,7 +32,7 @@
             <h3>
                 <small class="text-muted">Category assignment</small>
             </h3>
-            <select style="width: 100%" class="select2" multiple="multiple" name="category_ids[]">
+            <select style="width: 100%" class="custom_select2" multiple="multiple" name="category_ids[]">
                 @foreach ($categories as $category)
                     <option {{ $product->hasCategoryId($category->id) ? 'selected' : '' }} value="{{ $category->id }}">
                         {{ $category->name }}</option>

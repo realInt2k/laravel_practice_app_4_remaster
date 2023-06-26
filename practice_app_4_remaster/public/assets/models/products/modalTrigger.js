@@ -26,6 +26,6 @@
         // console.log(newHeight);
         // $("#input-description").height(newHeight);
 
-        $(".select2").select2();
+        $(".custom_select2").select2();
     })
 }))
