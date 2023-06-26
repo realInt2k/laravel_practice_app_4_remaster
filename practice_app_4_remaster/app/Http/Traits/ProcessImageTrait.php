@@ -9,16 +9,18 @@ use Intervention\Image\Image as InterventionImage;
 
 trait ProcessImageTrait
 {
+    private string $fileName = '';
+
     public function verify($request): bool
     {
         return isset($request->image);
     }
 
-    public function saveFile($request): ?string
+    public function saveFile($request): null|string
     {
         if ($this->verify($request)) {
             $dir = $this->createPublicDirIfNotExist();
-            $name = $this->nameTheImage($request);
+            $name = $this->getFileName();
             $image = Image::make($request->file('image'));
             if (!file_exists($dir . $name)) {
                 $image->save($dir . $name);
@@ -35,13 +37,19 @@ trait ProcessImageTrait
         }
     }
 
-    public function updateFile(Request $request, string|null $oldImage = null, bool $dry = false): ?string
+    public function updateFile(
+        Request     $request,
+        string|null $oldImage = null,
+        bool        $dry = false
+    ): null|string
     {
         if ($this->verify($request)) {
             if (!$dry) {
                 $this->deleteFile($oldImage);
+                return $this->saveFile($request);
+            } else {
+                return $this->getFileName();
             }
-            return $this->saveFile($request);
         } elseif (isset($request->remove_image_request) && $request->remove_image_request == "true") {
             if (!$dry) {
                 $this->deleteFile($oldImage);
@@ -52,13 +60,14 @@ trait ProcessImageTrait
         }
     }
 
-    public function nameTheImage($request): string
+    public function nameTheImage(Request $request): string
     {
-        return pathinfo($request->image->getClientOriginalName(), PATHINFO_FILENAME)
+        return $this->verify($request) ?
+            pathinfo($request->image->getClientOriginalName(), PATHINFO_FILENAME)
             . '_'
             . hrtime(true)
             . '.'
-            . $request->image->extension();
+            . $request->image->extension() : hrtime(true);
     }
 
     protected function removeFileFromPublicStorage(string $path): void
@@ -92,5 +101,21 @@ trait ProcessImageTrait
         } else {
             $image->resize(null, $width, $height);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName(): string
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * @param string $fileName
+     */
+    public function setFileName(string $fileName): void
+    {
+        $this->fileName = $fileName;
     }
 }

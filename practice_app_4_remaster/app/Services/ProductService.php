@@ -33,6 +33,7 @@ class ProductService extends BaseService
         $storeData = $request->all();
         $storeData['user_id'] = auth()->user()->id;
         $storeData['category_ids'] = $this->extractCategoryIdsFromInput($storeData);
+        $this->setFileName($this->nameTheImage($request));
         $storeData['image'] = $this->saveFile($request);
         $product = $this->productRepo->saveNewProduct($storeData);
         $product->syncCategories($storeData['category_ids']);
@@ -50,6 +51,7 @@ class ProductService extends BaseService
             $product = $this->productRepo->findOrFail($id);
             $updateData['category_ids'] = $this->extractCategoryIdsFromInput($updateData);
             $oldImage = $product->image;
+            $this->setFileName($this->nameTheImage($request));
             $updateData['image'] = $this->updateFile($request, $oldImage, true);
             $product = $this->productRepo->updateProduct($updateData, $id);
             $product->syncCategories($updateData['category_ids']);
