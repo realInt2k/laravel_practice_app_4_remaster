@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Traits\ProductTraits\ChecksProductMeta;
+use App\Http\Traits\ProductTraits\SetsProductMeta;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -47,7 +49,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Product extends Model
 {
-    use HasFactory, ToArrayCorrectTimeZone;
+    use HasFactory, ToArrayCorrectTimeZone, SetsProductMeta, ChecksProductMeta;
 
     const IMAGE_PATH = 'storage/images/';
     const DEFAULT_IMAGE = 'storage/defaultImages/noImage.png';
@@ -73,16 +75,6 @@ class Product extends Model
         return $this->belongsToMany(Category::class, 'category_product', 'product_id', 'category_id');
     }
 
-    public function scopeOnlyUserId(Builder $query, int $id): Builder|null
-    {
-        return $query->where('user_id', $id);
-    }
-
-    public function hasCategoryId(int $id): bool
-    {
-        return $this->categories()->where('id', $id)->count() > 0;
-    }
-
     protected function imagePath(): Attribute
     {
         return Attribute::make(
@@ -93,6 +85,11 @@ class Product extends Model
         );
     }
 
+    public function scopeOnlyUserId(Builder $query, int $id): Builder|null
+    {
+        return $query->where('user_id', $id);
+    }
+    
     public function scopeWithCategories(Builder $query): Builder|null
     {
         return $query->with('categories');
@@ -134,10 +131,5 @@ class Product extends Model
         return $ids ? $query->whereHas('categories', fn ($query) =>
         $query->wherein('id', $ids)) :
             null;
-    }
-
-    public function syncCategories(array $categoryIds): array
-    {
-        return $this->categories()->sync($categoryIds);
     }
 }
