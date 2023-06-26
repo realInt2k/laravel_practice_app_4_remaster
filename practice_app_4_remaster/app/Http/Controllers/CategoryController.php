@@ -75,6 +75,6 @@ class CategoryController extends Controller
         } catch (Exception $e) {
             return $this->responseWhenException($request, $e);
         }
-        return $this->responseJSON($category, Response::HTTP_NO_CONTENT);
+        return $this->responseJSON($category);
     }
 }
