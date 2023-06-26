@@ -4,7 +4,7 @@ namespace App\Http\Traits;
 
 trait ToArrayCorrectTimeZone
 {
-    public function toArray()
+    public function toArray(): array
     {
         $array = parent::toArray();
         foreach ($this->getAttributes() as $key => $value) {
