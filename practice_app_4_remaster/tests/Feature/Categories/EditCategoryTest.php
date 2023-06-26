@@ -62,10 +62,12 @@ class EditCategoryTest extends TestCaseUtils
             ->assertStatus(Response::HTTP_OK)
             ->assertJson(
                 fn(AssertableJson $json) => $json
-                    ->where('data', fn ($data) => !empty($data))
+                    ->where('data', fn ($data) =>
+                        !empty($data)
+                        && str_contains($data, $category->name)
+                    )
                     ->etc()
-            )
-            ->assertSee($category->name);
+            );
     }
 
     public function getRoute(int $id): string
