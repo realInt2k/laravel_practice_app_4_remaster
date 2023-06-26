@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Traits\UserTraits;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 

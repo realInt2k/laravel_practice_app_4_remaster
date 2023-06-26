@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Traits\UserTraits\ChecksUserMeta;
 use App\Http\Traits\UserTraits\GetsUserMeta;
+use App\Http\Traits\UserTraits\SetsUserMeta;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
-use SetsUserMeta;
 
 /**
  * App\Models\User
@@ -67,7 +67,6 @@ use SetsUserMeta;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, ChecksUserMeta, GetsUserMeta, SetsUserMeta;
-
     /**
      * The attributes that are mass assignable.
      *
