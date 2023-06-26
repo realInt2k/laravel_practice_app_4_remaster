@@ -3,65 +3,115 @@
 namespace Tests\Feature\categories;
 
 use App\Models\Category;
-use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class StoreCategoryTest extends AbstractMiddlewareTestCase
+class StoreCategoryTest extends TestCaseUtils
 {
     /** @test */
-    public function can_not_store_category_if_unauthenticated()
+    public function super_admin_can_store_category(): void
     {
-        $data = $this->makeData();
-        $response = $this->post($this->getRoute(), $data);
-        $response->assertRedirect(route('login'));
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->try_to_store_new_category_with_appropriate_permission();
     }
 
     /** @test */
-    public function non_admin_cannot_store_category()
+    public function admin_can_store_category_with_appropriate_permission(): void
     {
-        $data = $this->makeData();
-        $this->testAsNewUser();
-        $response = $this->post($this->getRoute(), $data);
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'categories.store');
+        $this->try_to_store_new_category_with_appropriate_permission();
     }
 
     /** @test */
-    public function admin_can_see_store_category_with_categories_store()
+    public function non_admin_can_store_category_with_appropriate_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
-        $data = $this->makeData();
-        $response = $this->post($this->getRoute(), $data);
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has(
-                    'data', fn (AssertableJson $json) => $json
-                    ->where('name', $data['name'])
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'categories.store');
+        $this->try_to_store_new_category_with_appropriate_permission();
+    }
+
+    /** @test */
+    public function admin_cannot_store_category_without_appropriate_permission(): void
+    {
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $this->try_to_store_new_category_without_appropriate_permission_then_fail();
+    }
+
+    /** @test */
+    public function non_admin_cannot_store_category_without_appropriate_permission(): void
+    {
+        $this->loginAsNewUser();
+        $this->try_to_store_new_category_without_appropriate_permission_then_fail();
+    }
+
+    /** @test */
+    public function cannot_store_category_with_invalid_data()
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $countCategoryBefore = Category::count();
+        $dataStore = $this->makeStupidData();
+        $response = $this
+            ->from(route('categories.create'))
+            ->post(route('categories.store', $dataStore));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('categories.create'))
+            ->assertSessionHasErrors('name');
+        $this->assertDatabaseCount('categories', $countCategoryBefore);
+    }
+
+    /** @test */
+    public function cannot_store_category_if_unauthenticated()
+    {
+        $countCategoryBefore = Category::count();
+        $dataStore = Category::factory()->make()->toArray();
+        $response = $this->post(route('categories.store', $dataStore));
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
+        $this->assertDatabaseCount('categories', $countCategoryBefore);
+    }
+
+    public function try_to_store_new_category_with_appropriate_permission(): void
+    {
+        $countCategoryBefore = Category::count();
+        $dataStore = Category::factory()->make()->toArray();
+        $response = $this->post(route('categories.store', $dataStore));
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson(
+                fn(AssertableJson $json) => $json
+                    ->has(
+                        'data', fn(AssertableJson $json) => $json
+                        ->where('name', $dataStore['name'])
+                        ->etc()
+                    )
                     ->etc()
-                )
-                ->etc()
-        );
+            );
+        $this->assertDatabaseCount('categories', $countCategoryBefore + 1)
+            ->assertDatabaseHas('categories', $dataStore);
     }
 
-    public function makeData()
+    public function try_to_store_new_category_without_appropriate_permission_then_fail(): void
     {
-        return Category::factory()->make()->toArray();
+        $countCategoryBefore = Category::count();
+        $dataStore = Category::factory()->make()->toArray();
+        $response = $this
+            ->from(route('categories.create'))
+            ->post(route('categories.store', $dataStore));
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey())
+            ->assertRedirect(route('categories.create'));
+        $this
+            ->assertDatabaseCount('categories', $countCategoryBefore)
+            ->assertDatabaseMissing('categories', $dataStore);
     }
 
-    public function getRoute()
+    public function makeStupidData(): array
     {
-        return route('categories.store');
-    }
-
-    public function getCreateViewRoute()
-    {
-        return route('categories.create');
-    }
-
-    public function getTableName()
-    {
-        return 'categories';
+        $data = Category::factory()->make()->toArray();
+        $data['name'] = '';
+        return $data;
     }
 }
