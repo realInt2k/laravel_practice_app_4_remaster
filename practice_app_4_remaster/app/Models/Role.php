@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Traits\RoleTraits\ChecksRoleMeta;
+use App\Http\Traits\RoleTraits\SetsRoleMeta;
 use App\Http\Traits\ToArrayCorrectTimeZone;
 use Database\Factories\RoleFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,7 +38,7 @@ use Illuminate\Support\Carbon;
  */
 class Role extends Model
 {
-    use HasFactory, ToArrayCorrectTimeZone;
+    use HasFactory, ToArrayCorrectTimeZone, ChecksRoleMeta, SetsRoleMeta;
 
     protected $table = 'roles';
     /**
@@ -49,16 +51,6 @@ class Role extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_role', 'role_id', 'user_id');
-    }
-
-    public function existsPermissionId(int $id): bool
-    {
-        return $this->permissions->find($id) !== null;
-    }
-
-    public function syncPermissionIds(array $permissionIds): array
-    {
-        return $this->permissions()->sync($permissionIds);
     }
 
     public function permissions(): BelongsToMany
