@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Traits\UserTraits\ChecksUserMeta;
+use App\Http\Traits\UserTraits\GetsUserMeta;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +18,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
+use SetsUserMeta;
 
 /**
  * App\Models\User
@@ -63,7 +66,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, ChecksUserMeta, GetsUserMeta, SetsUserMeta;
 
     /**
      * The attributes that are mass assignable.
@@ -100,44 +103,6 @@ class User extends Authenticatable
         'updated_at' => 'datetime'
     ];
 
-    public function hasRoleId(int $roleId): bool
-    {
-        return $this->roles->where('id', $roleId)->count() > 0;
-    }
-
-    public function hasPermissionId(int $permId): bool
-    {
-        return $this->permissions->where('id', $permId)->count() > 0;
-    }
-
-    /**
-     * This function is used for access-related controls
-     */
-    public function hasPermission(string $name): bool
-    {
-        return $this->isSuperAdmin() || $this->hasPermissionNames($name);
-    }
-
-    public function isSuperAdmin(): bool
-    {
-        return $this->hasRoleNames(config('custom.aliases.super_admin_role'));
-    }
-
-    /**
-     * check if user has all the role names or not
-     * @explainParam $roleNames: string or array (i.e: "role1|role2" or [role1, role2])
-     * @param array|string $roleNames
-     * @return bool
-     */
-    public function hasRoleNames(array|string $roleNames): bool
-    {
-        if (is_string($roleNames)) {
-            $roleNames = explode('|', $roleNames);
-        }
-        $roleNameCountCheck = $this->roles()->wherein('name', $roleNames)->count();
-        return $roleNameCountCheck === count($roleNames);
-    }
-
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
@@ -148,49 +113,9 @@ class User extends Authenticatable
         return $this->hasMany(Product::class);
     }
 
-    /**
-     * check if user has all the permission names or not
-     * @explainParam $permissionNames: string or array (i.e: "perm1|perm2" or [perm1, perm2])
-     * @param array|string $permissionNames
-     * @return bool
-     */
-    public function hasPermissionNames(array|string $permissionNames): bool
-    {
-        if (is_string($permissionNames)) {
-            $permissionNames = explode('|', $permissionNames);
-        }
-        $result = true;
-        foreach ($permissionNames as $name) {
-            $indirectPermissionCountCheck = $this->roles()->whereRelation('permissions', 'name', $name)->count();
-            $directPermissionCountCheck = $this->permissions()->where('name', $name)->count();
-            if ($indirectPermissionCountCheck + $directPermissionCountCheck <= 0) {
-                $result = false;
-                break;
-            }
-        }
-        return $result;
-    }
-
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'user_permission', 'user_id', 'permission_id');
-    }
-
-    /**
-     * This function is used for access-related controls
-     */
-    public function hasRole(string $name): bool
-    {
-        return $this->isSuperAdmin() || $this->hasRoleNames($name);
-    }
-
-    public function getAllPermissionNames(): array
-    {
-        $result = $this->permissions->pluck('name')->toArray();
-        foreach ($this->roles as $role) {
-            $result = array_merge($result, $role->permissions->pluck('name')->toArray());
-        }
-        return array_unique($result);
     }
 
     public function scopeWithRolesAndPermissions(Builder $query): Builder|null
@@ -223,25 +148,5 @@ class User extends Authenticatable
     public function scopeWhereEmail(Builder $query, string|null $email): Builder|null
     {
         return $email ? $query->where('email', 'like', '%' . $email . '%') : null;
-    }
-
-    public function syncRoles(array $roleIds): array
-    {
-        return $this->roles()->sync($roleIds);
-    }
-
-    public function syncPermissions(Collection|Model|array $permissionIds): array
-    {
-        return $this->permissions()->sync($permissionIds);
-    }
-
-    public function hasProduct(int $id): bool
-    {
-        return $this->products()->where('id', $id)->count() > 0;
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->hasRoleNames(config('custom.aliases.admin_role'));
     }
 }

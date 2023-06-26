@@ -41,7 +41,7 @@ class UserRolePermissionUtility
         return $permissions;
     }
 
-    public static function checkIfUserHasPermission(User $user, string $permission)
+    public static function checkIfUserhasPermission(User $user, string $permission)
     {
         $permissionIdsOfUser = UserRolePermissionUtility::getAllPermissionIdsOfUser($user);
         $permissionNameCountCheck = Permission::wherein('id', $permissionIdsOfUser)
@@ -50,7 +50,7 @@ class UserRolePermissionUtility
         return $permissionNameCountCheck > 0;
     }
 
-    public static function checkIfUserHasPermissionNames(User $user, string | array $permissionNames)
+    public static function checkIfUserexistsPermissionNames(User $user, string | array $permissionNames)
     {
         if (is_string($permissionNames)) {
             $permissionNames = explode('|', $permissionNames);
@@ -71,7 +71,7 @@ class UserRolePermissionUtility
         return $roleNameCountCheck > 0;
     }
 
-    public static function checkIfUserHasRoleNames(User $user, array | string $roleNames)
+    public static function checkIfUserexistsRoleNames(User $user, array | string $roleNames)
     {
         if (is_string($roleNames)) {
             $roleNames = explode('|', $roleNames);
@@ -142,7 +142,7 @@ class UserRolePermissionUtility
      */
     public static function assignUserWithPermissionName(User &$user, string $permissionName)
     {
-        if (!$user->hasPermissionNames($permissionName)) {
+        if (!$user->existsPermissionNames($permissionName)) {
             $permission = UserRolePermissionUtility::getPermissionFromName($permissionName);
             if ($permission === null) {
                 $permission = Permission::create([

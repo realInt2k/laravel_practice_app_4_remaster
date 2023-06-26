@@ -51,7 +51,7 @@ class Role extends Model
         return $this->belongsToMany(User::class, 'user_role', 'role_id', 'user_id');
     }
 
-    public function hasPermissionId(int $id): bool
+    public function existsPermissionId(int $id): bool
     {
         return $this->permissions->find($id) !== null;
     }

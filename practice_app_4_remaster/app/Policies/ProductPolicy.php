@@ -9,10 +9,10 @@ use Illuminate\Http\Response as HttpResponse;
 
 class ProductPolicy
 {
-    private function userHasProduct(User $user, Product $product): Response
+    private function userownProduct(User $user, Product $product): Response
     {
         if (!$user->isSuperAdmin() && !$user->isAdmin()) {
-            if (!$user->hasProduct($product->id)) {
+            if (!$user->ownProduct($product->id)) {
                 return Response::denyWithStatus(HttpResponse::HTTP_FORBIDDEN, 'You do not own this product.');
             }
         }
@@ -32,7 +32,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product): Response
     {
-        return $this->userHasProduct($user, $product);
+        return $this->userownProduct($user, $product);
     }
 
     /**
@@ -48,7 +48,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product): Response
     {
-        return $this->userHasProduct($user, $product);
+        return $this->userownProduct($user, $product);
     }
 
     /**
@@ -56,7 +56,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product): Response
     {
-        return $this->userHasProduct($user, $product);
+        return $this->userownProduct($user, $product);
     }
 
     /**

@@ -18,7 +18,7 @@ class ProductMiddleware
         /** @var User */
         $authUser = auth()->user();
         $id = $request->id;
-        if (!$authUser->isAdmin() && !$authUser->isSuperAdmin() && !$authUser->hasProduct($id)) {
+        if (!$authUser->isAdmin() && !$authUser->isSuperAdmin() && !$authUser->ownProduct($id)) {
             if ($request->ajax()) {
                 return response()->json([
                     'status' => 'error',
