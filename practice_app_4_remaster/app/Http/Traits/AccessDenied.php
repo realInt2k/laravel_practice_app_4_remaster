@@ -2,11 +2,13 @@
 
 namespace App\Http\Traits;
 
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 trait AccessDenied
 {
-    function accessDenied($request)
+    function accessDenied($request): JsonResponse|RedirectResponse
     {
         if ($request->ajax()) {
             return response()->json([
