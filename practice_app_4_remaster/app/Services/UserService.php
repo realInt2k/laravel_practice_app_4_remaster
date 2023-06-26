@@ -2,79 +2,87 @@
 
 namespace App\Services;
 
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 
 class UserService extends BaseService
 {
 
-    protected $userRepo;
+    protected UserRepository $userRepo;
 
     public function __construct(
         UserRepository $userRepo,
-    ) {
+    )
+    {
         $this->userRepo = $userRepo;
     }
 
-    public function getAllUsers()
-    {
-        return $this->userRepo->all();
-    }
-
-    public function getById($id)
+    public function getById(int $id): User
     {
         return $this->userRepo->findOrFail($id);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): User
     {
         $storeData = $request->all();
-        $this->extractRoleOrPermissionInput($storeData);
+        $storeData = $this->extractRoleOrPermissionInput($storeData);
         $user = $this->userRepo->saveNewUser($storeData);
         $this->syncPermissionsIfSuperAdmin($storeData, $user);
         return $user;
     }
 
-    public function update(Request $request, $id, $isProfile = false)
+    private function extractRoleOrPermissionInput(array $input): array
     {
-        DB::beginTransaction();
-        try {
-            $updateData = $request->all();
-            $user = $this->userRepo->findOrFail($id);
-            $this->getUpdateDataPassword($updateData, $user);
-            if ($isProfile) {
-                $user = $this->userRepo->updateUser($updateData, $id);
-            } else {
-                $this->extractRoleOrPermissionInput($updateData);
-                $user = $this->userRepo->updateUser($updateData, $id);
-                $this->syncPermissionsIfSuperAdmin($updateData, $user);
-            }
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->throwException('cannot update user', $e);
+        if (!isset($input['roles'])) {
+            $input['roles'] = [];
         }
-        DB::commit();
+        if (!isset($input['permissions'])) {
+            $input['permissions'] = [];
+        }
+        return $input;
+    }
 
+    private function syncPermissionsIfSuperAdmin(array $data, User $targetUser): void
+    {
+        $targetUser->syncRoles($data['roles']);
+        $targetUser->syncPermissions($data['permissions']);
+    }
+
+    public function update(Request $request, int $id, bool $isProfile = false): User
+    {
+        $updateData = $request->all();
+        $user = $this->userRepo->findOrFail($id);
+        $updateData = $this->getUpdateDataPassword($updateData, $user);
+        if ($isProfile) {
+            $user = $this->userRepo->updateUser($updateData, $id);
+        } else {
+            $updateData = $this->extractRoleOrPermissionInput($updateData);
+            $user = $this->userRepo->updateUser($updateData, $id);
+            $this->syncPermissionsIfSuperAdmin($updateData, $user);
+        }
         return $user;
     }
 
-    public function destroy($id)
+    private function getUpdateDataPassword(array $updateData, User $targetUser): array
     {
-        DB::beginTransaction();
-        try {
-            $user = $this->userRepo->destroy($id);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->throwException('cannot destroy user', $e);
+        if (empty($updateData['password'])) {
+            $updateData['password'] = $targetUser->password;
+        } else {
+            $updateData['password'] = Hash::make($updateData['password']);
         }
-        DB::commit();
-        return $user;
+        return $updateData;
     }
 
-    public function search(Request $request, int $perPage)
+    public function destroy(int $id): User
+    {
+        return $this->userRepo->destroy($id);
+    }
+
+    public function search(Request $request, int $perPage): LengthAwarePaginator
     {
         $searchData = [];
         $searchData['id'] = $request->id;
@@ -83,32 +91,6 @@ class UserService extends BaseService
         $searchData['permission'] = $request->permission;
         $searchData['role'] = $request->role;
         $searchData['perPage'] = $perPage;
-        $users = $this->userRepo->search($searchData);
-        return $users;
-    }
-
-    private function extractRoleOrPermissionInput(&$updateData)
-    {
-        if (!isset($updateData['roles'])) {
-            $updateData['roles'] = [];
-        }
-        if (!isset($updateData['permissions'])) {
-            $updateData['permissions'] = [];
-        }
-    }
-
-    private function getUpdateDataPassword(&$updateData, $targetUser)
-    {
-        if ($updateData['password'] === null || empty($updateData['password'])) {
-            $updateData['password'] = $targetUser->password;
-        } else {
-            $updateData['password'] = Hash::make($updateData['password']);
-        }
-    }
-
-    private function syncPermissionsIfSuperAdmin($data, $targetUser)
-    {
-        $targetUser->syncRoles($data['roles']);
-        $targetUser->syncPermissions($data['permissions']);
+        return $this->userRepo->search($searchData);
     }
 }

@@ -1,59 +1,51 @@
 <?php
 
-namespace Tests\Feature\categories;
+namespace Tests\Feature\Categories;
 
 use App\Models\Category;
-use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class ShowCategoryTest extends AbstractMiddlewareTestCase
+class ShowCategoryTest extends TestCaseUtils
 {
     /** @test */
-    public function admin_can_get_category()
+    public function unauthenticated_cannot_see_a_category(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories-what');
-        $data = $this->createData();
-        $response = $this->get($this->getRoute($data->id));
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has(
-                    'data'
-                )
-                ->etc()
-        );
-        $response->assertSee($data->name);
+        $category = Category::factory()->create();
+        $response = $this->get($this->getRoute($category->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function can_not_get_category_if_unauthenticated()
+    public function everyone_can_see_a_category(): void
     {
-        $data = $this->createData();
-        $response = $this->get($this->getRoute($data->id));
-        $response->assertRedirect(route('login'));
+        $this->loginAsNewUser();
+        $category = Category::factory()->create();
+        $response = $this->get($this->getRoute($category->id));
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson(
+                fn(AssertableJson $json) => $json
+                    ->where('data', fn ($data) => !empty($data))
+                    ->etc()
+            )
+            ->assertSee($category->name)
+            ->assertSee('none');
     }
 
     /** @test */
-    public function can_not_get_if_category_not_exist()
+    public function cannot_see_category_with_invalid_id(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
-        $response = $this->get($this->getRoute(-1));
+        $this->loginAsNewUser();
+        $id = -1;
+        $response = $this->get($this->getRoute($id));
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function getRoute($id)
+    public function getRoute(int $id): string
     {
         return route('categories.show', $id);
-    }
-
-    public function getView()
-    {
-        return 'categories.show';
-    }
-
-    public function createData()
-    {
-        return Category::factory()->create();
     }
 }

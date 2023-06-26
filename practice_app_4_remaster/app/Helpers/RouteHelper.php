@@ -1,28 +1,21 @@
 <?php
 
-namespace App\Helpers;
-
-use Exception;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-
-class RouteHelper
-{
+if (! function_exists('includeFilesInFolder')) {
     /**
      * Loops through a folder and requires all PHP files
      * Searches sub-directories as well.
      *
      * @param $folder
      */
-    static function includeFilesInFolder($folder)
+    function includeFilesInFolder($folder): void
     {
         try {
             $rdi = new RecursiveDirectoryIterator($folder);
-            /** @var RecursiveDirectoryIterator */
+            /** @var RecursiveDirectoryIterator $it */
             $it = new RecursiveIteratorIterator($rdi);
 
             while ($it->valid()) {
-                if (!$it->isDot() && $it->isFile() && $it->isReadable() && $it->current()->getExtension() === 'php') {
+                if (! $it->isDot() && $it->isFile() && $it->isReadable() && $it->current()->getExtension() === 'php') {
                     require $it->key();
                 }
 
@@ -32,11 +25,15 @@ class RouteHelper
             echo $e->getMessage();
         }
     }
+}
+
+if (! function_exists('includeRouteFiles')) {
+
     /**
      * @param $folder
      */
-    static function includeRouteFiles($folder)
+    function includeRouteFiles($folder): void
     {
-        self::includeFilesInFolder($folder);
+        includeFilesInFolder($folder);
     }
 }

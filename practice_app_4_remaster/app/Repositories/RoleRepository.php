@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Role;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Class RoleRepository.
@@ -10,42 +11,37 @@ use App\Models\Role;
 class RoleRepository extends BaseRepository
 {
     const ROLES_PER_PAGE = 15;
-    /**
-     * @return string
-     *  Return the model
-     */
-    public function model()
+
+    public function model(): string
     {
         return Role::class;
     }
 
-    public function saveNewRole($saveData)
+    public function saveNewRole(array $saveData): Role
     {
-        $role = $this->create($saveData);
-        return $role;
+        return $this->create($saveData);
     }
 
-    public function updateRole($updateData, $id)
+    public function updateRole(array $updateData, int $id): Role
     {
         $role = $this->findOrFail($id);
         $role->update($updateData);
         return $role;
     }
 
-    public function destroyRole($id)
+    public function destroyRole(int $id): Role
     {
         $role = $this->findOrFail($id);
         $role->delete();
         return $role;
     }
 
-    public function search($searchData)
+    public function search(array $searchData): LengthAwarePaginator
     {
-        $roles = $this->model->withPermissions()
+        return $this->model->withPermissions()
             ->whereId($searchData['id'])
             ->whereName($searchData['name'])
-            ->wherePermissionName($searchData['permission']);
-        $roles = $roles->paginate($searchData['perPage']);
-        return $roles;
+            ->wherePermissionName($searchData['permission'])
+            ->paginate($searchData['perPage']);
     }
 }

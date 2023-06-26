@@ -2,181 +2,181 @@
 
 namespace Tests\Feature\Users;
 
-use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class UpdateUserTest extends AbstractMiddlewareTestCase
+class UpdateUserTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function unauthenticated_cannot_update_user(): void
     {
-        DB::transaction(function () {
-            $user = User::factory()->create();
-            $newData = User::factory()->make();
-            $updateArray = array_merge(
-                $newData->toArray(),
-                ['password' => 'brand new password']
-            );
-            $response = $this->put(route('users.update', $user->id), $updateArray);
-            $response->assertStatus(302);
-            $response->assertRedirect(route('login'));
-        });
+        $user = User::factory()->create();
+        $newUserObj = User::factory()->make();
+        $updateData = array_merge(
+            $newUserObj->toArray(),
+            ['password' => $this->makeNewPassword()]
+        );
+        $response = $this->put($this->getUpdateRoute($user->id), $updateData);
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
+        $this->assertDatabaseMissing('users', $updateData);
+    }
+
+    public function makeNewPassword(): string
+    {
+        return Hash::make(Str::random(10));
+    }
+
+    public function getUpdateRoute(int $id): string
+    {
+        return route('users.update', $id);
     }
 
     /** @test */
-    public function authenticated_cannot_update_with_no_super_admin_and_no_users_update_permission_or_isnt_that_user(): void
+    public function non_admin_without_permission_cannot_update_user(): void
     {
-        DB::transaction(function () {
-            $currentUser = $this->testAsNewUser();
-            $otherUser = User::factory()->create();
-            $newData = User::factory()->make();
-            $updateArray = array_merge(
-                $newData->toArray(),
-                ['password' => 'brand new password']
-            );
-            $response = $this->put(route('users.update', $otherUser->id), $updateArray);
-            $response->assertStatus(302);
-            $response->assertSessionHas(config("constants.AUTHENTICATION_ERROR_KEY"));
-        });
+        $this->loginAsNewUser();
+        $this->try_to_update_then_fail();
+    }
+
+    public function try_to_update_then_fail(): void
+    {
+        $targetUser = User::factory()->create();
+        $newUserObj = User::factory()->make();
+        $updateData = array_merge(
+            $newUserObj->toArray(),
+            ['password' => $this->makeNewPassword()]
+        );
+        $response = $this->from($this->getCreateFormRoute($targetUser->id))
+            ->put($this->getUpdateRoute($targetUser->id), $updateData);
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect($this->getCreateFormRoute($targetUser->id));
+        $this->assertDatabaseMissing('users', $updateData);
+    }
+
+    public function getCreateFormRoute(int $id): string
+    {
+        return route('users.create', $id);
     }
 
     /** @test */
-    public function admin_can_update_user_with_user_update_permission(): void
+    public function admin_without_permission_cannot_update_user(): void
     {
-        DB::transaction(function () {
-            /** @var User */
-            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users.update');
-            $otherUser = User::factory()->create();
-            $newData = User::factory()->make();
-            $updateArray = array_merge(
-                $newData->toArray(),
-                [
-                    'password' => 'brand new password'
-                ]
-            );
-            $response = $this->from(route('users.index'))->put(route('users.update', $otherUser->id), $updateArray);
-            $response->assertStatus(Response::HTTP_OK);
-            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
-            $response->assertStatus(200);
-            $response->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has(
-                        'data',
-                        fn (AssertableJson $json) =>
-                        $json->where('id', $otherUser->id)
-                            ->etc()
-                    )
-                    ->etc()
-            );
-            $newData->id = $otherUser->id;
-            $this->assertEquals($newData->email_verified_at, $otherUser->email_verified_at);
-            unset($newData['email_verified_at']);
-            $this->assertDatabaseHas('users', $newData->toArray());
-        });
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $this->try_to_update_then_fail();
     }
 
     /** @test */
-    public function authenticated_can_update_with_no_super_admin_and_no_user_update_permission_but_is_that_user(): void
+    public function non_admin_with_permission_can_update_user(): void
     {
-        $this->withoutExceptionHandling();
-        DB::transaction(function () {
-            /** @var User */
-            $currentUser = $this->testAsNewUser();
-            $newData = User::factory()->make();
-            $updateArray = array_merge(
-                $newData->toArray(),
-                [
-                    'password' => 'brand new password'
-                ]
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'users.update');
+        $this->try_to_successfully_update();
+    }
+
+    public function try_to_successfully_update(): void
+    {
+        $targetUser = User::factory()->create();
+        $newUserObj = User::factory()->make();
+        $updateData = array_merge(
+            $newUserObj->toArray(),
+            [
+                'password' => $this->makeNewPassword()
+            ]
+        );
+        $response = $this->from($this->getCreateFormRoute($targetUser->id))
+            ->put($this->getUpdateRoute($targetUser->id), $updateData);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn(AssertableJson $json) => $json
+                ->has('data', function (AssertableJson $json) use ($newUserObj, $targetUser) {
+                    return $json
+                        ->where('id', $targetUser->id)
+                        ->where('email', $newUserObj->email)
+                        ->where('name', $newUserObj->name)
+                        ->etc();
+                })
+                ->etc()
             );
-            $response = $this->from(route('users.profile'))->put(route('users.profile.update'), $updateArray);
-            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
-            $response->assertStatus(200);
-            $response->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has(
-                        'data',
-                        fn (AssertableJson $json) =>
-                        $json->where('id', $currentUser->id)
-                            ->etc()
-                    )
-                    ->etc()
-            );
-            $newData->id = $currentUser->id;
-            $this->assertDatabaseHas('users', $newData->toArray());
-        });
+        $newUserObj->id = $targetUser->id;
+        $this->assertDatabaseHas('users', $newUserObj->toArray());
+    }
+
+    /** @test */
+    public function admin_with_permission_can_update_user(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'users.update');
+        $this->try_to_successfully_update();
     }
 
     /** @test */
     public function super_admin_can_update_user(): void
     {
-        DB::transaction(function () {
-            /** @var User */
-            $currentUser = $this->testAsNewUserWithSuperAdmin();
-            $otherUser = User::factory()->create();
-            $newRole = Role::factory()->create();
-            $otherUserRoles = [$newRole->id];
-            $newData = User::factory()->make();
-            $updateArray = array_merge(
-                $newData->toArray(),
-                [
-                    'roles' => $otherUserRoles,
-                    'password' => 'brand new password'
-                ]
-            );
-            $response = $this->from(route('users.index'))->put(route('users.update', $otherUser->id), $updateArray);
-            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
-            $response->assertStatus(200);
-            $response->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has(
-                        'data',
-                        fn (AssertableJson $json) =>
-                        $json->where('id', $otherUser->id)
-                            ->etc()
-                    )
-                    ->etc()
-            );
-            $newData->id = $otherUser->id;
-            $this->assertDatabaseHas('users', $newData->toArray());
-            $this->assertEquals($otherUser->roles()->pluck('id')->toArray(), [$newRole->id]);
-        });
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->try_to_successfully_update();
     }
 
     /** @test */
-    public function cannot_update_with_duplicated_email(): void
+    public function everyone_can_update_from_profile_setting(): void
     {
-        DB::transaction(function () {
-            /** @var User */
-            $currentUser = $this->testAsNewUserWithSuperAdmin();
-            $otherUser = User::factory()->create();
-            $updateArray = $this->getUpdateData();
-            $updateArray['email'] = $currentUser->email;
-            $response = $this->from(route('users.edit', $otherUser->id))->put(route('users.update', $otherUser->id), $updateArray);
-            $response->assertStatus(302);
-            $response->assertSessionHasErrors(['email']);
-            $response->assertRedirect(route('users.edit', $otherUser->id));
-            unset($currentUser['email_verified_at']);
-            unset($currentUser['updated_at']);
-            unset($currentUser['created_at']);
-            $this->assertDatabaseHas('users', $currentUser->toArray());
-        });
+        $currentUser = $this->loginAsNewUser();
+        $newUserObj = User::factory()->make();
+        $updateData = array_merge(
+            $newUserObj->toArray(),
+            ['password' => $this->makeNewPassword()]
+        );
+        $response = $this->from(route('users.profile'))->put(route('users.profile.update'), $updateData);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn(AssertableJson $json) => $json
+                ->has('data', function (AssertableJson $json) use ($newUserObj, $currentUser) {
+                    return $json
+                        ->where('id', $currentUser->id)
+                        ->where('email', $newUserObj->email)
+                        ->where('name', $newUserObj->name)
+                        ->etc();
+                })
+                ->etc()
+            );
+        $newUserObj->id = $currentUser->id;
+        $this->assertDatabaseHas('users', $newUserObj->toArray());
     }
 
-    public function getUpdateData()
+    public function try_to_update_with_invalid_data(array $updateData): void
     {
-        $newData = User::factory()->make();
-        $updateArray = array_merge(
-            $newData->toArray(),
-            ['password' => Str::random(10)]
-        );
-        return $updateArray;
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $targetUser = User::factory()->create();
+        $response = $this->from($this->getCreateFormRoute($targetUser->id))
+            ->put($this->getUpdateRoute($targetUser->id), $updateData);
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect($this->getCreateFormRoute($targetUser->id))
+            ->assertSessionHasErrors(array_keys($updateData));
+        $this->assertDatabaseMissing('users', array_merge(
+            ['id' => $targetUser->id],
+            $updateData
+        ));
+    }
+
+    /** @test */
+    public function cannot_update_user_with_duplicated_email(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $otherUser = User::factory()->create();
+        $this->try_to_update_with_invalid_data(['email' => $otherUser->email]);
+    }
+
+    /** @test */
+    public function cannot_update_user_with_invalid_email(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->try_to_update_with_invalid_data(['email' => null]);
+    }
+
+    /** @test */
+    public function cannot_update_user_with_invalid_name(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->try_to_update_with_invalid_data(['name' => null]);
     }
 }

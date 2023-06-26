@@ -4,49 +4,43 @@ namespace Tests\Feature\Users;
 
 use App\Models\User;
 use Illuminate\Support\Str;
-use App\Services\UserRolePermissionUtility;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
 
-class ShowUserTest extends AbstractMiddlewareTestCase
+use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\AbstractMiddlewareTestCase;
+use Tests\Feature\TestCaseUtils;
+
+
+class ShowUserTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function unauthenticated_cannot_see_a_user(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $response = $this->get(route('users.show', $user->id));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('login'));
-    }
-
-    /**
-     * @test
-     */
-    public function can_see_a_user_without_admin_roles(): void
-    {
-        $user = $this->testAsNewUserWithRolePermission('user' . Str::random(10), 'knot');
-        $user = User::factory()->create();
-        $response = $this->get(route('users.show', $user->id));
-        $response->assertStatus(200);
-        $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has('data')->etc()
-        );
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function can_get_user_with_admin_roles(): void
+    public function authenticated_can_see_a_user(): void
     {
-        $user = $this->testAsNewUserWithRolePermission('admin', 'perm' . Str::random(5));
+        /** @var User $user */
+        $this->loginAsNewUser();
         $user = User::factory()->create();
         $response = $this->get(route('users.show', $user->id));
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
         $response->assertJson(
             fn (AssertableJson $json) => $json
-                ->has('data')->etc()
-        );
-        $response->assertSee([$user->name, $user->email]);
+                ->where('data', fn ($data) =>
+                    !empty($data)
+                )
+                ->etc()
+        )->assertSee(array_merge(
+            [$user->name, $user->email],
+            $user->permissions()->pluck('name')->toArray(),
+            $user->roles()->pluck('name')->toArray()
+        ));
     }
 }

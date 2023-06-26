@@ -1,62 +1,65 @@
 <?php
 
-namespace Tests\Feature\categories;
+namespace Tests\Feature\Categories;
 
-use Illuminate\Http\Response;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class CreateCategoryTest extends AbstractMiddlewareTestCase
+class CreateCategoryTest extends TestCaseUtils
 {
     /** @test */
-    public function can_not_create_category_if_unauthenticated()
+    public function can_not_see_create_category_form_if_unauthenticated(): void
     {
-        $response = $this->get($this->getRoute());
-        $response->assertStatus(Response::HTTP_FOUND);
-        $response->assertRedirect(route('login'));
+        $response = $this->get(route('categories.create'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function non_admin_cannot_create_category()
+    public function authenticated_cannot_see_create_category_form_without_appropriate_permission(): void
     {
-        $this->testAsNewUser();
-        $response = $this->get($this->getRoute());
-        $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $this->loginAsNewUser();
+        $response = $this->get(route('categories.create'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey());
     }
 
     /** @test */
-    public function admin_can_see_create_category_form_with_categories_store()
+    public function admin_cannot_see_create_category_form_without_appropriate_permission(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories.store');
-        $response = $this->get($this->getRoute());
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $response = $this->get(route('categories.create'));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+    }
+
+    /** @test */
+    public function admin_can_see_create_category_form_with_appropriate_permission(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'categories.store');
+        $this->try_to_get_category_create_form_with_appropriate_permission();
+    }
+
+    /** @test */
+    public function non_admin_can_see_create_category_form_with_appropriate_permission(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'categories.store');
+        $this->try_to_get_category_create_form_with_appropriate_permission();
+    }
+
+    public function try_to_get_category_create_form_with_appropriate_permission(): void
+    {
+        $response = $this->get(route('categories.create'));
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has(
-                    'data',
-                )
-                ->etc()
-        );
-    }
-
-    public function getRoute()
-    {
-        return route('categories.create');
-    }
-
-    public function getIndexRoute()
-    {
-        return route('categories.index');
-    }
-
-    public function getCreateViewRoute()
-    {
-        return route('categories.create');
-    }
-
-    public function getTableName()
-    {
-        return 'categories';
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson(
+                fn(AssertableJson $json) => $json
+                    ->where('data', fn ($data) => !empty($data))
+                    ->etc()
+            );
     }
 }

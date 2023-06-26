@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -11,47 +12,39 @@ use Illuminate\Support\Facades\Auth;
 class UserRepository extends BaseRepository
 {
     const USERS_PER_PAGE = 15;
-    /**
-     * @return string
-     *  Return the model
-     */
-    public function model()
+
+    public function model(): string
     {
         return User::class;
     }
 
-    public function saveNewUser($storeData)
+    public function saveNewUser(array $storeData): User
     {
-        $user = $this->create($storeData);
-        return $user;
+        return $this->create($storeData);
     }
 
-    public function updateUser($updateData, $id)
+    public function updateUser(array $updateData, int $id): User
     {
-        /** @var User */
+        /** @var User $user*/
         $user = $this->update($updateData, $id);
         return $user;
     }
 
-    public function destroy($id)
+    public function destroy(int $id): User
     {
         $user = $this->findOrFail($id);
-        foreach ($user->products as $product) {
-            $product->update(['user_id' => null]);
-        }
         $user->delete();
         return $user;
     }
 
-    public function search($searchData)
+    public function search(array $searchData): LengthAwarePaginator
     {
-        $users = $this->model->withRolesAndPermissions()
+        return $this->model->withRolesAndPermissions()
             ->whereId($searchData['id'])
             ->whereName($searchData['name'])
             ->whereEmail($searchData['email'])
             ->wherePermissionName($searchData['permission'])
-            ->whereRoleName($searchData['role']);
-        $users = $users->paginate($searchData['perPage'], ['*'], 'page');
-        return $users;
+            ->whereRoleName($searchData['role'])
+            ->paginate($searchData['perPage'], ['*'], 'page');
     }
 }

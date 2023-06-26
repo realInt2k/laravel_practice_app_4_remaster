@@ -17,7 +17,7 @@ Route::prefix('/categories')->group(function () {
 
     Route::get('/{id}/edit', [CategoryController::class, 'edit'])
         ->name('categories.edit')
-        ->middleware('check.permission:categories-edit');
+        ->middleware('check.permission:categories.update');
 
     Route::get('/create', [CategoryController::class, 'create'])
         ->name('categories.create')

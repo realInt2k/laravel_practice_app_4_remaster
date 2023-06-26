@@ -2,95 +2,102 @@
 
 namespace Tests\Feature\Users;
 
-use Exception;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class DeleteUserTest extends AbstractMiddlewareTestCase
+class DeleteUserTest extends TestCaseUtils
 {
     /** @test */
     public function unauthenticated_cannot_delete_user(): void
     {
-        DB::transaction(function () {
-            $user = User::factory()->create();
-            $response = $this->delete(
-                $this->getRoute($user->id),
+        /** @var User $user */
+        $user = User::factory()->create();
+        $response = $this->delete(
+            $this->getRoute($user->id),
+        );
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
+    }
+
+    public function getRoute($id): string
+    {
+        return route('users.destroy', $id);
+    }
+
+    /** @test */
+    public function non_admin_without_permission_cannot_delete_user(): void
+    {
+        $this->loginAsNewUser();
+        /** @var User $otherUser */
+        $otherUser = User::factory()->create();
+        $response = $this->delete($this->getRoute($otherUser->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+        $this->assertDatabaseHas('users', ['id' => $otherUser->id]);
+    }
+
+    /** @test */
+    public function admin_without_permission_cannot_delete_user(): void
+    {
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        /** @var User $otherUser */
+        $otherUser = User::factory()->create();
+        $response = $this->delete($this->getRoute($otherUser->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+        $this->assertDatabaseHas('users', ['id' => $otherUser->id]);
+    }
+
+    /** @test */
+    public function admin_with_permission_can_delete_user(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'users.destroy');
+        $this->try_to_successfully_delete_user();
+    }
+
+    public function try_to_successfully_delete_user(): void
+    {
+        /** @var User $otherUser */
+        $otherUser = User::factory()->create();
+        $response = $this->from(route('users.index'))
+            ->delete($this->getRoute($otherUser->id));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn(AssertableJson $json) => $json
+                ->has('data', function (AssertableJson $json) use ($otherUser) {
+                    return $json
+                        ->where('id', $otherUser->id)
+                        ->where('email', $otherUser->email)
+                        ->etc();
+                })
+                ->etc()
             );
-            $response->assertStatus(302);
-            $response->assertRedirect(route('login'));
-            $this->assertDatabaseHas('users', $user->toArray());
-        });
+        $this->assertDatabaseMissing('users', $otherUser->toArray());
     }
 
     /** @test */
-    public function non_admin_cannot_delete(): void
+    public function authenticated_with_permission_can_delete_user(): void
     {
-        DB::transaction(function () {
-            $currentUser = $this->testAsNewUser();
-            $otherUser = User::factory()->create();
-            $response = $this->delete($this->getRoute($otherUser->id));
-            $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-        });
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'users.destroy');
+        $this->try_to_successfully_delete_user();
     }
 
     /** @test */
-    public function admin_can_not_delete_user_without_user_destroy_permission(): void
+    public function super_admin_can_delete_user(): void
     {
-        DB::transaction(function () {
-            $currentUser = $this->testAsNewUserWithRolePermission('admin', Str::random(5));
-            $otherUser = User::factory()->create();
-            $response = $this->from(route('users.index'))
-                ->delete($this->getRoute($otherUser->id));
-            $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-        });
-    }
-
-    /** @test */
-    public function admin_can_delete_user_with_user_destroy_permission(): void
-    {
-        DB::transaction(function () {
-            $currentUser = $this->testAsNewUserWithRolePermission('admin', 'users.destroy');
-            $otherUser = User::factory()->create();
-            $response = $this->from(route('users.index'))
-                ->delete($this->getRoute($otherUser->id));
-            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
-            $response->assertStatus(Response::HTTP_NO_CONTENT);
-            $this->assertDatabaseMissing('users', $otherUser->toArray());
-        });
-    }
-
-    /** @test */
-    public function authenticated_as_super_admin_can_delete_user(): void
-    {
-        DB::transaction(function () {
-            $currentUser = $this->testAsNewUserWithSuperAdmin();
-            $otherUser = User::factory()->create();
-            $response = $this->from(route('users.index'))
-                ->delete($this->getRoute($otherUser->id));
-            $response->assertSessionMissing(config('constants.AUTHENTICATION_ERROR_KEY'));
-            $response->assertStatus(Response::HTTP_NO_CONTENT);
-            $this->assertDatabaseMissing('users', $otherUser->toArray());
-        });
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->try_to_successfully_delete_user();
     }
 
     /** @test */
     public function invalid_user_id_will_result_in_page_not_found(): void
     {
-        DB::transaction(function () {
-            $id = -1;
-            $response = $this->from(route('users.index'))
-                ->delete($this->getRoute($id));
-            $response->assertStatus(Response::HTTP_NOT_FOUND);
-        });
-    }
-
-    public function getRoute($id)
-    {
-        return route('users.destroy', $id);
+        $id = -1;
+        $response = $this->from(route('users.index'))
+            ->delete($this->getRoute($id));
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }

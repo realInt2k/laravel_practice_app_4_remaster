@@ -3,105 +3,128 @@
 namespace Tests\Feature\categories;
 
 use App\Models\Category;
-use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class UpdateCategoryTest extends AbstractMiddlewareTestCase
+class UpdateCategoryTest extends TestCaseUtils
 {
     /** @test */
-    public function admin_can_updated_category()
+    public function super_admin_can_update_category(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories.update');
-        $data = $this->createData();
-        $dataUpdate = $this->makeData();
-        $response = $this->put($this->getRoute($data->id), $dataUpdate);
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJson(
-            fn (AssertableJson $json) => $json
-                ->has(
-                    'data', fn (AssertableJson $json) => $json
-                    ->where('name', $dataUpdate['name'])
-                    ->etc()
-                )
-                ->etc()
-        );
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $this->try_to_update_category_with_appropriate_permission();
+    }
+
+    /** @test */
+    public function admin_can_update_category_with_appropriate_permission(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole(), 'categories.update');
+        $this->try_to_update_category_with_appropriate_permission();
+    }
+
+    /** @test */
+    public function non_admin_can_update_category_with_appropriate_permission(): void
+    {
+        $this->loginAsNewUserWithRoleAndPermission('role' . Str::random(5), 'categories.update');
+        $this->try_to_update_category_with_appropriate_permission();
+    }
+
+    /** @test */
+    public function admin_cannot_update_category_without_appropriate_permission(): void
+    {
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $this->try_to_update_category_without_appropriate_permission_then_fail();
+    }
+
+    /** @test */
+    public function non_admin_cannot_update_category_without_appropriate_permission(): void
+    {
+        $this->loginAsNewUser();
+        $this->try_to_update_category_without_appropriate_permission_then_fail();
     }
 
     /** @test */
     public function cannot_update_with_invalid_data()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories.update');
-        $data = $this->createData();
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $category = Category::factory()->create();
         $dataUpdate = $this->makeStupidData();
-        $response = $this->from($this->getEditViewRoute($data->id))->put($this->getRoute($data->id), $dataUpdate);
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors('name');
+        $response = $this
+            ->from($this->getEditViewRoute($category->id))
+            ->put($this->getUpdateRoute($category->id), $dataUpdate);
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect($this->getEditViewRoute($category->id))
+            ->assertSessionHasErrors('name');
     }
 
     /** @test */
     public function can_not_update_category_if_unauthenticated()
     {
-        $data = $this->createData();
-        $dataUpdate = $this->makeData();
-        $response = $this->put($this->getRoute($data->id), $dataUpdate);
-        $response->assertStatus(Response::HTTP_FOUND);
-        $response->assertRedirect(route('login'));
+        $category = Category::factory()->create();
+        $dataUpdate = Category::factory()->make()->toArray();
+        $response = $this->put($this->getUpdateRoute($category->id), $dataUpdate);
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function can_not_update_if_category_not_exist()
+    public function can_not_update_if_category_doesnt_exist()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories.update');
-        $dataUpdate = $this->makeData();
-        $response = $this->put($this->getRoute(-1), $dataUpdate);
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $dataUpdate = Category::factory()->make()->toArray();
+        $id = -1;
+        $response = $this->put($this->getUpdateRoute($id), $dataUpdate);
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    /** @test */
-    public function non_admin_user_can_not_update_category()
+    public function try_to_update_category_with_appropriate_permission(): void
     {
-        $this->testAsNewUser();
-        $data = $this->createData();
-        $dataUpdate = $this->makeData();
-        $response = $this->put($this->getRoute($data->id), $dataUpdate);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
+        $category = Category::factory()->create();
+        $dataUpdate = Category::factory()->make()->toArray();
+        $response = $this->put($this->getUpdateRoute($category->id), $dataUpdate);
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson(
+                fn(AssertableJson $json) => $json
+                    ->has(
+                        'data', fn(AssertableJson $json) => $json
+                        ->where('name', $dataUpdate['name'])
+                        ->etc()
+                    )
+                    ->etc()
+            );
     }
 
-    public function createData()
+    public function try_to_update_category_without_appropriate_permission_then_fail(): void
     {
-        return Category::factory()->create();
+        $category = Category::factory()->create();
+        $dataUpdate = Category::factory()->make()->toArray();
+        $response = $this
+            ->from($this->getEditViewRoute($category->id))
+            ->put($this->getUpdateRoute($category->id), $dataUpdate);
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey())
+            ->assertRedirect($this->getEditViewRoute($category->id));
     }
 
-    public function makeData()
-    {
-        return Category::factory()->make()->toArray();
-    }
-
-    public function makeStupidData()
+    public function makeStupidData(): array
     {
         $data = Category::factory()->make()->toArray();
         $data['name'] = '';
         return $data;
     }
 
-    public function getEditViewRoute($id)
+    public function getEditViewRoute(int $id): string
     {
         return route('categories.edit', $id);
     }
 
-    public function getRoute($id)
+    public function getUpdateRoute(int $id): string
     {
         return route('categories.update', $id);
-    }
-
-    public function getIndexRoute()
-    {
-        return route('categories.index');
-    }
-
-    public function getTableName()
-    {
-        return 'categories';
     }
 }

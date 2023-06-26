@@ -3,78 +3,95 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application as FoundationApplication;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Services\CategoryService;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
-    public $categoryService;
+    public CategoryService $categoryService;
 
     public function __construct(CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
     }
 
-    public function index()
+    public function index(): View|FoundationApplication|Factory|Application
     {
         return view('pages.categories.index');
     }
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $categories = $this->categoryService->search($request, self::PER_PAGE);
         $viewHtml = view('pages.categories.pagination', compact('categories'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function show(Request $request, $id)
+    public function show(int $id): JsonResponse
     {
         $category = $this->categoryService->getById($id);
         $viewHtml = view('pages.categories.show', compact('category'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function edit(Request $request, $id)
+    public function edit(int $id): JsonResponse
     {
         $categories = $this->categoryService->getAllCategories();
         $category = $this->categoryService->getById($id);
         $viewHtml = view('pages.categories.edit', compact('category', 'categories'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function create(Request $request)
+    public function create(): JsonResponse
     {
         $categories = $this->categoryService->getAllCategories();
         $viewHtml = view('pages.categories.create', compact('categories'))->render();
-        return $this->responseWithData($viewHtml);
+        return $this->responseJSON($viewHtml);
     }
 
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreCategoryRequest $request): JsonResponse
     {
         $category = $this->categoryService->store($request);
-        return $this->responseWithData($category);
+        return $this->responseJSON($category);
     }
 
-    public function update(UpdateCategoryRequest $request, $id)
+    /**
+     * @throws Exception
+     */
+    public function update(UpdateCategoryRequest $request, int $id): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $category = $this->categoryService->update($request, $id);
         } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
+            DB::rollBack();
+            $this->throwException('cannot update category', $e);
         }
-        return $this->responseWithData($category);
+        DB::commit();
+        return $this->responseJSON($category);
     }
 
-    public function destroy(Request $request, $id)
+    /**
+     * @throws Exception
+     */
+    public function destroy(Request $request, int $id): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $category = $this->categoryService->destroy($id);
         } catch (Exception $e) {
-            return $this->responseWhenException($request, $e);
+            DB::rollBack();
+            $this->throwException('cannot destroy category', $e);
         }
-        return $this->responseWithData($category, Response::HTTP_NO_CONTENT);
+        DB::commit();
+        return $this->responseJSON($category);
     }
 }

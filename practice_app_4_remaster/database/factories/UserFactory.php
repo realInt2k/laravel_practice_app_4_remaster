@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -10,6 +13,23 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+
+    public function withRandomPermission(): UserFactory
+    {
+        return $this->afterCreating(function (User $user) {
+            $permissionId = Permission::factory()->create()->id;
+            $user->permissions()->attach($permissionId);
+        });
+    }
+
+    public function withRandomRole(): UserFactory
+    {
+        return $this->afterCreating(function (User $user) {
+            $roleId = Role::factory()->create()->id;
+            $user->roles()->attach($roleId);
+        });
+    }
+
     /**
      * Define the model's default state.
      *
@@ -31,7 +51,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

@@ -3,44 +3,48 @@
 namespace Tests\Feature\categories;
 
 use App\Models\Category;
-use Illuminate\Http\Response;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class DestroyCategoryTest extends AbstractMiddlewareTestCase
+class DestroyCategoryTest extends TestCaseUtils
 {
     /** @test */
-    public function admin_can_deleted_category()
+    public function user_cannot_delete_category_without_appropriate_permission()
     {
-        $this->testAsNewUserWithRolePermission('admin', 'categories.destroy');
-        $data = $this->createData();
-        $dataCount = $this->getDataCount();
-        $response = $this->delete($this->getRoute($data->id));
-        $response->assertStatus(Response::HTTP_NO_CONTENT);
-        $this->assertEquals($dataCount - 1, $this->getDataCount());
-        $this->assertDatabaseMissing('categories', ['id' => $data->id]);
+        $this->loginAsNewUser();
+        $this->try_to_delete_category_without_appropriate_permission_then_fail();
+    }
+
+    /** @test */
+    public function user_can_delete_category_with_appropriate_permission()
+    {
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $this->try_to_delete_category_without_appropriate_permission_then_fail();
+    }
+
+    /** @test */
+    public function admin_can_delete_category_with_appropriate_permission()
+    {
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole() . Str::random(5), 'categories.destroy');
+        $this->try_to_delete_category_with_appropriate_permission();
+    }
+
+    /** @test */
+    public function super_admin_can_delete_categor()
+    {
+        $this->loginAsNewUserWithRoleAndPermission($this->getAdminRole() . Str::random(5), 'categories.destroy');
+        $this->try_to_delete_category_with_appropriate_permission();
     }
 
     /** @test */
     public function can_not_delete_category_if_unauthenticated()
     {
-        $data = $this->createData();
-        $response = $this->delete($this->getRoute($data->id));
-        $response->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function non_admin_cannot_delete_category()
-    {
-        $this->testAsNewUser();
-        $data = $this->createData();
-        $response = $this->delete($this->getRoute($data->id));
-        $response->assertStatus(302);
-        $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-    }
-
-    public function createData()
-    {
-        return Category::factory()->create();
+        $category = Category::factory()->create();
+        $response = $this->delete($this->getRoute($category->id));
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('login'));
     }
 
     public function getRoute($id)
@@ -48,13 +52,29 @@ class DestroyCategoryTest extends AbstractMiddlewareTestCase
         return route('categories.destroy', $id);
     }
 
-    public function getIndexRoute()
+    public function try_to_delete_category_with_appropriate_permission(): void
     {
-        return route('categories.index');
+        $category = Category::factory()->create();
+        $countCategoryBefore = Category::count();
+        $response = $this->delete($this->getRoute($category->id));
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertDatabaseCount('categories', $countCategoryBefore - 1)
+            ->assertDatabaseMissing('categories', ['id' => $category->id]);
     }
 
-    public function getDataCount()
+    public function try_to_delete_category_without_appropriate_permission_then_fail(): void
     {
-        return Category::count();
+        $category = Category::factory()->create();
+        $countCategoryBefore = Category::count();
+        $response = $this
+            ->from(route('categories.index'))
+            ->delete($this->getRoute($category->id));
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('categories.index'))
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+        $this
+            ->assertDatabaseCount('categories', $countCategoryBefore)
+            ->assertDatabaseHas('categories', ['id' => $category->id]);
     }
 }

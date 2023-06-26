@@ -2,12 +2,49 @@
 
 namespace App\Models;
 
+use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use App\Http\Traits\ToArrayCorrectTimeZone;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\belongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * App\Models\Product
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int|null $user_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $image
+ * @property-read Collection<int, Category> $categories
+ * @property-read int|null $categories_count
+ * @property-read User|null $user
+ * @method static ProductFactory factory($count = null, $state = [])
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product onlyUserId(int $id)
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereCategoryIds(?array $ids)
+ * @method static Builder|Product whereCategoryName(?string $categoryName)
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereDescription($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereImage($value)
+ * @method static Builder|Product whereName($value)
+ * @method static Builder|Product whereUpdatedAt($value)
+ * @method static Builder|Product whereUserId($value)
+ * @method static Builder|Product withCategories()
+ * @method static Builder|Product withName(?string $name)
+ * @mixin Builder
+ */
 class Product extends Model
 {
     use HasFactory, ToArrayCorrectTimeZone;
@@ -26,22 +63,22 @@ class Product extends Model
         'image'
     ];
 
-    public function user()
+    public function user(): belongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function categories()
+    public function categories(): belongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_product', 'product_id', 'category_id');
     }
 
-    public function scopeOnlyUserId($query, $id)
+    public function scopeOnlyUserId(Builder $query, int $id): Builder|null
     {
-        $query->where('user_id', $id);
+        return $query->where('user_id', $id);
     }
 
-    public function hasCategoryId($id)
+    public function hasCategoryId(int $id): bool
     {
         return $this->categories()->where('id', $id)->count() > 0;
     }
@@ -56,50 +93,50 @@ class Product extends Model
         );
     }
 
-    public function scopeWithCategories($query)
+    public function scopeWithCategories(Builder $query): Builder|null
     {
         return $query->with('categories');
     }
 
-    public function scopeWhereCategoryName($query, $categoryName)
+    public function scopeWhereCategoryName(Builder $query, string|null $categoryName): Builder|null
     {
         return $categoryName ?
             $query->whererelation('categories', 'name', 'like', '%' . $categoryName . '%') : null;
     }
 
-    public function scopeWhereId($query, $id)
+    public function scopeWhereId(Builder $query, int|null $id): Builder|null
     {
         return $id ? $query->where('id', $id) : null;
     }
 
-    public function scopeWhereUserId($query, $userId)
+    public function scopeWhereUserId(Builder $query, int|null $userId): Builder|null
     {
         return $userId ? $query->where('user_id', $userId) : null;
     }
 
-    public function scopeWhereName($query, $name)
+    public function scopeWhereName(Builder $query, string|null $name): Builder|null
     {
         return $name ? $query->where('name', 'like', '%' . $name . '%') : null;
     }
 
-    public function scopeWhereDescription($query, $description)
+    public function scopeWhereDescription(Builder $query, string|null $description): Builder|null
     {
         return $description ? $query->where('description', 'like', '%' . $description . '%') : null;
     }
 
-    public function scopeWithName($query, $name)
+    public function scopeWithName(Builder $query, string|null $name): Builder|null
     {
         return $name ? $query->where('name', 'like', "%$name%") : null;
     }
 
-    public function scopeWhereCategoryIds($query, $ids)
+    public function scopeWhereCategoryIds(Builder $query, array|null $ids): Builder|null
     {
         return $ids ? $query->whereHas('categories', fn ($query) =>
         $query->wherein('id', $ids)) :
             null;
     }
 
-    public function syncCategories($categoryIds)
+    public function syncCategories(array $categoryIds): array
     {
         return $this->categories()->sync($categoryIds);
     }

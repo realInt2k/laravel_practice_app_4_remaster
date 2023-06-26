@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 //use Your Model
 
@@ -15,25 +16,32 @@ class ProductRepository extends BaseRepository
      * @return string
      *  Return the model
      */
-    public function model()
+    public function model(): string
     {
         return Product::class;
     }
 
-    public function saveNewProduct($storeData)
+    public function unAttachUser(int $userId): void
+    {
+        $this->model->where('user_id', $userId)->update([
+            'user_id' => null
+        ]);
+    }
+
+    public function saveNewProduct(array $storeData): Product
     {
         return $this->create($storeData);
     }
 
 
-    public function updateProduct($updateData, $id)
+    public function updateProduct(array $updateData, int $id): Product
     {
         $product = $this->findOrFail($id);
         $product->update($updateData);
         return $product;
     }
 
-    public function search($searchData)
+    public function search(array $searchData): LengthAwarePaginator
     {
         return $this->model->withCategories()
             ->whereCategoryIds($searchData['category_ids'])
@@ -44,7 +52,7 @@ class ProductRepository extends BaseRepository
             ->paginate($searchData['perPage']);
     }
 
-    public function destroy($id)
+    public function destroy(int $id): Product
     {
         $product = $this->findOrFail($id);
         $product->delete();

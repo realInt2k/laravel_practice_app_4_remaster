@@ -3,78 +3,72 @@
 namespace Tests\Feature\Roles;
 
 use App\Models\Role;
-use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class DeleteRoleTest extends AbstractMiddlewareTestCase
+class DeleteRoleTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function unauthenticated_cannot_delete_role(): void
     {
-        DB::transaction(function () {
-            $id = rand(0, Role::count());
-            $roleCountBefore = Role::count();
-            $response = $this->delete(route('roles.destroy', $id));
-            $response->assertStatus(302);
-            $response->assertRedirect(route('login'));
-            $this->assertDatabaseCount('roles', $roleCountBefore);
-        });
+        $role = Role::factory()->create();
+        $roleCountBefore = Role::count();
+        $response = $this->delete(route('roles.destroy', $role->id));
+        $response->assertStatus(Response::HTTP_FOUND);
+        $response->assertRedirect(route('login'));
+        $this->assertDatabaseCount($role->getTable(), $roleCountBefore)
+            ->assertDatabaseHas($role->getTable(), ['id' => $role->id]);
     }
 
     /** @test */
-    public function authenticated_without_roles_destroy_permission_cannot_delete(): void
+    public function non_admin_cannot_delete_role(): void
     {
-        DB::transaction(function () {
-            $this->testAsNewUser();
-            $roleCountBefore = Role::count();
-            $id = rand(0, Role::count());
-            $response = $this->delete(route('roles.destroy', $id));
-            $response->assertStatus(302);
-            $response->assertSessionHas(config('constants.AUTHENTICATION_ERROR_KEY'));
-            $this->assertDatabaseCount('roles', $roleCountBefore);
-        });
+        $this->loginAsNewUser();
+        $role = Role::factory()->create();
+        $roleCountBefore = Role::count();
+        $response = $this->delete(route('roles.destroy', $role->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+        $this->assertDatabaseCount($role->getTable(), $roleCountBefore)
+            ->assertDatabaseHas($role->getTable(), ['id' => $role->id]);
     }
 
     /** @test */
-    public function admin_with_roles_destroy_permission_cannot_delete(): void
+    public function admin_cannot_delete_role(): void
     {
-        DB::transaction(function () {
-            $this->testAsNewUserWithRolePermission('admin', 'roles.destroy');
-            $role = Role::factory()->create();
-            $roleCountBefore = Role::count();
-            $response = $this->from(route('roles.index'))->delete(route('roles.destroy', $role->id));
-            $this->assertDatabaseHas('roles', $role->toArray());
-            $this->assertDatabaseCount('roles', $roleCountBefore);
-        });
+        $this->loginAsNewUserWithRole($this->getAdminRole());
+        $role = Role::factory()->create();
+        $roleCountBefore = Role::count();
+        $response = $this->from(route('roles.index'))
+            ->delete(route('roles.destroy', $role->id));
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+        $this->assertDatabaseCount($role->getTable(), $roleCountBefore)
+            ->assertDatabaseHas($role->getTable(), ['id' => $role->id]);
     }
 
     /** @test */
     public function super_admin_can_delete(): void
     {
-        DB::transaction(function () {
-            $this->testAsUserWithSuperAdmin();
-            $role = Role::factory()->create();
-            $roleCountBefore = Role::count();
-            $response = $this->from(route('roles.index'))->delete(route('roles.destroy', $role->id));
-            $this->assertDatabaseMissing('roles', $role->toArray());
-            $this->assertDatabaseCount('roles', $roleCountBefore - 1);
-        });
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $role = Role::factory()->create();
+        $roleCountBefore = Role::count();
+        $response = $this->from(route('roles.index'))
+            ->delete(route('roles.destroy', $role->id));
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertSessionMissing($this->getAuthErrorKey());
+        $this->assertDatabaseCount('roles', $roleCountBefore - 1)
+            ->assertDatabaseMissing('roles', $role->toArray());
     }
 
     /** @test */
     public function cannot_delete_role_if_uri_id_is_invalid(): void
     {
-        DB::transaction(function () {
-            $this->testAsUserWithSuperAdmin();
-            $roleCountBefore = Role::count();
-            $id = -1;
-            $response = $this->delete(route('roles.destroy', $id));
-            $response->assertStatus(Response::HTTP_NOT_FOUND);
-            $this->assertDatabaseCount('roles', $roleCountBefore);
-        });
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $id = -1;
+        $roleCountBefore = Role::count();
+        $response = $this->delete(route('roles.destroy', $id));
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+        $this->assertDatabaseCount('roles', $roleCountBefore);
     }
 }

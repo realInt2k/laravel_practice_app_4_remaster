@@ -23,7 +23,7 @@ class NoCircularCategories implements ValidationRule
     {
         // value is parent_id;
         $category = Category::findOrFail($this->id);
-        $allChildIds = $category->getAllChildIds();
+        $allChildIds = $category->getAllDescendantIds();
         $categoryNames = Category::wherein('id', $allChildIds)->pluck('name')->toArray();
         $strChildNames = '';
         $count = count($categoryNames);

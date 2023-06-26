@@ -3,15 +3,14 @@
 namespace Tests\Feature\Roles;
 
 use App\Models\Role;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Tests\Feature\AbstractMiddlewareTestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Feature\TestCaseUtils;
 
-class ShowRoleTest extends AbstractMiddlewareTestCase
+class ShowRoleTest extends TestCaseUtils
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function unauthenticated_cannot_see_role(): void
     {
         DB::transaction(function () {
@@ -22,14 +21,45 @@ class ShowRoleTest extends AbstractMiddlewareTestCase
         });
     }
 
-    /**
-     * @test
-     */
+    /** @test */
+    public function non_admin_cannot_see_role(): void
+    {
+        $this->loginAsNewUser();
+        $role = Role::factory()->create();
+        $response = $this
+            ->from(route('users.profile'))
+            ->get(route('roles.show', $role->id));
+        $response
+            ->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHasErrors($this->getAuthErrorKey());
+    }
+
+    /** @test */
+    public function super_admin_can_see_role_and_its_permissions(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $role = Role::factory()->withRandomPermissions(5)->create();
+        $response = $this
+            ->from(route('users.profile'))
+            ->get(route('roles.show', $role->id));
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson(fn(AssertableJson $json) => $json
+                ->where('data',
+                    fn($data) => !empty($data)
+                        && str_contains($data, $role->name)
+                )
+                ->etc()
+            )
+            ->assertSee($role->permissions()->pluck('name')->toArray());
+    }
+
+    /** @test */
     public function cannot_see_role_with_invalid_id(): void
     {
-        $this->testAsNewUserWithRolePermission('admin', 'roles.store');
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
         $id = -1;
-        $response = $this->get(route('roles.show', -1));
+        $response = $this->get(route('roles.show', $id));
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }

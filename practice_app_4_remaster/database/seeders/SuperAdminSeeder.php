@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class SuperAdminSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class SuperAdminSeeder extends Seeder
             $user = User::create([
                 'name' => 'int2k',
                 'email' => 'int2k@gmail.com',
-                'password' => 'int2k'
+                'password' => Hash::make('int2k')
             ]);
         } else {
             $user = User::where('email', 'int2k@gmail.com')->first();
