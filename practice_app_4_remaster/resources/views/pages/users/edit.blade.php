@@ -47,7 +47,7 @@
             </h3>
                 <select style="width: 100%" class="select2" multiple="multiple" name="roles[]">
                     @foreach ($roles as $role)
-                        <option {{ $user->hasRoleId($role->id) ? 'selected' : '' }} value="{{ $role->id }}">
+                        <option {{ $user->existsRoleId($role->id) ? 'selected' : '' }} value="{{ $role->id }}">
                             {{ $role->name }}</option>
                     @endforeach
                 </select>
@@ -56,7 +56,7 @@
             </h3>
                 <select style="width: 100%" class="form-control select2" multiple="multiple" name="permissions[]">
                     @foreach ($permissions as $permission)
-                        <option {{ $user->hasPermissionId($permission->id) ? 'selected' : '' }}
+                        <option {{ $user->existsPermissionId($permission->id) ? 'selected' : '' }}
                             value="{{ $permission->id }}">
                             {{ $permission->name }}</option>
                     @endforeach
