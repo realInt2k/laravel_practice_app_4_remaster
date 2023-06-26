@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Product;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Http\Traits\ProcessImageTrait;
 use App\Repositories\ProductRepository;
@@ -12,7 +15,7 @@ class ProductService extends BaseService
 {
     use ProcessImageTrait;
 
-    protected $productRepo;
+    protected ProductRepository $productRepo;
 
     public function __construct(
         ProductRepository $productRepo,
@@ -20,13 +23,12 @@ class ProductService extends BaseService
         $this->productRepo = $productRepo;
     }
 
-    public function getById($id)
+    public function getById(int $id): Product
     {
-        $product = $this->productRepo->findOrFail($id);
-        return $product;
+        return $this->productRepo->findOrFail($id);
     }
 
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request): Product
     {
         $storeData = $request->all();
         $storeData['user_id'] = auth()->user()->id;
@@ -37,14 +39,18 @@ class ProductService extends BaseService
         return $product;
     }
 
-    public function update($request, $id)
+    /**
+     * @throws Exception
+     */
+    public function update(Request $request, int $id): Product
     {
-        DB::beginTransaction();
+        $oldImage = null;
         try {
             $updateData = $request->all();
             $product = $this->productRepo->findOrFail($id);
             $updateData['category_ids'] = $this->extractCategoryIdsFromInput($updateData);
-            $updateData['image'] = $this->updateFile($request, $product->image);
+            $oldImage = $product->image;
+            $updateData['image'] = $this->updateFile($request, $oldImage, true);
             $product = $this->productRepo->updateProduct($updateData, $id);
             $product->syncCategories($updateData['category_ids']);
         } catch (Exception $e) {
@@ -52,10 +58,14 @@ class ProductService extends BaseService
             $this->throwException('cannot update product', $e);
         }
         DB::commit();
+        $this->updateFile($request, $oldImage);
         return $product;
     }
 
-    public function destroy($id)
+    /**
+     * @throws Exception
+     */
+    public function destroy(int $id): Product
     {
         DB::beginTransaction();
         try {
@@ -74,7 +84,7 @@ class ProductService extends BaseService
         $this->productRepo->unAttachUser($userId);
     }
 
-    public function search($request, $perPage, $categoryIds)
+    public function search(Request $request, int $perPage, array $categoryIds): LengthAwarePaginator
     {
         $searchData = [];
         $searchData['category_ids'] = $categoryIds;
@@ -83,12 +93,11 @@ class ProductService extends BaseService
         $searchData['name'] = $request->name;
         $searchData['description'] = $request->description;
         $searchData['perPage'] = $perPage;
-        $products = $this->productRepo->search($searchData);
-        return $products;
+        return $this->productRepo->search($searchData);
     }
 
-    private function extractCategoryIdsFromInput($input)
+    private function extractCategoryIdsFromInput(array $input): array
     {
-        return isset($input['category_ids']) ? $input['category_ids'] : [];
+        return $input['category_ids'] ?? [];
     }
 }

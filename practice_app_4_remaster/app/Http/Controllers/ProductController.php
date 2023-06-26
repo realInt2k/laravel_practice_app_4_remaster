@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application as FoundationApplication;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Services\ProductService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -20,13 +24,13 @@ class ProductController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index()
+    public function index(): View|FoundationApplication|Factory|Application
     {
         $categories = $this->categoryService->getAllCategories();
         return view('pages.products.index', compact('categories'));
     }
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $categoryIds = [];
         if (isset($request->category)) {
@@ -41,14 +45,14 @@ class ProductController extends Controller
         return $this->responseJSON($viewHtml);
     }
 
-    public function show(Request $request, $id)
+    public function show(int $id): JsonResponse
     {
         $product = $this->productService->getById($id);
         $viewHtml = view('pages.products.show', compact('product'))->render();
         return $this->responseJSON($viewHtml);
     }
 
-    public function edit(Request $request, $id)
+    public function edit(int $id): JsonResponse
     {
         $product = $this->productService->getById($id);
         $categories = $this->categoryService->getAllCategories();
@@ -56,20 +60,23 @@ class ProductController extends Controller
         return $this->responseJSON($viewHtml);
     }
 
-    public function create(Request $request)
+    public function create(): JsonResponse
     {
         $categories = $this->categoryService->getAllCategories();
         $viewHtml = view('pages.products.create', compact('categories'))->render();
         return $this->responseJSON($viewHtml);
     }
 
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request): JsonResponse
     {
         $product = $this->productService->store($request);
         return $this->responseJSON($product);
     }
 
-    public function update(UpdateProductRequest $request, $id)
+    /**
+     * @throws Exception
+     */
+    public function update(UpdateProductRequest $request, int $id): JsonResponse
     {
         try {
             $product = $this->productService->update($request, $id);
@@ -79,7 +86,10 @@ class ProductController extends Controller
         return $this->responseJSON($product);
     }
 
-    public function destroy(Request $request, $id)
+    /**
+     * @throws Exception
+     */
+    public function destroy(Request $request, int $id): JsonResponse
     {
         try {
             $product = $this->productService->destroy($id);

@@ -2,17 +2,19 @@
 
 namespace App\Http\Traits;
 
-use Intervention\Image\Facades\Image;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Intervention\Image\Image as InterventionImage;
 
 trait ProcessImageTrait
 {
-    public function verify($request)
+    public function verify($request): bool
     {
         return isset($request->image);
     }
 
-    public function saveFile($request)
+    public function saveFile($request): ?string
     {
         if ($this->verify($request)) {
             $dir = $this->createPublicDirIfNotExist();
@@ -26,28 +28,31 @@ trait ProcessImageTrait
         return null;
     }
 
-    public function deleteFile($name)
+    public function deleteFile($name): void
     {
         if (isset($name)) {
             $this->removeFileFromPublicStorage(config('custom.constants.IMAGE_DIR') . $name);
         }
     }
 
-    public function updateFile($request, $oldImage = null)
+    public function updateFile(Request $request, string|null $oldImage = null, bool $dry = false): ?string
     {
         if ($this->verify($request)) {
-            if (isset($oldImage)) {
+            if (!$dry) {
                 $this->deleteFile($oldImage);
             }
-            $image = $this->saveFile($request);
-            return $image;
+            return $this->saveFile($request);
+        } elseif (isset($request->remove_image_request) && $request->remove_image_request == "true") {
+            if (!$dry) {
+                $this->deleteFile($oldImage);
+            }
+            return null;
         } else {
-            return (isset($request->remove_image_request) && $request->remove_image_request == "true") ?
-                null : $oldImage;
+            return $oldImage;
         }
     }
 
-    public function nameTheImage($request)
+    public function nameTheImage($request): string
     {
         return pathinfo($request->image->getClientOriginalName(), PATHINFO_FILENAME)
             . '_'
@@ -56,7 +61,7 @@ trait ProcessImageTrait
             . $request->image->extension();
     }
 
-    protected function removeFileFromPublicStorage($path)
+    protected function removeFileFromPublicStorage(string $path): void
     {
         Storage::disk('public')->delete($path);
     }
@@ -70,9 +75,15 @@ trait ProcessImageTrait
     }
 
     /**
-     * @param \Intervention\Image\Image $image
+     * @param InterventionImage $image
+     * @param int|null $width
+     * @param int|null $height
+     * @param bool $retainAspectRatio
      */
-    public function resizeImage(&$image, $width, $height, bool $retainAspectRatio = true)
+    public function resizeImage(InterventionImage &$image,
+                                int|null          $width,
+                                int|null          $height,
+                                bool              $retainAspectRatio = true): void
     {
         if ($retainAspectRatio) {
             $image->resize(null, $width, function ($constraint) {
@@ -81,35 +92,5 @@ trait ProcessImageTrait
         } else {
             $image->resize(null, $width, $height);
         }
-    }
-
-    /**
-     * @param \Intervention\Image\Image $image
-     */
-    public function cropImage(&$image, $width, $height, $x = null, $y = null)
-    {
-        return $image->crop($width, $height, $x, $y);
-    }
-
-    /**
-     * @param \Intervention\Image\Image $image
-     */
-    public function blurImage(&$image, $intensity = 1)
-    {
-        if (abs($intensity) > 100) {
-            return;
-        }
-        $image->blur($intensity);
-    }
-
-    /**
-     * @param \Intervention\Image\Image $image
-     */
-    public function brighten(&$image, $intensity = 0)
-    {
-        if (abs($intensity) > 100) {
-            return;
-        }
-        $image->brightness($intensity);
     }
 }
