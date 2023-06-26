@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use App\Repositories\BaseRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryRepository extends BaseRepository
 {
@@ -13,18 +14,17 @@ class CategoryRepository extends BaseRepository
      * @return string
      *  Return the model
      */
-    public function model()
+    public function model(): string
     {
         return Category::class;
     }
 
-    public function saveNewCategory($storeData)
+    public function saveNewCategory(array $storeData): Category
     {
-        $category = $this->create($storeData);
-        return $category;
+        return $this->create($storeData);
     }
 
-    public function destroyCategory($id)
+    public function destroyCategory(int $id): Category
     {
         $category = $this->findOrFail($id);
         foreach ($category->children as $cat) {
@@ -34,14 +34,14 @@ class CategoryRepository extends BaseRepository
         return $category;
     }
 
-    public function updateCategory($updateData, $id)
+    public function updateCategory(array $updateData, int $id): Category
     {
         $category = $this->findOrFail($id);
         $category->update($updateData);
         return $category;
     }
 
-    public function search($searchData)
+    public function search(array $searchData): LengthAwarePaginator
     {
 
         return $this->model->whereName($searchData['name'])

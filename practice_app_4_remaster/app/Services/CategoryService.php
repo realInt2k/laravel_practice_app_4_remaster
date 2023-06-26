@@ -2,74 +2,57 @@
 
 namespace App\Services;
 
-use Exception;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Models\Category;
 use App\Repositories\CategoryRepository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryService extends BaseService
 {
-    protected $categoryRepo, $userRepo;
+    protected CategoryRepository $categoryRepo;
 
     public function __construct(
         CategoryRepository $categoryRepo
-    ) {
+    )
+    {
         $this->categoryRepo = $categoryRepo;
     }
 
-    public function getAllCategories()
+    public function getAllCategories(): array|Collection
     {
         return $this->categoryRepo->all();
     }
 
-    public function getById($id)
+    public function getById(int $id): Category
     {
-        $category = $this->categoryRepo->findOrFail($id);
-        return $category;
+        return $this->categoryRepo->findOrFail($id);
     }
 
-    public function getAllRelevantIdsFromCategoryId($id): array
+    public function getAllRelevantIdsFromCategoryId(int $id): array
     {
         $category = $this->categoryRepo->findOrFail($id);
-        $childIds = $category->getAllDescendantIds();
-        return $childIds;
+        return $category->getAllDescendantIds();
     }
 
-    public function store($request)
+    public function store(Request $request): Category
     {
         $storeData = $request->all();
-        $category = $this->categoryRepo->saveNewCategory($storeData);
-        return $category;
+        return $this->categoryRepo->saveNewCategory($storeData);
     }
 
-    public function destroy($id)
+    public function destroy(int $id): Category
     {
-        DB::beginTransaction();
-        try {
-            $category = $this->categoryRepo->destroyCategory($id);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->throwException('cannot destroy category', $e);
-        }
-        DB::commit();
-        return $category;
+        return $this->categoryRepo->destroyCategory($id);
     }
 
-    public function update($request, $id)
+    public function update(Request $request, int $id): Category
     {
-        DB::beginTransaction();
-        try {
-            $updateData = $request->all();
-            $category = $this->categoryRepo->updateCategory($updateData, $id);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->throwException('cannot update category', $e);
-        }
-        DB::commit();
-        return $category;
+        $updateData = $request->all();
+        return $this->categoryRepo->updateCategory($updateData, $id);
     }
 
-    public function search($request, $perPage)
+    public function search(Request $request, int $perPage): LengthAwarePaginator
     {
         $searchData = [];
         $searchData['name'] = $request->name;
