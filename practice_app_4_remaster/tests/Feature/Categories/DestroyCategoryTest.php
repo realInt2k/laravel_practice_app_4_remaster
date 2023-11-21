@@ -47,6 +47,16 @@ class DestroyCategoryTest extends TestCaseUtils
             ->assertRedirect(route('login'));
     }
 
+    /** @test */
+    public function can_not_delete_category_if_is_not_exist()
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $id = -1;
+        $response = $this->delete($this->getRoute($id));
+        $response
+            ->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
     public function getRoute($id)
     {
         return route('categories.destroy', $id);

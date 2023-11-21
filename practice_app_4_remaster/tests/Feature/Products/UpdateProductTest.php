@@ -69,6 +69,7 @@ class UpdateProductTest extends TestCaseUtils
     public function cannot_update_product_with_empty_name(): void
     {
         $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $updateData = Product::factory()->make()->toArray();
         $updateData = ['name' => ''];
         $this->try_to_update_new_product_with_invalid_data($updateData);
     }
@@ -104,7 +105,7 @@ class UpdateProductTest extends TestCaseUtils
         $product = Product::factory()->create();
         $countProductBefore = Product::count();
         $response = $this->from(route('products.edit', $product->id))
-            ->post(route('products.store'), $updateData);
+            ->put(route('products.update', $product->id), $updateData);
         $response->assertStatus(Response::HTTP_FOUND)
             ->assertRedirect(route('products.edit', $product->id))
             ->assertSessionHasErrors(array_keys($updateData));

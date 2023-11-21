@@ -194,4 +194,19 @@ class StoreUserTest extends TestCaseUtils
         ];
         $this->try_to_store_with_invalid_data($storeData);
     }
+
+    /** @test */
+    public function cannot_store_user_with_name_too_long(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $countUserBefore = User::count();
+        $str = str_repeat("abc", 1000);
+        $storeData = User::factory()->make()->toArray();
+        $storeData['name'] = $str;
+        $storeData['password'] = $this->makeNewPassword();
+        $response = $this->from(route('users.create'))
+            ->post(route('users.store'), $storeData);
+        $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+        $this->assertDatabaseCount('users', $countUserBefore);
+    }
 }

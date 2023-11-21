@@ -14,54 +14,6 @@ class UserRolePermissionUtility
         return $user->roles()->pluck('id')->toArray();
     }
 
-    public static function getAllRoleNamesOfUser(User $user)
-    {
-        $roleIdsOfUser = UserRolePermissionUtility::getAllRoleIdsOfUser($user);
-        $roleNames = Role::wherein('id', $roleIdsOfUser)
-            ->pluck('name')
-            ->toArray();
-        return $roleNames;
-    }
-
-    public static function getAllPermissionIdsOfUser(User $user)
-    {
-        $roleIds = UserRolePermissionUtility::getAllRoleIdsOfUser($user);
-        $permissionIds = RolePermission::wherein('role_id', $roleIds)
-            ->pluck('permission_id')
-            ->toArray();
-        return $permissionIds;
-    }
-
-    public static function getAllPermissionNamesOfUser(User $user)
-    {
-        $permissionsIds = UserRolePermissionUtility::getAllPermissionIdsOfUser($user);
-        $permissions = Permission::wherein('id', $permissionsIds)
-            ->pluck('name')
-            ->toArray();
-        return $permissions;
-    }
-
-    public static function checkIfUserhasPermission(User $user, string $permission)
-    {
-        $permissionIdsOfUser = UserRolePermissionUtility::getAllPermissionIdsOfUser($user);
-        $permissionNameCountCheck = Permission::wherein('id', $permissionIdsOfUser)
-            ->where('name', '=', $permission)
-            ->count();
-        return $permissionNameCountCheck > 0;
-    }
-
-    public static function checkIfUserexistsPermissionNames(User $user, string | array $permissionNames)
-    {
-        if (is_string($permissionNames)) {
-            $permissionNames = explode('|', $permissionNames);
-        }
-        $permissionIdsOfUser = UserRolePermissionUtility::getAllPermissionIdsOfUser($user);
-        $permissionNameCountCheck = Permission::wherein('id', $permissionIdsOfUser)
-            ->wherein('name', $permissionNames)
-            ->count();
-        return $permissionNameCountCheck === count($permissionNames);
-    }
-
     public static function checkIfUserHasRoleName(User $user, string $roleName)
     {
         $roleIdsOfUser = UserRolePermissionUtility::getAllRoleIdsOfUser($user);
@@ -69,29 +21,6 @@ class UserRolePermissionUtility
             ->where('name', '=', $roleName)
             ->count();
         return $roleNameCountCheck > 0;
-    }
-
-    public static function checkIfUserexistsRoleNames(User $user, array | string $roleNames)
-    {
-        if (is_string($roleNames)) {
-            $roleNames = explode('|', $roleNames);
-        }
-        $roleIdsOfUser = UserRolePermissionUtility::getAllRoleIdsOfUser($user);
-        $roleNameCountCheck = Role::wherein('id', $roleIdsOfUser)
-            ->wherein('name', $roleNames)
-            ->count();
-        return $roleNameCountCheck === count($roleNames);
-    }
-
-    public static function checkIfRoleHasPermissionName(Role $role, string $permissionName)
-    {
-        $getPermissionIds = RolePermission::where('role_id', '=', $role->id)
-            ->pluck('permission_id')
-            ->toArray();
-        $permissionNameCountCheck = Permission::wherein('id', $getPermissionIds)
-            ->where('name', '=', $permissionName)
-            ->count();
-        return $permissionNameCountCheck > 0;
     }
 
     public static function getRoleFromName(string $roleName)

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /var/www/app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=10.1.2" rel="stylesheet" type="text/css">
+  <link href="_css/nv.d3.min.css?v=10.1.2" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=10.1.2" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">/var/www/app</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Http/Controllers/Auth/ConfirmPasswordController.php.html#9">App\Http\Controllers\Auth\ConfirmPasswordController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/LoginController.php.html#9">App\Http\Controllers\Auth\LoginController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#12">App\Http\Controllers\Auth\RegisterController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/VerificationController.php.html#9">App\Http\Controllers\Auth\VerificationController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/RegisterController.php.html#9">App\Http\Controllers\RegisterController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#11">App\Http\Controllers\SessionsController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/RedirectIfAuthenticated.php.html#11">App\Http\Middleware\RedirectIfAuthenticated</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/TrustHosts.php.html#7">App\Http\Middleware\TrustHosts</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Permission.php.html#33">App\Models\Permission</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Providers/BroadcastServiceProvider.php.html#8">App\Providers\BroadcastServiceProvider</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/BaseService.php.html#8">App\Services\BaseService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/Handler.php.html#14">App\Exceptions\Handler</a></td><td class="text-right">8%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#10">App\Repositories\BaseRepository</a></td><td class="text-right">47%</td></tr>
+       <tr><td><a href="Http/Traits/AccessDenied.php.html#9">App\Http\Traits\AccessDenied</a></td><td class="text-right">55%</td></tr>
+       <tr><td><a href="Models/Category.php.html#41">App\Models\Category</a></td><td class="text-right">60%</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#10">App\Http\Traits\ProcessImageTrait</a></td><td class="text-right">63%</td></tr>
+       <tr><td><a href="Console/Kernel.php.html#8">App\Console\Kernel</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Middleware/VerifyCsrfToken.php.html#7">App\Http\Middleware\VerifyCsrfToken</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Traits/CategoryTraits/GetsCategoryMeta.php.html#5">App\Http\Traits\CategoryTraits\GetsCategoryMeta</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Services/UserRolePermissionUtility.php.html#10">App\Services\UserRolePermissionUtility</a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Models/Product.php.html#50">App\Models\Product</a></td><td class="text-right">72%</td></tr>
+       <tr><td><a href="Models/Role.php.html#39">App\Models\Role</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Http/Traits/UserTraits/GetsUserMeta.php.html#5">App\Http\Traits\UserTraits\GetsUserMeta</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#17">App\Http\Controllers\CategoryController</a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Http/Controllers/RoleController.php.html#16">App\Http\Controllers\RoleController</a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#13">App\Http\Controllers\Controller</a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Http/Controllers/ProductController.php.html#17">App\Http\Controllers\ProductController</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Services/CategoryService.php.html#11">App\Services\CategoryService</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Services/ProductService.php.html#14">App\Services\ProductService</a></td><td class="text-right">86%</td></tr>
+       <tr><td><a href="Http/Controllers/UserController.php.html#21">App\Http\Controllers\UserController</a></td><td class="text-right">86%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Exceptions/Handler.php.html#14">App\Exceptions\Handler</a></td><td class="text-right">186</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#11">App\Http\Controllers\SessionsController</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#10">App\Repositories\BaseRepository</a></td><td class="text-right">59</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#10">App\Http\Traits\ProcessImageTrait</a></td><td class="text-right">43</td></tr>
+       <tr><td><a href="Models/Product.php.html#50">App\Models\Product</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Http/Middleware/RedirectIfAuthenticated.php.html#11">App\Http\Middleware\RedirectIfAuthenticated</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Services/UserRolePermissionUtility.php.html#10">App\Services\UserRolePermissionUtility</a></td><td class="text-right">17</td></tr>
+       <tr><td><a href="Http/Controllers/UserController.php.html#21">App\Http\Controllers\UserController</a></td><td class="text-right">14</td></tr>
+       <tr><td><a href="Http/Controllers/ProductController.php.html#17">App\Http\Controllers\ProductController</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#17">App\Http\Controllers\CategoryController</a></td><td class="text-right">11</td></tr>
+       <tr><td><a href="Http/Controllers/RoleController.php.html#16">App\Http\Controllers\RoleController</a></td><td class="text-right">11</td></tr>
+       <tr><td><a href="Models/Role.php.html#39">App\Models\Role</a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Services/ProductService.php.html#14">App\Services\ProductService</a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Models/Category.php.html#41">App\Models\Category</a></td><td class="text-right">8</td></tr>
+       <tr><td><a href="Http/Traits/CategoryTraits/GetsCategoryMeta.php.html#5">App\Http\Traits\CategoryTraits\GetsCategoryMeta</a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Traits/AccessDenied.php.html#9">App\Http\Traits\AccessDenied</a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Middleware/VerifyCsrfToken.php.html#7">App\Http\Middleware\VerifyCsrfToken</a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Traits/UserTraits/GetsUserMeta.php.html#5">App\Http\Traits\UserTraits\GetsUserMeta</a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Console/Kernel.php.html#13"><abbr title="App\Console\Kernel::schedule">schedule</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/Handler.php.html#37"><abbr title="App\Exceptions\Handler::customApiResponse">customApiResponse</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/Handler.php.html#77"><abbr title="App\Exceptions\Handler::handleApiException">handleApiException</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/ConfirmPasswordController.php.html#36"><abbr title="App\Http\Controllers\Auth\ConfirmPasswordController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/LoginController.php.html#36"><abbr title="App\Http\Controllers\Auth\LoginController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#39"><abbr title="App\Http\Controllers\Auth\RegisterController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#50"><abbr title="App\Http\Controllers\Auth\RegisterController::validator">validator</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#65"><abbr title="App\Http\Controllers\Auth\RegisterController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/VerificationController.php.html#36"><abbr title="App\Http\Controllers\Auth\VerificationController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#29"><abbr title="App\Http\Controllers\Controller::responseWhenException">responseWhenException</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/RegisterController.php.html#11"><abbr title="App\Http\Controllers\RegisterController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/RegisterController.php.html#16"><abbr title="App\Http\Controllers\RegisterController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#13"><abbr title="App\Http\Controllers\SessionsController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#18"><abbr title="App\Http\Controllers\SessionsController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#37"><abbr title="App\Http\Controllers\SessionsController::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#52"><abbr title="App\Http\Controllers\SessionsController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#78"><abbr title="App\Http\Controllers\SessionsController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/RedirectIfAuthenticated.php.html#18"><abbr title="App\Http\Middleware\RedirectIfAuthenticated::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/TrustHosts.php.html#14"><abbr title="App\Http\Middleware\TrustHosts::hosts">hosts</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Category.php.html#51"><abbr title="App\Models\Category::products">products</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Category.php.html#66"><abbr title="App\Models\Category::scopeOfUserId">scopeOfUserId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Permission.php.html#41"><abbr title="App\Models\Permission::roles">roles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Permission.php.html#46"><abbr title="App\Models\Permission::users">users</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Product.php.html#68"><abbr title="App\Models\Product::user">user</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Product.php.html#87"><abbr title="App\Models\Product::scopeOnlyUserId">scopeOnlyUserId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Product.php.html#97"><abbr title="App\Models\Product::scopeWhereCategoryName">scopeWhereCategoryName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Product.php.html#123"><abbr title="App\Models\Product::scopeWithName">scopeWithName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Role.php.html#51"><abbr title="App\Models\Role::users">users</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/User.php.html#110"><abbr title="App\Models\User::products">products</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Providers/BroadcastServiceProvider.php.html#13"><abbr title="App\Providers\BroadcastServiceProvider::boot">boot</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#34"><abbr title="App\Repositories\BaseRepository::paginate">paginate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#47"><abbr title="App\Repositories\BaseRepository::find">find</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#52"><abbr title="App\Repositories\BaseRepository::findWithoutRedirect">findWithoutRedirect</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#62"><abbr title="App\Repositories\BaseRepository::findOrFailWithTrashed">findOrFailWithTrashed</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#99"><abbr title="App\Repositories\BaseRepository::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#104"><abbr title="App\Repositories\BaseRepository::multipleDelete">multipleDelete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#109"><abbr title="App\Repositories\BaseRepository::latest">latest</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#121"><abbr title="App\Repositories\BaseRepository::updateOrCreate">updateOrCreate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#126"><abbr title="App\Repositories\BaseRepository::insertMany">insertMany</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/BaseService.php.html#13"><abbr title="App\Services\BaseService::throwException">throwException</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/CategoryService.php.html#32"><abbr title="App\Services\CategoryService::getAllRelevantIdsFromCategoryId">getAllRelevantIdsFromCategoryId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/UserRolePermissionUtility.php.html#55"><abbr title="App\Services\UserRolePermissionUtility::assignRoleWithPermissionName">assignRoleWithPermissionName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#73"><abbr title="App\Http\Traits\ProcessImageTrait::removeFileFromPublicStorage">removeFileFromPublicStorage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#92"><abbr title="App\Http\Traits\ProcessImageTrait::resizeImage">resizeImage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Traits/UserTraits/ChecksUserMeta.php.html#75"><abbr title="App\Http\Traits\UserTraits\ChecksUserMeta::ownProduct">ownProduct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/RoleController.php.html#82"><abbr title="App\Http\Controllers\RoleController::destroy">destroy</abbr></a></td><td class="text-right">40%</td></tr>
+       <tr><td><a href="Http/Controllers/ProductController.php.html#79"><abbr title="App\Http\Controllers\ProductController::update">update</abbr></a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Http/Controllers/ProductController.php.html#92"><abbr title="App\Http\Controllers\ProductController::destroy">destroy</abbr></a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#33"><abbr title="App\Http\Traits\ProcessImageTrait::deleteFile">deleteFile</abbr></a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#40"><abbr title="App\Http\Traits\ProcessImageTrait::updateFile">updateFile</abbr></a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Http/Traits/AccessDenied.php.html#11"><abbr title="App\Http\Traits\AccessDenied::accessDenied">accessDenied</abbr></a></td><td class="text-right">55%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#69"><abbr title="App\Http\Controllers\CategoryController::update">update</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#85"><abbr title="App\Http\Controllers\CategoryController::destroy">destroy</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Http/Controllers/RoleController.php.html#69"><abbr title="App\Http\Controllers\RoleController::update">update</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Services/UserRolePermissionUtility.php.html#72"><abbr title="App\Services\UserRolePermissionUtility::assignUserWithPermissionName">assignUserWithPermissionName</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Http/Controllers/UserController.php.html#125"><abbr title="App\Http\Controllers\UserController::destroy">destroy</abbr></a></td><td class="text-right">60%</td></tr>
+       <tr><td><a href="Http/Controllers/UserController.php.html#92"><abbr title="App\Http\Controllers\UserController::updateProfile">updateProfile</abbr></a></td><td class="text-right">62%</td></tr>
+       <tr><td><a href="Services/ProductService.php.html#70"><abbr title="App\Services\ProductService::destroy">destroy</abbr></a></td><td class="text-right">62%</td></tr>
+       <tr><td><a href="Http/Middleware/VerifyCsrfToken.php.html#18"><abbr title="App\Http\Middleware\VerifyCsrfToken::tokensMatch">tokensMatch</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Models/Role.php.html#66"><abbr title="App\Models\Role::scopeWherePermissionName">scopeWherePermissionName</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Traits/CategoryTraits/GetsCategoryMeta.php.html#7"><abbr title="App\Http\Traits\CategoryTraits\GetsCategoryMeta::getAllDescendantIds">getAllDescendantIds</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#78"><abbr title="App\Http\Traits\ProcessImageTrait::createPublicDirIfNotExist">createPublicDirIfNotExist</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Traits/UserTraits/GetsUserMeta.php.html#7"><abbr title="App\Http\Traits\UserTraits\GetsUserMeta::getAllPermissionNames">getAllPermissionNames</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Services/ProductService.php.html#46"><abbr title="App\Services\ProductService::update">update</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Services/RoleService.php.html#31"><abbr title="App\Services\RoleService::store">store</abbr></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#19"><abbr title="App\Http\Traits\ProcessImageTrait::saveFile">saveFile</abbr></a></td><td class="text-right">87%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Exceptions/Handler.php.html#37"><abbr title="App\Exceptions\Handler::customApiResponse">customApiResponse</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Exceptions/Handler.php.html#77"><abbr title="App\Exceptions\Handler::handleApiException">handleApiException</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Http/Middleware/RedirectIfAuthenticated.php.html#18"><abbr title="App\Http\Middleware\RedirectIfAuthenticated::handle">handle</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Services/UserRolePermissionUtility.php.html#55"><abbr title="App\Services\UserRolePermissionUtility::assignRoleWithPermissionName">assignRoleWithPermissionName</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#40"><abbr title="App\Http\Traits\ProcessImageTrait::updateFile">updateFile</abbr></a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#18"><abbr title="App\Http\Controllers\SessionsController::store">store</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#37"><abbr title="App\Http\Controllers\SessionsController::show">show</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/SessionsController.php.html#52"><abbr title="App\Http\Controllers\SessionsController::update">update</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Models/Product.php.html#97"><abbr title="App\Models\Product::scopeWhereCategoryName">scopeWhereCategoryName</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Models/Product.php.html#123"><abbr title="App\Models\Product::scopeWithName">scopeWithName</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#34"><abbr title="App\Repositories\BaseRepository::paginate">paginate</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#126"><abbr title="App\Repositories\BaseRepository::insertMany">insertMany</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#92"><abbr title="App\Http\Traits\ProcessImageTrait::resizeImage">resizeImage</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Services/UserRolePermissionUtility.php.html#72"><abbr title="App\Services\UserRolePermissionUtility::assignUserWithPermissionName">assignUserWithPermissionName</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Controllers/UserController.php.html#125"><abbr title="App\Http\Controllers\UserController::destroy">destroy</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Traits/CategoryTraits/GetsCategoryMeta.php.html#7"><abbr title="App\Http\Traits\CategoryTraits\GetsCategoryMeta::getAllDescendantIds">getAllDescendantIds</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#19"><abbr title="App\Http\Traits\ProcessImageTrait::saveFile">saveFile</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Controllers/RoleController.php.html#82"><abbr title="App\Http\Controllers\RoleController::destroy">destroy</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/ProductController.php.html#79"><abbr title="App\Http\Controllers\ProductController::update">update</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/ProductController.php.html#92"><abbr title="App\Http\Controllers\ProductController::destroy">destroy</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#33"><abbr title="App\Http\Traits\ProcessImageTrait::deleteFile">deleteFile</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Traits/AccessDenied.php.html#11"><abbr title="App\Http\Traits\AccessDenied::accessDenied">accessDenied</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#69"><abbr title="App\Http\Controllers\CategoryController::update">update</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#85"><abbr title="App\Http\Controllers\CategoryController::destroy">destroy</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/RoleController.php.html#69"><abbr title="App\Http\Controllers\RoleController::update">update</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/UserController.php.html#92"><abbr title="App\Http\Controllers\UserController::updateProfile">updateProfile</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Services/ProductService.php.html#70"><abbr title="App\Services\ProductService::destroy">destroy</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Middleware/VerifyCsrfToken.php.html#18"><abbr title="App\Http\Middleware\VerifyCsrfToken::tokensMatch">tokensMatch</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Models/Role.php.html#66"><abbr title="App\Models\Role::scopeWherePermissionName">scopeWherePermissionName</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Traits/ProcessImageTrait.php.html#78"><abbr title="App\Http\Traits\ProcessImageTrait::createPublicDirIfNotExist">createPublicDirIfNotExist</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Traits/UserTraits/GetsUserMeta.php.html#7"><abbr title="App\Http\Traits\UserTraits\GetsUserMeta::getAllPermissionNames">getAllPermissionNames</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Services/ProductService.php.html#46"><abbr title="App\Services\ProductService::update">update</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Services/RoleService.php.html#31"><abbr title="App\Services\RoleService::store">store</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 10.1.2</a> using <a href="https://www.php.net/" target="_top">PHP 8.1.20</a> and <a href="https://phpunit.de/">PHPUnit 10.2.2</a> at Thu Jun 29 10:41:47 UTC 2023.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/jquery.min.js?v=10.1.2" type="text/javascript"></script>
+  <script src="_js/d3.min.js?v=10.1.2" type="text/javascript"></script>
+  <script src="_js/nv.d3.min.js?v=10.1.2" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([11,1,0,0,0,1,1,5,4,7,6,41], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([45,0,0,0,0,1,9,7,1,3,4,177], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[66.66666666666666,2,"<a href=\"Console\/Kernel.php.html#8\">App\\Console\\Kernel<\/a>"],[8.571428571428571,15,"<a href=\"Exceptions\/Handler.php.html#14\">App\\Exceptions\\Handler<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/ConfirmPasswordController.php.html#9\">App\\Http\\Controllers\\Auth\\ConfirmPasswordController<\/a>"],[100,0,"<a href=\"Http\/Controllers\/Auth\/ForgotPasswordController.php.html#8\">App\\Http\\Controllers\\Auth\\ForgotPasswordController<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/LoginController.php.html#9\">App\\Http\\Controllers\\Auth\\LoginController<\/a>"],[0,3,"<a href=\"Http\/Controllers\/Auth\/RegisterController.php.html#12\">App\\Http\\Controllers\\Auth\\RegisterController<\/a>"],[100,0,"<a href=\"Http\/Controllers\/Auth\/ResetPasswordController.php.html#9\">App\\Http\\Controllers\\Auth\\ResetPasswordController<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/VerificationController.php.html#9\">App\\Http\\Controllers\\Auth\\VerificationController<\/a>"],[80.64516129032258,11,"<a href=\"Http\/Controllers\/CategoryController.php.html#17\">App\\Http\\Controllers\\CategoryController<\/a>"],[83.33333333333334,3,"<a href=\"Http\/Controllers\/Controller.php.html#13\">App\\Http\\Controllers\\Controller<\/a>"],[85.29411764705883,12,"<a href=\"Http\/Controllers\/ProductController.php.html#17\">App\\Http\\Controllers\\ProductController<\/a>"],[0,2,"<a href=\"Http\/Controllers\/RegisterController.php.html#9\">App\\Http\\Controllers\\RegisterController<\/a>"],[81.81818181818183,11,"<a href=\"Http\/Controllers\/RoleController.php.html#16\">App\\Http\\Controllers\\RoleController<\/a>"],[0,8,"<a href=\"Http\/Controllers\/SessionsController.php.html#11\">App\\Http\\Controllers\\SessionsController<\/a>"],[86.79245283018868,14,"<a href=\"Http\/Controllers\/UserController.php.html#21\">App\\Http\\Controllers\\UserController<\/a>"],[100,0,"<a href=\"Http\/Kernel.php.html#7\">App\\Http\\Kernel<\/a>"],[100,3,"<a href=\"Http\/Middleware\/AdminProtectionMiddleware.php.html#11\">App\\Http\\Middleware\\AdminProtectionMiddleware<\/a>"],[100,2,"<a href=\"Http\/Middleware\/Authenticate.php.html#8\">App\\Http\\Middleware\\Authenticate<\/a>"],[100,0,"<a href=\"Http\/Middleware\/EncryptCookies.php.html#7\">App\\Http\\Middleware\\EncryptCookies<\/a>"],[100,2,"<a href=\"Http\/Middleware\/Permission.php.html#10\">App\\Http\\Middleware\\Permission<\/a>"],[100,0,"<a href=\"Http\/Middleware\/PreventRequestsDuringMaintenance.php.html#7\">App\\Http\\Middleware\\PreventRequestsDuringMaintenance<\/a>"],[0,4,"<a href=\"Http\/Middleware\/RedirectIfAuthenticated.php.html#11\">App\\Http\\Middleware\\RedirectIfAuthenticated<\/a>"],[100,2,"<a href=\"Http\/Middleware\/Role.php.html#10\">App\\Http\\Middleware\\Role<\/a>"],[100,0,"<a href=\"Http\/Middleware\/TrimStrings.php.html#7\">App\\Http\\Middleware\\TrimStrings<\/a>"],[0,1,"<a href=\"Http\/Middleware\/TrustHosts.php.html#7\">App\\Http\\Middleware\\TrustHosts<\/a>"],[100,0,"<a href=\"Http\/Middleware\/TrustProxies.php.html#8\">App\\Http\\Middleware\\TrustProxies<\/a>"],[100,0,"<a href=\"Http\/Middleware\/ValidateSignature.php.html#7\">App\\Http\\Middleware\\ValidateSignature<\/a>"],[66.66666666666666,2,"<a href=\"Http\/Middleware\/VerifyCsrfToken.php.html#7\">App\\Http\\Middleware\\VerifyCsrfToken<\/a>"],[100,2,"<a href=\"Http\/Requests\/StoreCategoryRequest.php.html#8\">App\\Http\\Requests\\StoreCategoryRequest<\/a>"],[100,3,"<a href=\"Http\/Requests\/StoreProductRequest.php.html#7\">App\\Http\\Requests\\StoreProductRequest<\/a>"],[100,2,"<a href=\"Http\/Requests\/StoreRoleRequest.php.html#7\">App\\Http\\Requests\\StoreRoleRequest<\/a>"],[100,2,"<a href=\"Http\/Requests\/StoreUserRequest.php.html#8\">App\\Http\\Requests\\StoreUserRequest<\/a>"],[100,3,"<a href=\"Http\/Requests\/UpdateCategoryRequest.php.html#9\">App\\Http\\Requests\\UpdateCategoryRequest<\/a>"],[100,3,"<a href=\"Http\/Requests\/UpdateProductRequest.php.html#7\">App\\Http\\Requests\\UpdateProductRequest<\/a>"],[100,2,"<a href=\"Http\/Requests\/UpdateProfileRequest.php.html#9\">App\\Http\\Requests\\UpdateProfileRequest<\/a>"],[100,2,"<a href=\"Http\/Requests\/UpdateRoleRequest.php.html#8\">App\\Http\\Requests\\UpdateRoleRequest<\/a>"],[100,2,"<a href=\"Http\/Requests\/UpdateUserRequest.php.html#9\">App\\Http\\Requests\\UpdateUserRequest<\/a>"],[60,6,"<a href=\"Models\/Category.php.html#41\">App\\Models\\Category<\/a>"],[0,2,"<a href=\"Models\/Permission.php.html#33\">App\\Models\\Permission<\/a>"],[72.22222222222221,21,"<a href=\"Models\/Product.php.html#50\">App\\Models\\Product<\/a>"],[75,9,"<a href=\"Models\/Role.php.html#39\">App\\Models\\Role<\/a>"],[100,0,"<a href=\"Models\/RolePermission.php.html#8\">App\\Models\\RolePermission<\/a>"],[90.9090909090909,14,"<a href=\"Models\/User.php.html#67\">App\\Models\\User<\/a>"],[100,3,"<a href=\"Providers\/AppServiceProvider.php.html#7\">App\\Providers\\AppServiceProvider<\/a>"],[100,6,"<a href=\"Providers\/AuthServiceProvider.php.html#10\">App\\Providers\\AuthServiceProvider<\/a>"],[93.33333333333333,3,"<a href=\"Providers\/BladeServiceProvider.php.html#9\">App\\Providers\\BladeServiceProvider<\/a>"],[0,1,"<a href=\"Providers\/BroadcastServiceProvider.php.html#8\">App\\Providers\\BroadcastServiceProvider<\/a>"],[100,2,"<a href=\"Providers\/CustomPaginationServiceProvider.php.html#8\">App\\Providers\\CustomPaginationServiceProvider<\/a>"],[100,2,"<a href=\"Providers\/EventServiceProvider.php.html#10\">App\\Providers\\EventServiceProvider<\/a>"],[100,7,"<a href=\"Providers\/HelperServiceProvider.php.html#12\">App\\Providers\\HelperServiceProvider<\/a>"],[90.9090909090909,2,"<a href=\"Providers\/RouteServiceProvider.php.html#12\">App\\Providers\\RouteServiceProvider<\/a>"],[47.368421052631575,17,"<a href=\"Repositories\/BaseRepository.php.html#10\">App\\Repositories\\BaseRepository<\/a>"],[100,6,"<a href=\"Repositories\/CategoryRepository.php.html#9\">App\\Repositories\\CategoryRepository<\/a>"],[100,1,"<a href=\"Repositories\/PermissionRepository.php.html#8\">App\\Repositories\\PermissionRepository<\/a>"],[100,6,"<a href=\"Repositories\/ProductRepository.php.html#13\">App\\Repositories\\ProductRepository<\/a>"],[100,5,"<a href=\"Repositories\/RoleRepository.php.html#11\">App\\Repositories\\RoleRepository<\/a>"],[100,5,"<a href=\"Repositories\/UserRepository.php.html#12\">App\\Repositories\\UserRepository<\/a>"],[100,2,"<a href=\"Rules\/EmailDeha.php.html#8\">App\\Rules\\EmailDeha<\/a>"],[94.11764705882352,5,"<a href=\"Rules\/NoCircularCategories.php.html#9\">App\\Rules\\NoCircularCategories<\/a>"],[0,1,"<a href=\"Services\/BaseService.php.html#8\">App\\Services\\BaseService<\/a>"],[85.71428571428571,8,"<a href=\"Services\/CategoryService.php.html#11\">App\\Services\\CategoryService<\/a>"],[100,2,"<a href=\"Services\/PermissionService.php.html#7\">App\\Services\\PermissionService<\/a>"],[86.04651162790698,10,"<a href=\"Services\/ProductService.php.html#14\">App\\Services\\ProductService<\/a>"],[95.45454545454545,9,"<a href=\"Services\/RoleService.php.html#11\">App\\Services\\RoleService<\/a>"],[70.96774193548387,13,"<a href=\"Services\/UserRolePermissionUtility.php.html#10\">App\\Services\\UserRolePermissionUtility<\/a>"],[100,13,"<a href=\"Services\/UserService.php.html#12\">App\\Services\\UserService<\/a>"],[55.55555555555556,2,"<a href=\"Http\/Traits\/AccessDenied.php.html#9\">App\\Http\\Traits\\AccessDenied<\/a>"],[66.66666666666666,3,"<a href=\"Http\/Traits\/CategoryTraits\/GetsCategoryMeta.php.html#5\">App\\Http\\Traits\\CategoryTraits\\GetsCategoryMeta<\/a>"],[63.1578947368421,21,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#10\">App\\Http\\Traits\\ProcessImageTrait<\/a>"],[100,1,"<a href=\"Http\/Traits\/ProductTraits\/ChecksProductMeta.php.html#5\">App\\Http\\Traits\\ProductTraits\\ChecksProductMeta<\/a>"],[100,1,"<a href=\"Http\/Traits\/ProductTraits\/SetsProductMeta.php.html#5\">App\\Http\\Traits\\ProductTraits\\SetsProductMeta<\/a>"],[100,1,"<a href=\"Http\/Traits\/RoleTraits\/ChecksRoleMeta.php.html#5\">App\\Http\\Traits\\RoleTraits\\ChecksRoleMeta<\/a>"],[100,1,"<a href=\"Http\/Traits\/RoleTraits\/SetsRoleMeta.php.html#5\">App\\Http\\Traits\\RoleTraits\\SetsRoleMeta<\/a>"],[100,4,"<a href=\"Http\/Traits\/ToArrayCorrectTimeZone.php.html#5\">App\\Http\\Traits\\ToArrayCorrectTimeZone<\/a>"],[95.23809523809523,15,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#5\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta<\/a>"],[75,2,"<a href=\"Http\/Traits\/UserTraits\/GetsUserMeta.php.html#5\">App\\Http\\Traits\\UserTraits\\GetsUserMeta<\/a>"],[100,2,"<a href=\"Http\/Traits\/UserTraits\/SetsUserMeta.php.html#8\">App\\Http\\Traits\\UserTraits\\SetsUserMeta<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"Console\/Kernel.php.html#13\">App\\Console\\Kernel::schedule<\/a>"],[100,1,"<a href=\"Console\/Kernel.php.html#21\">App\\Console\\Kernel::commands<\/a>"],[100,1,"<a href=\"Exceptions\/Handler.php.html#30\">App\\Exceptions\\Handler::register<\/a>"],[0,9,"<a href=\"Exceptions\/Handler.php.html#37\">App\\Exceptions\\Handler::customApiResponse<\/a>"],[0,4,"<a href=\"Exceptions\/Handler.php.html#77\">App\\Exceptions\\Handler::handleApiException<\/a>"],[100,1,"<a href=\"Exceptions\/Handler.php.html#98\">App\\Exceptions\\Handler::render<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/ConfirmPasswordController.php.html#36\">App\\Http\\Controllers\\Auth\\ConfirmPasswordController::__construct<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/LoginController.php.html#36\">App\\Http\\Controllers\\Auth\\LoginController::__construct<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/RegisterController.php.html#39\">App\\Http\\Controllers\\Auth\\RegisterController::__construct<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/RegisterController.php.html#50\">App\\Http\\Controllers\\Auth\\RegisterController::validator<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/RegisterController.php.html#65\">App\\Http\\Controllers\\Auth\\RegisterController::create<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/VerificationController.php.html#36\">App\\Http\\Controllers\\Auth\\VerificationController::__construct<\/a>"],[100,1,"<a href=\"Http\/Controllers\/CategoryController.php.html#21\">App\\Http\\Controllers\\CategoryController::__construct<\/a>"],[100,1,"<a href=\"Http\/Controllers\/CategoryController.php.html#26\">App\\Http\\Controllers\\CategoryController::index<\/a>"],[100,1,"<a href=\"Http\/Controllers\/CategoryController.php.html#31\">App\\Http\\Controllers\\CategoryController::search<\/a>"],[100,1,"<a href=\"Http\/Controllers\/CategoryController.php.html#38\">App\\Http\\Controllers\\CategoryController::show<\/a>"],[100,1,"<a href=\"Http\/Controllers\/CategoryController.php.html#45\">App\\Http\\Controllers\\CategoryController::edit<\/a>"],[100,1,"<a href=\"Http\/Controllers\/CategoryController.php.html#53\">App\\Http\\Controllers\\CategoryController::create<\/a>"],[100,1,"<a href=\"Http\/Controllers\/CategoryController.php.html#60\">App\\Http\\Controllers\\CategoryController::store<\/a>"],[57.14285714285714,2,"<a href=\"Http\/Controllers\/CategoryController.php.html#69\">App\\Http\\Controllers\\CategoryController::update<\/a>"],[57.14285714285714,2,"<a href=\"Http\/Controllers\/CategoryController.php.html#85\">App\\Http\\Controllers\\CategoryController::destroy<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Controller.php.html#18\">App\\Http\\Controllers\\Controller::responseJSON<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Controller.php.html#29\">App\\Http\\Controllers\\Controller::responseWhenException<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Controller.php.html#37\">App\\Http\\Controllers\\Controller::throwException<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProductController.php.html#21\">App\\Http\\Controllers\\ProductController::__construct<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProductController.php.html#27\">App\\Http\\Controllers\\ProductController::index<\/a>"],[90,2,"<a href=\"Http\/Controllers\/ProductController.php.html#33\">App\\Http\\Controllers\\ProductController::search<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProductController.php.html#48\">App\\Http\\Controllers\\ProductController::show<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProductController.php.html#55\">App\\Http\\Controllers\\ProductController::edit<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProductController.php.html#63\">App\\Http\\Controllers\\ProductController::create<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProductController.php.html#70\">App\\Http\\Controllers\\ProductController::store<\/a>"],[50,2,"<a href=\"Http\/Controllers\/ProductController.php.html#79\">App\\Http\\Controllers\\ProductController::update<\/a>"],[50,2,"<a href=\"Http\/Controllers\/ProductController.php.html#92\">App\\Http\\Controllers\\ProductController::destroy<\/a>"],[0,1,"<a href=\"Http\/Controllers\/RegisterController.php.html#11\">App\\Http\\Controllers\\RegisterController::create<\/a>"],[0,1,"<a href=\"Http\/Controllers\/RegisterController.php.html#16\">App\\Http\\Controllers\\RegisterController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/RoleController.php.html#20\">App\\Http\\Controllers\\RoleController::__construct<\/a>"],[100,1,"<a href=\"Http\/Controllers\/RoleController.php.html#26\">App\\Http\\Controllers\\RoleController::index<\/a>"],[100,1,"<a href=\"Http\/Controllers\/RoleController.php.html#32\">App\\Http\\Controllers\\RoleController::search<\/a>"],[100,1,"<a href=\"Http\/Controllers\/RoleController.php.html#41\">App\\Http\\Controllers\\RoleController::show<\/a>"],[100,1,"<a href=\"Http\/Controllers\/RoleController.php.html#48\">App\\Http\\Controllers\\RoleController::create<\/a>"],[100,1,"<a href=\"Http\/Controllers\/RoleController.php.html#55\">App\\Http\\Controllers\\RoleController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/RoleController.php.html#61\">App\\Http\\Controllers\\RoleController::edit<\/a>"],[57.14285714285714,2,"<a href=\"Http\/Controllers\/RoleController.php.html#69\">App\\Http\\Controllers\\RoleController::update<\/a>"],[40,2,"<a href=\"Http\/Controllers\/RoleController.php.html#82\">App\\Http\\Controllers\\RoleController::destroy<\/a>"],[0,1,"<a href=\"Http\/Controllers\/SessionsController.php.html#13\">App\\Http\\Controllers\\SessionsController::create<\/a>"],[0,2,"<a href=\"Http\/Controllers\/SessionsController.php.html#18\">App\\Http\\Controllers\\SessionsController::store<\/a>"],[0,2,"<a href=\"Http\/Controllers\/SessionsController.php.html#37\">App\\Http\\Controllers\\SessionsController::show<\/a>"],[0,2,"<a href=\"Http\/Controllers\/SessionsController.php.html#52\">App\\Http\\Controllers\\SessionsController::update<\/a>"],[0,1,"<a href=\"Http\/Controllers\/SessionsController.php.html#78\">App\\Http\\Controllers\\SessionsController::destroy<\/a>"],[100,1,"<a href=\"Http\/Controllers\/UserController.php.html#28\">App\\Http\\Controllers\\UserController::__construct<\/a>"],[100,1,"<a href=\"Http\/Controllers\/UserController.php.html#41\">App\\Http\\Controllers\\UserController::index<\/a>"],[100,1,"<a href=\"Http\/Controllers\/UserController.php.html#47\">App\\Http\\Controllers\\UserController::search<\/a>"],[100,1,"<a href=\"Http\/Controllers\/UserController.php.html#59\">App\\Http\\Controllers\\UserController::show<\/a>"],[100,1,"<a href=\"Http\/Controllers\/UserController.php.html#66\">App\\Http\\Controllers\\UserController::create<\/a>"],[100,1,"<a href=\"Http\/Controllers\/UserController.php.html#74\">App\\Http\\Controllers\\UserController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/UserController.php.html#80\">App\\Http\\Controllers\\UserController::edit<\/a>"],[62.5,2,"<a href=\"Http\/Controllers\/UserController.php.html#92\">App\\Http\\Controllers\\UserController::updateProfile<\/a>"],[100,2,"<a href=\"Http\/Controllers\/UserController.php.html#109\">App\\Http\\Controllers\\UserController::update<\/a>"],[60,3,"<a href=\"Http\/Controllers\/UserController.php.html#125\">App\\Http\\Controllers\\UserController::destroy<\/a>"],[100,1,"<a href=\"Http\/Middleware\/AdminProtectionMiddleware.php.html#15\">App\\Http\\Middleware\\AdminProtectionMiddleware::__construct<\/a>"],[100,2,"<a href=\"Http\/Middleware\/AdminProtectionMiddleware.php.html#24\">App\\Http\\Middleware\\AdminProtectionMiddleware::handle<\/a>"],[100,2,"<a href=\"Http\/Middleware\/Authenticate.php.html#13\">App\\Http\\Middleware\\Authenticate::redirectTo<\/a>"],[100,2,"<a href=\"Http\/Middleware\/Permission.php.html#18\">App\\Http\\Middleware\\Permission::handle<\/a>"],[0,4,"<a href=\"Http\/Middleware\/RedirectIfAuthenticated.php.html#18\">App\\Http\\Middleware\\RedirectIfAuthenticated::handle<\/a>"],[100,2,"<a href=\"Http\/Middleware\/Role.php.html#18\">App\\Http\\Middleware\\Role::handle<\/a>"],[0,1,"<a href=\"Http\/Middleware\/TrustHosts.php.html#14\">App\\Http\\Middleware\\TrustHosts::hosts<\/a>"],[66.66666666666666,2,"<a href=\"Http\/Middleware\/VerifyCsrfToken.php.html#18\">App\\Http\\Middleware\\VerifyCsrfToken::tokensMatch<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreCategoryRequest.php.html#13\">App\\Http\\Requests\\StoreCategoryRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreCategoryRequest.php.html#23\">App\\Http\\Requests\\StoreCategoryRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreProductRequest.php.html#12\">App\\Http\\Requests\\StoreProductRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreProductRequest.php.html#17\">App\\Http\\Requests\\StoreProductRequest::messages<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreProductRequest.php.html#29\">App\\Http\\Requests\\StoreProductRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreRoleRequest.php.html#12\">App\\Http\\Requests\\StoreRoleRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreRoleRequest.php.html#22\">App\\Http\\Requests\\StoreRoleRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreUserRequest.php.html#13\">App\\Http\\Requests\\StoreUserRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/StoreUserRequest.php.html#23\">App\\Http\\Requests\\StoreUserRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateCategoryRequest.php.html#14\">App\\Http\\Requests\\UpdateCategoryRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateCategoryRequest.php.html#24\">App\\Http\\Requests\\UpdateCategoryRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateCategoryRequest.php.html#36\">App\\Http\\Requests\\UpdateCategoryRequest::messages<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateProductRequest.php.html#12\">App\\Http\\Requests\\UpdateProductRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateProductRequest.php.html#17\">App\\Http\\Requests\\UpdateProductRequest::messages<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateProductRequest.php.html#29\">App\\Http\\Requests\\UpdateProductRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateProfileRequest.php.html#14\">App\\Http\\Requests\\UpdateProfileRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateProfileRequest.php.html#24\">App\\Http\\Requests\\UpdateProfileRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateRoleRequest.php.html#13\">App\\Http\\Requests\\UpdateRoleRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateRoleRequest.php.html#23\">App\\Http\\Requests\\UpdateRoleRequest::rules<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateUserRequest.php.html#14\">App\\Http\\Requests\\UpdateUserRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/UpdateUserRequest.php.html#24\">App\\Http\\Requests\\UpdateUserRequest::rules<\/a>"],[0,1,"<a href=\"Models\/Category.php.html#51\">App\\Models\\Category::products<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#56\">App\\Models\\Category::parent<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#61\">App\\Models\\Category::children<\/a>"],[0,1,"<a href=\"Models\/Category.php.html#66\">App\\Models\\Category::scopeOfUserId<\/a>"],[100,2,"<a href=\"Models\/Category.php.html#71\">App\\Models\\Category::scopeWhereName<\/a>"],[0,1,"<a href=\"Models\/Permission.php.html#41\">App\\Models\\Permission::roles<\/a>"],[0,1,"<a href=\"Models\/Permission.php.html#46\">App\\Models\\Permission::users<\/a>"],[0,1,"<a href=\"Models\/Product.php.html#68\">App\\Models\\Product::user<\/a>"],[100,1,"<a href=\"Models\/Product.php.html#73\">App\\Models\\Product::categories<\/a>"],[100,3,"<a href=\"Models\/Product.php.html#78\">App\\Models\\Product::imagePath<\/a>"],[0,1,"<a href=\"Models\/Product.php.html#87\">App\\Models\\Product::scopeOnlyUserId<\/a>"],[100,1,"<a href=\"Models\/Product.php.html#92\">App\\Models\\Product::scopeWithCategories<\/a>"],[0,2,"<a href=\"Models\/Product.php.html#97\">App\\Models\\Product::scopeWhereCategoryName<\/a>"],[100,2,"<a href=\"Models\/Product.php.html#103\">App\\Models\\Product::scopeWhereId<\/a>"],[100,2,"<a href=\"Models\/Product.php.html#108\">App\\Models\\Product::scopeWhereUserId<\/a>"],[100,2,"<a href=\"Models\/Product.php.html#113\">App\\Models\\Product::scopeWhereName<\/a>"],[100,2,"<a href=\"Models\/Product.php.html#118\">App\\Models\\Product::scopeWhereDescription<\/a>"],[0,2,"<a href=\"Models\/Product.php.html#123\">App\\Models\\Product::scopeWithName<\/a>"],[100,2,"<a href=\"Models\/Product.php.html#128\">App\\Models\\Product::scopeWhereCategoryIds<\/a>"],[0,1,"<a href=\"Models\/Role.php.html#51\">App\\Models\\Role::users<\/a>"],[100,1,"<a href=\"Models\/Role.php.html#56\">App\\Models\\Role::permissions<\/a>"],[100,1,"<a href=\"Models\/Role.php.html#61\">App\\Models\\Role::scopeWithPermissions<\/a>"],[66.66666666666666,2,"<a href=\"Models\/Role.php.html#66\">App\\Models\\Role::scopeWherePermissionName<\/a>"],[100,2,"<a href=\"Models\/Role.php.html#73\">App\\Models\\Role::scopeWhereId<\/a>"],[100,2,"<a href=\"Models\/Role.php.html#78\">App\\Models\\Role::scopeWhereName<\/a>"],[100,1,"<a href=\"Models\/User.php.html#105\">App\\Models\\User::roles<\/a>"],[0,1,"<a href=\"Models\/User.php.html#110\">App\\Models\\User::products<\/a>"],[100,1,"<a href=\"Models\/User.php.html#115\">App\\Models\\User::permissions<\/a>"],[100,1,"<a href=\"Models\/User.php.html#120\">App\\Models\\User::scopeWithRolesAndPermissions<\/a>"],[100,2,"<a href=\"Models\/User.php.html#125\">App\\Models\\User::scopeWherePermissionName<\/a>"],[100,2,"<a href=\"Models\/User.php.html#131\">App\\Models\\User::scopeWhereRoleName<\/a>"],[100,2,"<a href=\"Models\/User.php.html#137\">App\\Models\\User::scopeWhereId<\/a>"],[100,2,"<a href=\"Models\/User.php.html#142\">App\\Models\\User::scopeWhereName<\/a>"],[100,2,"<a href=\"Models\/User.php.html#147\">App\\Models\\User::scopeWhereEmail<\/a>"],[100,2,"<a href=\"Providers\/AppServiceProvider.php.html#12\">App\\Providers\\AppServiceProvider::register<\/a>"],[100,1,"<a href=\"Providers\/AppServiceProvider.php.html#22\">App\\Providers\\AppServiceProvider::boot<\/a>"],[100,6,"<a href=\"Providers\/AuthServiceProvider.php.html#24\">App\\Providers\\AuthServiceProvider::boot<\/a>"],[100,1,"<a href=\"Providers\/BladeServiceProvider.php.html#14\">App\\Providers\\BladeServiceProvider::register<\/a>"],[92.85714285714286,2,"<a href=\"Providers\/BladeServiceProvider.php.html#22\">App\\Providers\\BladeServiceProvider::boot<\/a>"],[0,1,"<a href=\"Providers\/BroadcastServiceProvider.php.html#13\">App\\Providers\\BroadcastServiceProvider::boot<\/a>"],[100,1,"<a href=\"Providers\/CustomPaginationServiceProvider.php.html#13\">App\\Providers\\CustomPaginationServiceProvider::register<\/a>"],[100,1,"<a href=\"Providers\/CustomPaginationServiceProvider.php.html#21\">App\\Providers\\CustomPaginationServiceProvider::boot<\/a>"],[100,1,"<a href=\"Providers\/EventServiceProvider.php.html#26\">App\\Providers\\EventServiceProvider::boot<\/a>"],[100,1,"<a href=\"Providers\/EventServiceProvider.php.html#34\">App\\Providers\\EventServiceProvider::shouldDiscoverEvents<\/a>"],[100,7,"<a href=\"Providers\/HelperServiceProvider.php.html#17\">App\\Providers\\HelperServiceProvider::boot<\/a>"],[90.9090909090909,2,"<a href=\"Providers\/RouteServiceProvider.php.html#26\">App\\Providers\\RouteServiceProvider::boot<\/a>"],[100,1,"<a href=\"Repositories\/BaseRepository.php.html#14\">App\\Repositories\\BaseRepository::__construct<\/a>"],[100,1,"<a href=\"Repositories\/BaseRepository.php.html#23\">App\\Repositories\\BaseRepository::all<\/a>"],[0,2,"<a href=\"Repositories\/BaseRepository.php.html#34\">App\\Repositories\\BaseRepository::paginate<\/a>"],[0,1,"<a href=\"Repositories\/BaseRepository.php.html#47\">App\\Repositories\\BaseRepository::find<\/a>"],[0,1,"<a href=\"Repositories\/BaseRepository.php.html#52\">App\\Repositories\\BaseRepository::findWithoutRedirect<\/a>"],[100,1,"<a href=\"Repositories\/BaseRepository.php.html#57\">App\\Repositories\\BaseRepository::findOrFail<\/a>"],[0,1,"<a href=\"Repositories\/BaseRepository.php.html#62\">App\\Repositories\\BaseRepository::findOrFailWithTrashed<\/a>"],[100,1,"<a href=\"Repositories\/BaseRepository.php.html#72\">App\\Repositories\\BaseRepository::create<\/a>"],[100,1,"<a href=\"Repositories\/BaseRepository.php.html#83\">App\\Repositories\\BaseRepository::update<\/a>"],[0,1,"<a href=\"Repositories\/BaseRepository.php.html#99\">App\\Repositories\\BaseRepository::delete<\/a>"],[0,1,"<a href=\"Repositories\/BaseRepository.php.html#104\">App\\Repositories\\BaseRepository::multipleDelete<\/a>"],[0,1,"<a href=\"Repositories\/BaseRepository.php.html#109\">App\\Repositories\\BaseRepository::latest<\/a>"],[100,0,"<a href=\"Repositories\/BaseRepository.php.html#114\">App\\Repositories\\BaseRepository::model<\/a>"],[100,1,"<a href=\"Repositories\/BaseRepository.php.html#116\">App\\Repositories\\BaseRepository::makeModel<\/a>"],[0,1,"<a href=\"Repositories\/BaseRepository.php.html#121\">App\\Repositories\\BaseRepository::updateOrCreate<\/a>"],[0,2,"<a href=\"Repositories\/BaseRepository.php.html#126\">App\\Repositories\\BaseRepository::insertMany<\/a>"],[100,1,"<a href=\"Repositories\/CategoryRepository.php.html#17\">App\\Repositories\\CategoryRepository::model<\/a>"],[100,1,"<a href=\"Repositories\/CategoryRepository.php.html#22\">App\\Repositories\\CategoryRepository::saveNewCategory<\/a>"],[100,1,"<a href=\"Repositories\/CategoryRepository.php.html#27\">App\\Repositories\\CategoryRepository::detachFromParent<\/a>"],[100,1,"<a href=\"Repositories\/CategoryRepository.php.html#32\">App\\Repositories\\CategoryRepository::destroyCategory<\/a>"],[100,1,"<a href=\"Repositories\/CategoryRepository.php.html#40\">App\\Repositories\\CategoryRepository::updateCategory<\/a>"],[100,1,"<a href=\"Repositories\/CategoryRepository.php.html#47\">App\\Repositories\\CategoryRepository::search<\/a>"],[100,1,"<a href=\"Repositories\/PermissionRepository.php.html#14\">App\\Repositories\\PermissionRepository::model<\/a>"],[100,1,"<a href=\"Repositories\/ProductRepository.php.html#19\">App\\Repositories\\ProductRepository::model<\/a>"],[100,1,"<a href=\"Repositories\/ProductRepository.php.html#24\">App\\Repositories\\ProductRepository::detachFromUser<\/a>"],[100,1,"<a href=\"Repositories\/ProductRepository.php.html#31\">App\\Repositories\\ProductRepository::saveNewProduct<\/a>"],[100,1,"<a href=\"Repositories\/ProductRepository.php.html#37\">App\\Repositories\\ProductRepository::updateProduct<\/a>"],[100,1,"<a href=\"Repositories\/ProductRepository.php.html#44\">App\\Repositories\\ProductRepository::search<\/a>"],[100,1,"<a href=\"Repositories\/ProductRepository.php.html#55\">App\\Repositories\\ProductRepository::destroy<\/a>"],[100,1,"<a href=\"Repositories\/RoleRepository.php.html#15\">App\\Repositories\\RoleRepository::model<\/a>"],[100,1,"<a href=\"Repositories\/RoleRepository.php.html#20\">App\\Repositories\\RoleRepository::saveNewRole<\/a>"],[100,1,"<a href=\"Repositories\/RoleRepository.php.html#25\">App\\Repositories\\RoleRepository::updateRole<\/a>"],[100,1,"<a href=\"Repositories\/RoleRepository.php.html#32\">App\\Repositories\\RoleRepository::destroyRole<\/a>"],[100,1,"<a href=\"Repositories\/RoleRepository.php.html#39\">App\\Repositories\\RoleRepository::search<\/a>"],[100,1,"<a href=\"Repositories\/UserRepository.php.html#16\">App\\Repositories\\UserRepository::model<\/a>"],[100,1,"<a href=\"Repositories\/UserRepository.php.html#21\">App\\Repositories\\UserRepository::saveNewUser<\/a>"],[100,1,"<a href=\"Repositories\/UserRepository.php.html#26\">App\\Repositories\\UserRepository::updateUser<\/a>"],[100,1,"<a href=\"Repositories\/UserRepository.php.html#33\">App\\Repositories\\UserRepository::destroy<\/a>"],[100,1,"<a href=\"Repositories\/UserRepository.php.html#40\">App\\Repositories\\UserRepository::search<\/a>"],[100,2,"<a href=\"Rules\/EmailDeha.php.html#16\">App\\Rules\\EmailDeha::validate<\/a>"],[100,1,"<a href=\"Rules\/NoCircularCategories.php.html#13\">App\\Rules\\NoCircularCategories::__construct<\/a>"],[93.75,4,"<a href=\"Rules\/NoCircularCategories.php.html#22\">App\\Rules\\NoCircularCategories::validate<\/a>"],[0,1,"<a href=\"Services\/BaseService.php.html#13\">App\\Services\\BaseService::throwException<\/a>"],[100,1,"<a href=\"Services\/CategoryService.php.html#15\">App\\Services\\CategoryService::__construct<\/a>"],[100,1,"<a href=\"Services\/CategoryService.php.html#22\">App\\Services\\CategoryService::getAllCategories<\/a>"],[100,1,"<a href=\"Services\/CategoryService.php.html#27\">App\\Services\\CategoryService::getById<\/a>"],[0,1,"<a href=\"Services\/CategoryService.php.html#32\">App\\Services\\CategoryService::getAllRelevantIdsFromCategoryId<\/a>"],[100,1,"<a href=\"Services\/CategoryService.php.html#38\">App\\Services\\CategoryService::store<\/a>"],[100,1,"<a href=\"Services\/CategoryService.php.html#44\">App\\Services\\CategoryService::destroy<\/a>"],[100,1,"<a href=\"Services\/CategoryService.php.html#49\">App\\Services\\CategoryService::update<\/a>"],[100,1,"<a href=\"Services\/CategoryService.php.html#55\">App\\Services\\CategoryService::search<\/a>"],[100,1,"<a href=\"Services\/PermissionService.php.html#11\">App\\Services\\PermissionService::__construct<\/a>"],[100,1,"<a href=\"Services\/PermissionService.php.html#17\">App\\Services\\PermissionService::getAllPermissions<\/a>"],[100,1,"<a href=\"Services\/ProductService.php.html#20\">App\\Services\\ProductService::__construct<\/a>"],[100,1,"<a href=\"Services\/ProductService.php.html#26\">App\\Services\\ProductService::getById<\/a>"],[100,1,"<a href=\"Services\/ProductService.php.html#31\">App\\Services\\ProductService::store<\/a>"],[80,2,"<a href=\"Services\/ProductService.php.html#46\">App\\Services\\ProductService::update<\/a>"],[62.5,2,"<a href=\"Services\/ProductService.php.html#70\">App\\Services\\ProductService::destroy<\/a>"],[100,1,"<a href=\"Services\/ProductService.php.html#85\">App\\Services\\ProductService::detachFromUser<\/a>"],[100,1,"<a href=\"Services\/ProductService.php.html#89\">App\\Services\\ProductService::search<\/a>"],[100,1,"<a href=\"Services\/ProductService.php.html#101\">App\\Services\\ProductService::extractCategoryIdsFromInput<\/a>"],[100,1,"<a href=\"Services\/RoleService.php.html#15\">App\\Services\\RoleService::__construct<\/a>"],[100,1,"<a href=\"Services\/RoleService.php.html#21\">App\\Services\\RoleService::getAllRoles<\/a>"],[100,1,"<a href=\"Services\/RoleService.php.html#26\">App\\Services\\RoleService::getById<\/a>"],[83.33333333333334,2,"<a href=\"Services\/RoleService.php.html#31\">App\\Services\\RoleService::store<\/a>"],[100,2,"<a href=\"Services\/RoleService.php.html#42\">App\\Services\\RoleService::update<\/a>"],[100,1,"<a href=\"Services\/RoleService.php.html#53\">App\\Services\\RoleService::destroy<\/a>"],[100,1,"<a href=\"Services\/RoleService.php.html#58\">App\\Services\\RoleService::search<\/a>"],[100,1,"<a href=\"Services\/UserRolePermissionUtility.php.html#12\">App\\Services\\UserRolePermissionUtility::getAllRoleIdsOfUser<\/a>"],[100,1,"<a href=\"Services\/UserRolePermissionUtility.php.html#17\">App\\Services\\UserRolePermissionUtility::checkIfUserHasRoleName<\/a>"],[100,1,"<a href=\"Services\/UserRolePermissionUtility.php.html#26\">App\\Services\\UserRolePermissionUtility::getRoleFromName<\/a>"],[100,1,"<a href=\"Services\/UserRolePermissionUtility.php.html#31\">App\\Services\\UserRolePermissionUtility::getPermissionFromName<\/a>"],[100,3,"<a href=\"Services\/UserRolePermissionUtility.php.html#36\">App\\Services\\UserRolePermissionUtility::assignUserWithRoleName<\/a>"],[0,3,"<a href=\"Services\/UserRolePermissionUtility.php.html#55\">App\\Services\\UserRolePermissionUtility::assignRoleWithPermissionName<\/a>"],[57.14285714285714,3,"<a href=\"Services\/UserRolePermissionUtility.php.html#72\">App\\Services\\UserRolePermissionUtility::assignUserWithPermissionName<\/a>"],[100,1,"<a href=\"Services\/UserService.php.html#17\">App\\Services\\UserService::__construct<\/a>"],[100,1,"<a href=\"Services\/UserService.php.html#24\">App\\Services\\UserService::getById<\/a>"],[100,1,"<a href=\"Services\/UserService.php.html#29\">App\\Services\\UserService::store<\/a>"],[100,3,"<a href=\"Services\/UserService.php.html#38\">App\\Services\\UserService::extractRoleOrPermissionInput<\/a>"],[100,1,"<a href=\"Services\/UserService.php.html#49\">App\\Services\\UserService::syncPermissionsIfSuperAdmin<\/a>"],[100,2,"<a href=\"Services\/UserService.php.html#55\">App\\Services\\UserService::update<\/a>"],[100,2,"<a href=\"Services\/UserService.php.html#70\">App\\Services\\UserService::getUpdateDataPassword<\/a>"],[100,1,"<a href=\"Services\/UserService.php.html#80\">App\\Services\\UserService::destroy<\/a>"],[100,1,"<a href=\"Services\/UserService.php.html#85\">App\\Services\\UserService::search<\/a>"],[55.55555555555556,2,"<a href=\"Http\/Traits\/AccessDenied.php.html#11\">App\\Http\\Traits\\AccessDenied::accessDenied<\/a>"],[66.66666666666666,3,"<a href=\"Http\/Traits\/CategoryTraits\/GetsCategoryMeta.php.html#7\">App\\Http\\Traits\\CategoryTraits\\GetsCategoryMeta::getAllDescendantIds<\/a>"],[100,1,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#14\">App\\Http\\Traits\\ProcessImageTrait::verify<\/a>"],[87.5,3,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#19\">App\\Http\\Traits\\ProcessImageTrait::saveFile<\/a>"],[50,2,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#33\">App\\Http\\Traits\\ProcessImageTrait::deleteFile<\/a>"],[50,6,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#40\">App\\Http\\Traits\\ProcessImageTrait::updateFile<\/a>"],[100,2,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#63\">App\\Http\\Traits\\ProcessImageTrait::nameTheImage<\/a>"],[0,1,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#73\">App\\Http\\Traits\\ProcessImageTrait::removeFileFromPublicStorage<\/a>"],[66.66666666666666,2,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#78\">App\\Http\\Traits\\ProcessImageTrait::createPublicDirIfNotExist<\/a>"],[0,2,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#92\">App\\Http\\Traits\\ProcessImageTrait::resizeImage<\/a>"],[100,1,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#109\">App\\Http\\Traits\\ProcessImageTrait::getFileName<\/a>"],[100,1,"<a href=\"Http\/Traits\/ProcessImageTrait.php.html#117\">App\\Http\\Traits\\ProcessImageTrait::setFileName<\/a>"],[100,1,"<a href=\"Http\/Traits\/ProductTraits\/ChecksProductMeta.php.html#7\">App\\Http\\Traits\\ProductTraits\\ChecksProductMeta::hasCategoryId<\/a>"],[100,1,"<a href=\"Http\/Traits\/ProductTraits\/SetsProductMeta.php.html#7\">App\\Http\\Traits\\ProductTraits\\SetsProductMeta::syncCategories<\/a>"],[100,1,"<a href=\"Http\/Traits\/RoleTraits\/ChecksRoleMeta.php.html#7\">App\\Http\\Traits\\RoleTraits\\ChecksRoleMeta::existsPermissionId<\/a>"],[100,1,"<a href=\"Http\/Traits\/RoleTraits\/SetsRoleMeta.php.html#7\">App\\Http\\Traits\\RoleTraits\\SetsRoleMeta::syncPermissionIds<\/a>"],[100,4,"<a href=\"Http\/Traits\/ToArrayCorrectTimeZone.php.html#7\">App\\Http\\Traits\\ToArrayCorrectTimeZone::toArray<\/a>"],[100,1,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#7\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::existsRoleId<\/a>"],[100,1,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#12\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::existsPermissionId<\/a>"],[100,2,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#17\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::hasPermission<\/a>"],[100,2,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#22\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::hasRole<\/a>"],[100,1,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#27\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::isSuperAdmin<\/a>"],[100,1,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#32\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::isAdmin<\/a>"],[100,4,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#43\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::existsPermissionNames<\/a>"],[100,2,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#66\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::existsRoleNames<\/a>"],[0,1,"<a href=\"Http\/Traits\/UserTraits\/ChecksUserMeta.php.html#75\">App\\Http\\Traits\\UserTraits\\ChecksUserMeta::ownProduct<\/a>"],[75,2,"<a href=\"Http\/Traits\/UserTraits\/GetsUserMeta.php.html#7\">App\\Http\\Traits\\UserTraits\\GetsUserMeta::getAllPermissionNames<\/a>"],[100,1,"<a href=\"Http\/Traits\/UserTraits\/SetsUserMeta.php.html#10\">App\\Http\\Traits\\UserTraits\\SetsUserMeta::syncRoles<\/a>"],[100,1,"<a href=\"Http\/Traits\/UserTraits\/SetsUserMeta.php.html#15\">App\\Http\\Traits\\UserTraits\\SetsUserMeta::syncPermissions<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

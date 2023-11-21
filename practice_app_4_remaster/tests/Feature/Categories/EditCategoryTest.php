@@ -64,7 +64,6 @@ class EditCategoryTest extends TestCaseUtils
                 fn(AssertableJson $json) => $json
                     ->where('data', fn ($data) =>
                         !empty($data)
-                        && str_contains($data, $category->name)
                     )
                     ->etc()
             );

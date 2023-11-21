@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -184,8 +184,10 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
-    ])->toArray(),
-
+    'aliases' =>
+        Facade::defaultAliases()->merge([
+            'auth_error_key' => 'authenticationErrors',
+            'super_admin_role' => 'super-admin',
+            'admin_role' => 'admin'
+        ])->toArray(),
 ];

@@ -30,7 +30,7 @@
 </form>
 
 <script>
-    $(function(yourcode) {
+    (function(yourcode) {
         yourcode(window.jQuery, window, document);
     }(function($, window, document) {
         $(function() {

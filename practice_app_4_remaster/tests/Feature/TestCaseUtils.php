@@ -11,17 +11,17 @@ abstract class TestCaseUtils extends TestCase
 {
     public function getAdminRole(): string
     {
-        return config('custom.aliases.admin_role');
+        return config('app.aliases.admin_role');
     }
 
     public function getSuperAdminRole(): string
     {
-        return config('custom.aliases.super_admin_role');
+        return config('app.aliases.super_admin_role');
     }
 
     public function getAuthErrorKey(): string
     {
-        return config('custom.aliases.auth_error_key');
+        return config('app.aliases.auth_error_key');
     }
 
     protected function createNewUserWithRoleAndPermission(string $roleName, string $permissionName): User

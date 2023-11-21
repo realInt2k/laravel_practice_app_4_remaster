@@ -17,7 +17,7 @@ trait AccessDenied
             ], Response::HTTP_FORBIDDEN);
         } else {
             return redirect()->back()->withErrors([
-                config('constants.AUTHENTICATION_ERROR_KEY')
+                config('app.aliases.auth_error_key')
                 => 'you don\'t have permission to perform this action!'
             ]);
         }

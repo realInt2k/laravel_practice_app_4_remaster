@@ -26,12 +26,12 @@ trait ChecksUserMeta
 
     public function isSuperAdmin(): bool
     {
-        return $this->existsRoleNames(config('custom.aliases.super_admin_role'));
+        return $this->existsRoleNames(config('app.aliases.super_admin_role'));
     }
 
     public function isAdmin(): bool
     {
-        return $this->existsRoleNames(config('custom.aliases.admin_role'));
+        return $this->existsRoleNames(config('app.aliases.admin_role'));
     }
 
     /**

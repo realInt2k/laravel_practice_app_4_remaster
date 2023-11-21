@@ -80,6 +80,19 @@ class UpdateCategoryTest extends TestCaseUtils
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
+    /** @test */
+    public function can_not_update_with_circular_parent()
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $category = Category::factory()->create();
+        $dataUpdate = Category::factory()->make()->toArray();
+        $dataUpdate['parent_id'] = $category->id;
+        $response = $this->from(route('categories.edit', $category->id))->put($this->getUpdateRoute($category->id), $dataUpdate);
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertRedirect(route('categories.edit', $category->id))
+            ->assertSessionHasErrors('parent_id');
+    }
+
     public function try_to_update_category_with_appropriate_permission(): void
     {
         $category = Category::factory()->create();

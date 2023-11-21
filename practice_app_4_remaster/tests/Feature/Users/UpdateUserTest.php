@@ -170,7 +170,7 @@ class UpdateUserTest extends TestCaseUtils
     public function cannot_update_user_with_invalid_email(): void
     {
         $this->loginAsNewUserWithRole($this->getSuperAdminRole());
-        $this->try_to_update_with_invalid_data(['email' => null]);
+        $this->try_to_update_with_invalid_data(['email' => "lmao@gmai.dotnet"]);
     }
 
     /** @test */
@@ -178,5 +178,22 @@ class UpdateUserTest extends TestCaseUtils
     {
         $this->loginAsNewUserWithRole($this->getSuperAdminRole());
         $this->try_to_update_with_invalid_data(['name' => null]);
+    }
+
+    /** @test */
+    public function cannot_update_user_with_name_too_long(): void
+    {
+        $this->loginAsNewUserWithRole($this->getSuperAdminRole());
+        $str = str_repeat("abc", 100);
+        $updateData = User::factory()->make()->toArray();
+        $updateData['name'] = $str;
+        $targetUser = User::factory()->create();
+        $response = $this->from($this->getCreateFormRoute($targetUser->id))
+            ->put($this->getUpdateRoute($targetUser->id), $updateData);
+        $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+        $this->assertDatabaseMissing('users', array_merge(
+            ['id' => $targetUser->id],
+            $updateData
+        ));
     }
 }

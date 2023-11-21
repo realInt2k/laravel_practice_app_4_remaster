@@ -85,7 +85,7 @@ class UserService extends BaseService
     public function search(Request $request, int $perPage): LengthAwarePaginator
     {
         $searchData = [];
-        $searchData['id'] = $request->id;
+        $searchData['id'] = $request['id'];
         $searchData['name'] = $request->name;
         $searchData['email'] = $request->email;
         $searchData['permission'] = $request->permission;
